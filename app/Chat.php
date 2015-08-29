@@ -8,8 +8,12 @@ class Chat extends Model {
 		return $this->morphMany('App\Message', 'messageable');
 	}
 	
-	public function user() {
-		return $this->belongsTo('App\PortalUser');
+	public function owner() {
+		return $this->belongsTo('App\User');
+	}
+	
+	public function users() {
+		return $this->belongsToMany('App\User');
 	}
 
 }

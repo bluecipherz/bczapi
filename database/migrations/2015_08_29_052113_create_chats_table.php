@@ -15,9 +15,14 @@ class CreateChatsTable extends Migration {
 		Schema::create('chats', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->unsignedInteger('user_id');
 			$table->string('name');
+			$table->unsignedInteger('user_id');
 			$table->timestamps();
+		});
+		Schema::create('users_chats', function(Blueprint $table)
+		{
+			$table->unsignedInteger('user_id');
+			$table->unsignedInteger('chat_id');
 		});
 	}
 
@@ -29,6 +34,7 @@ class CreateChatsTable extends Migration {
 	public function down()
 	{
 		Schema::dropIfExists('chats');
+		Schema::dropIfExists('users_chats');
 	}
 
 }

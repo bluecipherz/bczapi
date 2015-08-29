@@ -16,7 +16,6 @@ class CreateMessagesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->unsignedInteger('user_id');
-			$table->unsignedInteger('forum_id');
 			$table->string('messageable_type');
 			$table->unsignedInteger('messageable_id');
 			$table->text('message');

@@ -12,9 +12,5 @@ class ClientUser extends User {
 	public function user() {
 		return $this->morphOne('App\User', 'userable');
 	}
-	
-	public function projects() {
-		return $this->hasMany('App\Project', 'client_id');
-	}
 
 }

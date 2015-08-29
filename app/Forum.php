@@ -8,7 +8,7 @@ class Forum extends Model {
 		return $this->morphMany('App\Message', 'messageable');
 	}
 	
-	public function user() {
+	public function owner() {
 		return $this->belongsTo('App\User');
 	}
 

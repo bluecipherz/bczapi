@@ -20,6 +20,11 @@ class CreateForumsTable extends Migration {
 			$table->unsignedInteger('project_id');
 			$table->timestamps();
 		});
+		Schema::create('users_forums', function(Blueprint $table)
+		{
+			$table->unsignedInteger('user_id');
+			$table->unsignedInteger('forum_id');
+		});
 	}
 
 	/**
@@ -30,6 +35,7 @@ class CreateForumsTable extends Migration {
 	public function down()
 	{
 		Schema::dropIfExists('forums');
+		Schema::dropIfExists('users_forums');
 	}
 
 }

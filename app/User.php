@@ -44,7 +44,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 	
 	public function forums() {
-		return $this->hasMany('App\Forum');
+		return $this->belongsToMany('App\Forum');
+	}
+	
+	public function projects() {
+		return $this->belongsToMany('App\Project');
+	}
+	
+	public function chats() {
+		return $this->belongsToMany('App\Chat');
 	}
 	
 	public function images() {

@@ -21,6 +21,11 @@ class CreateProjectsTable extends Migration {
 			$table->unsignedInteger('client_id');
 			$table->timestamps();
 		});
+		Schema::create('users_projects', function(Blueprint $table)
+		{
+			$table->unsignedInteger('user_id');
+			$table->unsignedInteger('project_id');
+		});
 	}
 
 	/**
@@ -31,6 +36,7 @@ class CreateProjectsTable extends Migration {
 	public function down()
 	{
 		Schema::dropIfExists('projects');
+		Schema::dropIfExists('users_projects');
 	}
 
 }
