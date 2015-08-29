@@ -25,10 +25,10 @@ Route::controllers([
 Route::model('projects', 'App\Project');
 Route::model('tasks', 'App\Task');
 
-Route::group(array('after' => ['cors']), function() {
-	// Route::group(array(['middleware' => ['jwt.auth']]), function() {
-		Route::resource('authenticate', 'AuthController', ['only' => ['index']]);
+Route::group(array(['after' => ['cors'], ['domain' => 'api.bluecipherz.com']]), function() {
+	// Route::group(array(['middleware' => 'jwt.auth']), function() {
 		Route::get('authenticate', 'AuthController@authenticate');
+		Route::resource('authenticate', 'AuthController', ['only' => ['index']]);
 		Route::resource('projects', 'ProjectController');
 		Route::resource('projects.tasks', 'TaskController');
 		Route::resource('forums', 'ForumController');

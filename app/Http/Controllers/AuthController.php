@@ -6,8 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use App\User;
 
 class AuthController extends Controller {
+
+	public function __construct() {
+		$this->middleware('jwt.auth', ['only' => ['index']]);
+	}
 
 	public function authenticate(Request $request) {
 		// return 'ok';
@@ -31,7 +36,8 @@ class AuthController extends Controller {
 	 */
 	public function index()
 	{
-		
+		$users = User::all();
+		return $users;
 	}
 
 	/**

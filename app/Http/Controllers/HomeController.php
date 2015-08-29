@@ -33,7 +33,7 @@ class HomeController extends Controller {
 	public function index()
 	{
 		$data = [
-			'feeds' => JWTAuth::user()->notifications
+			'user' => \Auth::user()
 		];
 		return $data;
 	}
