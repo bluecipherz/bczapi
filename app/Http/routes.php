@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('start', function() {
+	return 'ok1';
+});
+
 Route::get('/', 'WelcomeController@index');
 
 Route::get('home', 'HomeController@index');
@@ -20,20 +24,28 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
+Route::model('projects', 'App\Project');
+Route::model('tasks', 'App\Task');
 
-
-Route::group(array('prefix' => 'api','after' => 'cors'), function() {
-	Route::resource('todos','TodosController');
-	// Route::resource('authenticate', 'AuthController', ['only' => ['index']]);
-	Route::post('authenticate', 'AuthController@authenticate');
+Route::group(array('after' => ['cors']), function() {
+	// Route::group(array(['middleware' => ['jwt.auth']]), function() {
+		Route::resource('authenticate', 'AuthController', ['only' => ['index']]);
+		Route::get('authenticate', 'AuthController@authenticate');
+		Route::resource('projects', 'ProjectController');
+		Route::resource('projects.tasks', 'TaskController');
+		Route::resource('forums', 'ForumController');
+		Route::resource('chats', 'ChatController');
+		Route::resource('messages', 'MessageController');
+		Route::resource('expenses', 'ExpenseController');
+		Route::resource('invoices', 'InvoiceController');
+		Route::resource('images', 'ImageController');
+	// });	
 });
-
-
 
 Route::filter('cors', function($route, $request, $response) {
 	$response->headers->set('Access-Control-Allow-Origin', 'http://localhost:9000');
 });
 
-Route::get('todoapp',function() {
-	return view('todoapp.index');
+Route::get('stop', function() {
+	return 'ok2';
 });

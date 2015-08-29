@@ -11,8 +11,23 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
-		'event.name' => [
-			'EventListener',
+		'App\Event\ProjectCreated' => [
+			'App\Handlers\Events\NotifyUsers',
+		],
+		'App\Event\UserAddedToProject' => [
+			'App\Handlers\Events\NotifyUsers'
+		],
+		'App\Event\TaskAdded' => [
+			'App\Handlers\Events\NotifyUsers'
+		],
+		'App\Event\TaskCompleted' => [
+			'App\Handlers\Events\NotifyUsers'
+		],
+		'App\Event\ProjectStatusUpdate' => [
+			'App\Handlers\Events\NotifyUsers',
+		],
+		'App\Event\ClientAddedToProject' => [
+			'App\Handlers\Events\NotifyUsers',
 		],
 	];
 

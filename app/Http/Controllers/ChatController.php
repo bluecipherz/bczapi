@@ -4,26 +4,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
-class AuthController extends Controller {
+class ChatController extends Controller {
 
-	public function authenticate(Request $request) {
-		// return 'ok';
-		$credentials = $request->only('email', 'password');
-		// return $credentials;
-		
-		try {
-			if(!$token = JWTAuth::attempt($credentials)) {
-				return response()->json(['error' => 'invalid_credentials'], 401);
-			}
-		} catch(JWTException $e) {
-			return response()->json(['error' => 'could_not_create_token'], 500);
-		}
-		return response()->json(compact('token'));
+	public function __construct() {
+		$this->middleware('jwt.auth');
 	}
-
+	
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -31,7 +18,7 @@ class AuthController extends Controller {
 	 */
 	public function index()
 	{
-		
+		//
 	}
 
 	/**

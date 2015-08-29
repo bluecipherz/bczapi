@@ -4,24 +4,12 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
+use App\Project;
 
-class AuthController extends Controller {
+class ProjectController extends Controller {
 
-	public function authenticate(Request $request) {
-		// return 'ok';
-		$credentials = $request->only('email', 'password');
-		// return $credentials;
-		
-		try {
-			if(!$token = JWTAuth::attempt($credentials)) {
-				return response()->json(['error' => 'invalid_credentials'], 401);
-			}
-		} catch(JWTException $e) {
-			return response()->json(['error' => 'could_not_create_token'], 500);
-		}
-		return response()->json(compact('token'));
+	public function __construct() {
+		// $this->middleware('jwt.auth');
 	}
 
 	/**
@@ -31,7 +19,8 @@ class AuthController extends Controller {
 	 */
 	public function index()
 	{
-		
+		return Project::all();
+		// return ['success' => true];
 	}
 
 	/**
@@ -49,9 +38,10 @@ class AuthController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Request $request)
 	{
-		//
+		$project = Project::create($request->all());
+		event(new ProjectCreated($project, PortalUser::all()));
 	}
 
 	/**

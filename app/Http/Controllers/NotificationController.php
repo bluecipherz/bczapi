@@ -4,10 +4,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Todo;
-use Input;
 
-class TodosController extends Controller {
+class NotificationController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -16,11 +14,7 @@ class TodosController extends Controller {
 	 */
 	public function index()
 	{
-		// $todos = Todo::all();
-		// return $todos;
-		
-		$todos = Todo::all();
-		return $todos;
+		//
 	}
 
 	/**
@@ -30,7 +24,7 @@ class TodosController extends Controller {
 	 */
 	public function create()
 	{
-		
+		//
 	}
 
 	/**
@@ -40,9 +34,7 @@ class TodosController extends Controller {
 	 */
 	public function store()
 	{
-		$todo = Todo::create(Input::all());
-		// return response()->json($todo,200,['Access-Control-Allow-Origin' => 'http://localhost:9000']);
-		return $todo->toArray();
+		//
 	}
 
 	/**
@@ -75,9 +67,7 @@ class TodosController extends Controller {
 	 */
 	public function update($id)
 	{
-		$todo = Todo::find($id);
-		$todo->done = Input::get('done');
-		$todo->save();
+		//
 	}
 
 	/**
@@ -88,8 +78,7 @@ class TodosController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		Todo::destroy($id);
+		//
 	}
-	
 
 }

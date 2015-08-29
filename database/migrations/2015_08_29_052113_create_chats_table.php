@@ -1,12 +1,10 @@
-
- 
 <?php
- 
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
- 
-class CreateTodoTable extends Migration {
- 
+
+class CreateChatsTable extends Migration {
+
 	/**
 	 * Run the migrations.
 	 *
@@ -14,15 +12,15 @@ class CreateTodoTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('todos', function(Blueprint $table)
+		Schema::create('chats', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('title');
-			$table->boolean('done');
+			$table->unsignedInteger('user_id');
+			$table->string('name');
 			$table->timestamps();
 		});
 	}
- 
+
 	/**
 	 * Reverse the migrations.
 	 *
@@ -30,8 +28,7 @@ class CreateTodoTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('todos');
+		Schema::dropIfExists('chats');
 	}
- 
+
 }
- 
