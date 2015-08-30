@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClientUsersTable extends Migration {
+class CreateCommentsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,9 +12,11 @@ class CreateClientUsersTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('client_users', function(Blueprint $table)
+		Schema::create('comments', function(Blueprint $table)
 		{
 			$table->increments('id');
+            $table->unsignedInteger('commentable_id');
+            $table->string('commentable_type');
 			$table->timestamps();
 		});
 	}
@@ -26,7 +28,7 @@ class CreateClientUsersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('client_users');
+		Schema::drop('comments');
 	}
 
 }

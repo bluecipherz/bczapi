@@ -15,5 +15,9 @@ class Message extends Model {
 	public function images() {
 		return $this->morphMany('App\Image', 'imageable');
 	}
+    
+    public function feeds() {
+        return $this->morphMany('App\Feed', 'feedable');
+    }
 	
 }

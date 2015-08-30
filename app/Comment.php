@@ -2,14 +2,14 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Invoice extends Model {
-	
-	public function project() {
-		return $this->belongsTo('App\Project');
-	}
+class Comment extends Model {
+
+	public function commentable() {
+        return $this->morphTo();
+    }
     
     public function feeds() {
         return $this->morphMany('App\Feed', 'feedable');
     }
-	
+
 }

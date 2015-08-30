@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClientUsersTable extends Migration {
+class CreateFeedsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,9 +12,13 @@ class CreateClientUsersTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('client_users', function(Blueprint $table)
+		Schema::create('feeds', function(Blueprint $table)
 		{
 			$table->increments('id');
+            $table->string('type');
+            $table->unsignedInteger('feedable_id');
+            $table->string('feedable_type');
+            $table->unsignedInteger('project_id')
 			$table->timestamps();
 		});
 	}
@@ -26,7 +30,7 @@ class CreateClientUsersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('client_users');
+		Schema::drop('feeds');
 	}
 
 }

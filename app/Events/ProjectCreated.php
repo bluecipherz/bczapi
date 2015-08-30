@@ -12,17 +12,15 @@ class ProjectCreated extends Event implements NotifiableEvent {
 	use SerializesModels;
 
 	public $notifiable;
-	public $users;
 	
 	/**
 	 * Create a new event instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(Project $project, Collection $users)
+	public function __construct(Project $project)
 	{
 		$this->notifiable = $project;
-		$this->users = $users;
 	}
 	
 	public function getSubject() {

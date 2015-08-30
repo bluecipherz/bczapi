@@ -8,7 +8,7 @@ class Task extends Model {
 		return $this->belongsTo('App\Project');
 	}
 
-	public function user() {
+	public function owner() {
 		return $this->belongsTo('App\User');
 	}
 	
@@ -19,5 +19,9 @@ class Task extends Model {
 	public function images() {
 		return $this->morphMany('App\Image', 'imageable');
 	}
+    
+    public function feeds() {
+        return $this->morphMany('App\Feed', 'feedable');
+    }
 	
 }

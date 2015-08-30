@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model {
 
-	public function tasks() {
+	public function ownTasks() {
 		return $this->hasMany('App\Task');
 	}
 	
@@ -27,5 +27,9 @@ class Project extends Model {
 	public function users() {
 		return $this->belongsToMany('App\User');
 	}
+    
+    public function feeds() {
+        return $this->morphMany('App\Feed', 'feedable');
+    }
 
 }

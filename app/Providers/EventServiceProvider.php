@@ -12,7 +12,7 @@ class EventServiceProvider extends ServiceProvider {
 	 */
 	protected $listen = [
 		'App\Event\ProjectCreated' => [
-			'App\Handlers\Events\NotifyUsers',
+			'App\Handlers\Events\CreateFeed',
 		],
 		'App\Event\UserAddedToProject' => [
 			'App\Handlers\Events\NotifyUsers'

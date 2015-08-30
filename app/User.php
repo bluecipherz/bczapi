@@ -62,5 +62,19 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	public function notifications() {
 		return $this->hasMany('App\Notification');
 	}
+    
+    public function scopePortal($query) {
+        return $query->where('userable_type', 'App\PortalUser');
+    }
+    
+    public function scopeClient($query) {
+        return $query->where('userable_type', 'App\ClientUser');
+    }
+    
+    public function relatedFeeds() {
+        $commonFeeds = Feed::common();
+        $myFeeds = Feed::whereIn('project_id', $this->projects->lists('id'));
+        return $commonFeeds->merge($myFeeds)->orderBy('created_at');
+    }
 	
 }
