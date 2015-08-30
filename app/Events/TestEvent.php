@@ -4,7 +4,7 @@ use App\Events\Event;
 
 use Illuminate\Queue\SerializesModels;
 
-class ForumCreated extends Event {
+class TestEvent extends Event {
 
 	use SerializesModels;
 
@@ -15,7 +15,7 @@ class ForumCreated extends Event {
 	 */
 	public function __construct()
 	{
-		//
+		echo 'frickzem';
 	}
 
 }

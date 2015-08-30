@@ -36,9 +36,14 @@ class TaskController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Request $request, Project $project)
 	{
-		//
+		$task = Task::create($request);
+		$user = Auth::user();
+		$user->tasks()->save($task);
+		$project->tasks()->save($task);
+		event(new TaskCreated($user, $project, $task));
+		return $task;
 	}
 
 	/**

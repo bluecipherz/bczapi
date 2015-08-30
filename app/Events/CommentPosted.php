@@ -4,36 +4,33 @@ use App\Events\Event;
 use App\Events\Contracts\NotifiableEvent;
 
 use Illuminate\Queue\SerializesModels;
-use App\Project;
-use Illuminate\Database\Eloquent\Collection;
 
-class ProjectCreated extends Event implements NotifiableEvent {
+class CommentPosted extends Event implements NotifiableEvent {
 
 	use SerializesModels;
 
-	public $project, $user;
+	protected $user, $commentable;
 	
 	/**
 	 * Create a new event instance.
 	 *
 	 * @return void
 	 */
-	public function __construct($user, $project)
+	public function __construct(User $user, $commentable)
 	{
-		$this->project = $project;
 		$this->user = $user;
+		$this->commentable = $commentable();
 	}
 	
 	public function getSubject() {
-		return 'Project Created';
+		return 'Comment Posted';
 	}
 	
 	public function getBody() {
-		return "{$this->user->email} created a new project {$this->project->name}";
+		return "{$this->user->email} posted comment";
 	}
 	
 	public function getType() {
-		return 'ProjectCreated';
+		return 'CommentPosted';
 	}
-
 }

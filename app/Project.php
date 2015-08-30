@@ -4,12 +4,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model {
 
+	protected $fillable = ['name', 'description'];
+
 	public function ownTasks() {
 		return $this->hasMany('App\Task');
 	}
 	
 	public function owner() {
-		return $this->belongsTo('App\User');
+		return $this->belongsTo('App\User', 'user_id');
 	}
 	
 	public function messages() {
@@ -31,5 +33,9 @@ class Project extends Model {
     public function feeds() {
         return $this->morphMany('App\Feed', 'feedable');
     }
+	
+	public function comments() {
+		return $this->morphMany('App\Comment', 'commentable');
+	}
 
 }

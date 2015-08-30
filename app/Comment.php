@@ -11,5 +11,9 @@ class Comment extends Model {
     public function feeds() {
         return $this->morphMany('App\Feed', 'feedable');
     }
+	
+	public function images() {
+		return $this->morphMany('App\Image', 'imageable');
+	}
 
 }

@@ -11,23 +11,29 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
-		'App\Event\ProjectCreated' => [
+		'App\Events\ProjectCreated' => [
 			'App\Handlers\Events\CreateFeed',
 		],
-		'App\Event\UserAddedToProject' => [
-			'App\Handlers\Events\NotifyUsers'
+		'App\Events\TaskCreated' => [
+			'App\Handlers\Events\CreateFeed',
 		],
-		'App\Event\TaskAdded' => [
-			'App\Handlers\Events\NotifyUsers'
+		'App\Events\CommentPosted' => [
+			'App\Handlers\Events\CreateFeed',
 		],
-		'App\Event\TaskCompleted' => [
-			'App\Handlers\Events\NotifyUsers'
+		'App\Events\StatusUpdated' => [
+			'App\Handlers\Events\CreateFeed',
 		],
-		'App\Event\ProjectStatusUpdate' => [
-			'App\Handlers\Events\NotifyUsers',
+		'App\Events\TaskCompleted' => [
+			'App\Handlers\Events\CreateFeed',
 		],
-		'App\Event\ClientAddedToProject' => [
-			'App\Handlers\Events\NotifyUsers',
+		'App\Events\ChatRoomCreated' => [
+			'App\Handlers\Events\CreateFeed',
+		],
+		'App\Events\UserAddedToProject' => [
+			'App\Handlers\Events\CreateFeed',
+		],
+		'App\Events\ForumPosted' => [
+			'App\Handlers\Events\CreateFeed',
 		],
 	];
 

@@ -4,36 +4,35 @@ use App\Events\Event;
 use App\Events\Contracts\NotifiableEvent;
 
 use Illuminate\Queue\SerializesModels;
-use App\Project;
-use Illuminate\Database\Eloquent\Collection;
 
-class ProjectCreated extends Event implements NotifiableEvent {
+class TaskCreated extends Event implements NotifiableEvent {
 
 	use SerializesModels;
 
-	public $project, $user;
+	protected $user, $project, $task;
 	
 	/**
 	 * Create a new event instance.
 	 *
 	 * @return void
 	 */
-	public function __construct($user, $project)
+	public function __construct(User $user, Project $project, Task $task)
 	{
-		$this->project = $project;
 		$this->user = $user;
+		$this->project = $project;
+		$this->task = $task;
 	}
 	
 	public function getSubject() {
-		return 'Project Created';
+		return 'TaskCreated Created';
 	}
 	
 	public function getBody() {
-		return "{$this->user->email} created a new project {$this->project->name}";
+		return "{$this->user->email} added a task in {$this->project->name}";
 	}
 	
 	public function getType() {
-		return 'ProjectCreated';
+		return 'TaskCreated';
 	}
 
 }

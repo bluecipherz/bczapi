@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 class Chat extends Model {
 
 	public function messages() {
-		return $this->morphMany('App\Message', 'messageable');
+		return $this->hasMany('App\Message');
 	}
 	
 	public function owner() {

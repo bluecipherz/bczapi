@@ -16,6 +16,7 @@ class CreateForumsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name');
+			$table->string('description');
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('project_id');
 			$table->timestamps();

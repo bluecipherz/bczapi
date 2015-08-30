@@ -28,6 +28,8 @@ Route::controllers([
 Route::post('authenticate', 'AuthController@authenticate');
 Route::resource('authenticate', 'AuthController', ['only' => ['index']]);
 
+		Route::resource('projects', 'ProjectController');
+		
 Route::group(array(
 //    'prefix' => 'api',
     'after' => 'cors',
@@ -35,7 +37,6 @@ Route::group(array(
     'middleware' => 'jwt.auth'
     ), function() {
         Route::get('/', 'HomeController@index');
-		Route::resource('projects', 'ProjectController');
 		Route::resource('projects.tasks', 'TaskController');
 		Route::resource('forums', 'ForumController');
 		Route::resource('chats', 'ChatController');
@@ -47,6 +48,10 @@ Route::group(array(
 
 Route::filter('cors', function($route, $request, $response) {
 	$response->headers->set('Access-Control-Allow-Origin', 'http://localhost:9000');
+});
+
+Route::get('test', function() {
+	return view('test');
 });
 
 Route::get('stop', function() {

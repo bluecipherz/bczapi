@@ -3,10 +3,6 @@
 use Illuminate\Database\Eloquent\Model;
 
 class Forum extends Model {
-
-	public function messages() {
-		return $this->morphMany('App\Message', 'messageable');
-	}
 	
 	public function owner() {
 		return $this->belongsTo('App\User');
@@ -19,5 +15,9 @@ class Forum extends Model {
     public function feeds() {
         return $this->morphMany('App\Feed', 'feedable');
     }
+	
+	public function comments() {
+		return $this->morphMany('App\Comment', 'commentable');
+	}
 
 }

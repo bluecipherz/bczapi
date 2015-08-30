@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Project;
+use App\Commands\CreateProject;
+use Auth;
 
 class ProjectController extends Controller {
 
@@ -40,8 +42,14 @@ class ProjectController extends Controller {
 	 */
 	public function store(Request $request)
 	{
-		$project = Project::create($request->all());
-		event(new ProjectCreated($project, PortalUser::all()));
+		// $this->dispatch(
+			// new CreateProject(Auth::user(), $request->all())
+		// );
+		$project = Project::create($this->data);
+		// $project->owner()->associate($this->user);
+		// $project->push();
+		$this->user->userable->ownProjects()->save($project);
+		event(new ProjectCreated($this->user, $project));
 	}
 
 	/**
