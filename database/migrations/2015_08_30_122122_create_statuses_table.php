@@ -15,7 +15,6 @@ class CreateStatusesTable extends Migration {
 		Schema::create('statuses', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->unsignedInteger('project_id');
 			$table->string('message');
 			$table->timestamps();
 		});

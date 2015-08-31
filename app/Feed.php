@@ -8,8 +8,12 @@ class Feed extends Model {
         return $this->morphTo();
     }
     
+    public function project() {
+		return $this->belongsTo('App\Project');
+	}
+    
     public function scopeCommon($query) {
-        return $query->where('project_id', '=', '');
+        return $query->where('project_id', '=', '0');
     }
 
 }

@@ -13,9 +13,9 @@ class PortalUser extends User {
 		return $this->morphOne('App\User', 'userable');
 	}
 	
-	public function ownForums() {
-		return $this->hasMany('App\Forum', 'user_id');
-	}
+	//~ public function ownForums() {
+		//~ return $this->hasMany('App\Forum', 'user_id');
+	//~ }
 	
 	public function ownChats() {
 		return $this->hasMany('App\Chat', 'user_id');

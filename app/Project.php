@@ -6,7 +6,7 @@ class Project extends Model {
 
 	protected $fillable = ['name', 'description'];
 
-	public function ownTasks() {
+	public function tasks() {
 		return $this->hasMany('App\Task');
 	}
 	
@@ -26,16 +26,23 @@ class Project extends Model {
 		return $this->morphMany('App\Image', 'imageable');
 	}
 	
+	/**
+	 * Members involved in this project
+	 */
 	public function users() {
-		return $this->belongsToMany('App\User');
+		return $this->belongsToMany('App\User', 'users_projects');
 	}
     
-    public function feeds() {
-        return $this->morphMany('App\Feed', 'feedable');
+    public function feed() {
+        return $this->morphOne('App\Feed', 'feedable');
     }
-	
-	public function comments() {
+    
+    public function comments() {
 		return $this->morphMany('App\Comment', 'commentable');
+	}
+	
+	public function forums() {
+		return $this->hasMany('App\Forum');
 	}
 
 }

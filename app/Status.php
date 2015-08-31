@@ -8,12 +8,16 @@ class Status extends Model {
 		return $this->morphMany('App\Image', 'imageable');
 	}
 	
-	public function scopeProject($query) {
-		return $query->where('project_id', '!=', '0');
+	public function owner() {
+		return $this->belongsTo('App\User', 'user_id');
 	}
 	
-	public function scopeGeneral($query) {
-		return $query->where('project_id', '=', '0');
+	public function feed() {
+		return $this->morphOne('App\Feed', 'feedable');
+	}
+	
+	public function comments() {
+		return $this->morphMany('App\Comment', 'commentable');
 	}
 
 }

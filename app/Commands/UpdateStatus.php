@@ -3,6 +3,10 @@
 use App\Commands\Command;
 
 use Illuminate\Contracts\Bus\SelfHandling;
+use App\User;
+use App\Status;
+use App\Project;
+use App\Events\StatusUpdated;
 
 class UpdateStatus extends Command implements SelfHandling {
 
@@ -11,9 +15,11 @@ class UpdateStatus extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(User $user, $data, Project $project = null)
 	{
-		//
+		$this->user = $user;
+		$this->data = $data;
+		$this->project = $project;
 	}
 
 	/**
@@ -22,8 +28,11 @@ class UpdateStatus extends Command implements SelfHandling {
 	 * @return void
 	 */
 	public function handle()
-	{
-		//
+	{	
+		$status = Status::create($this->data);
+		$status->owner()->associate($this->user);
+		//~ $status->project()->associate($this->project);
+		event(new StatusUpdated($this->user, $this->status, $this->project));
 	}
 
 }

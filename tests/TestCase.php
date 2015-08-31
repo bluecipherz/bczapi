@@ -2,11 +2,9 @@
 
 class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
-	public function setUp() {
-		parent::setUp();
-		
-		$this->prepareForTests();	
-	}
+	//~ public function setUp() {
+		//~ parent::setUp();
+	//~ }
 	
 	/**
 	 * Creates the application.
@@ -22,11 +20,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		return $app;
 	}
     
-    private function prepareForTests()
-    {
-        Artisan::call('migrate');
-        // Mail::pretend(true);
-		// $this->seed();
-    }
+    //~ public function tearDown() {
+		//~ Artisan::call('migrate:reset');
+	//~ }
 
 }

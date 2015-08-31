@@ -1,11 +1,12 @@
 <?php namespace App\Handlers\Events;
 
 use App\Event;
-use App\Events\Contracts\NotifiableEvent;
+use App\Events\Contracts\FeedableEvent;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
 use App\Feed;
+use App\Project;
 
 class CreateFeed {
 
@@ -25,12 +26,18 @@ class CreateFeed {
 	 * @param  Events  $event
 	 * @return void
 	 */
-	public function handle(NotifiableEvent $event)
+	public function handle(FeedableEvent $event)
 	{
 		$feed = new Feed;
-		$feed->subject = $event->getSubject();
-		$feed->body = $event->getBody();
-        $feed->type = $event->getType();
+		$feed->title = $event->getTitle();
+		$feed->type = get_class($event);
+        $feed->feedable()->associate($event->getFeedable());
+        
+        $project = $event->getProject();
+        if($project) {
+			$feed->project()->associate($project);
+		}
+        
 		$feed->save();
 	}
 

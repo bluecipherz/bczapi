@@ -1,13 +1,13 @@
 <?php namespace App\Events;
 
 use App\Events\Event;
-use App\Events\Contracts\NotifiableEvent;
+use App\Events\Contracts\FeedableEvent;
 
 use Illuminate\Queue\SerializesModels;
 use App\Project;
 use Illuminate\Database\Eloquent\Collection;
 
-class ProjectCreated extends Event implements NotifiableEvent {
+class ProjectCreated extends Event implements FeedableEvent {
 
 	use SerializesModels;
 
@@ -24,16 +24,16 @@ class ProjectCreated extends Event implements NotifiableEvent {
 		$this->user = $user;
 	}
 	
-	public function getSubject() {
-		return 'Project Created';
-	}
-	
-	public function getBody() {
+	public function getTitle() {
 		return "{$this->user->email} created a new project {$this->project->name}";
 	}
 	
-	public function getType() {
-		return 'ProjectCreated';
+	public function getFeedable() {
+		return $this->project;
+	}
+	
+	public function getProject() {
+		return null;
 	}
 
 }

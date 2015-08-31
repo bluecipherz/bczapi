@@ -44,11 +44,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 	
 	public function forums() {
-		return $this->belongsToMany('App\Forum');
+		return $this->hasMany('App\Forum');
 	}
 	
 	public function projects() {
-		return $this->belongsToMany('App\Project');
+		return $this->belongsToMany('App\Project', 'users_projects');
 	}
 	
 	public function chats() {
@@ -63,6 +63,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $this->hasMany('App\Notification');
 	}
     
+    public function comments() {
+		return $this->hasMany('App\Comment');
+	}
+    
     public function scopePortal($query) {
         return $query->where('userable_type', 'App\PortalUser');
     }
@@ -71,10 +75,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $query->where('userable_type', 'App\ClientUser');
     }
     
+    public function feed() {
+		return $this->morphOne('App\Feed', 'feedable');
+	}
+    
     public function relatedFeeds() {
-        $commonFeeds = Feed::common();
-        $myFeeds = Feed::whereIn('project_id', $this->projects->lists('id'));
-        return $commonFeeds->merge($myFeeds)->orderBy('created_at');
+        $commonFeeds = Feed::common()->orderBy('created_at');
+        $myFeeds = Feed::whereIn('project_id', $this->projects->lists('id'))->orderBy('created_at');
+        return $commonFeeds->get()->merge($myFeeds);
     }
 	
 }

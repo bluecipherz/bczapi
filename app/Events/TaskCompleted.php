@@ -1,11 +1,14 @@
 <?php namespace App\Events;
 
 use App\Events\Event;
-use App\Events\Contracts\NotifiableEvent;
+use App\Events\Contracts\FeedableEvent;
 
 use Illuminate\Queue\SerializesModels;
+use App\User;
+use App\Project;
+use App\Task;
 
-class TaskCompleted extends Event implements NotifiableEvent {
+class TaskCompleted extends Event implements FeedableEvent {
 
 	use SerializesModels;
 
@@ -23,16 +26,16 @@ class TaskCompleted extends Event implements NotifiableEvent {
 		$this->task = $task;
 	}
 	
-	public function getSubject() {
-		return 'Task Completed';
+	public function getTitle() {
+		return "{$this->user->email} completed Task in {$this->project->name}";
 	}
 	
-	public function getBody() {
-		return "{$this->user->email} completed Task in {$this->project-name}";
+	public function getFeedable() {
+		return $this->task;
 	}
 	
-	public function getType() {
-		return 'TaskCompleted';
+	public function getProject() {
+		return $this->project;
 	}
 
 }

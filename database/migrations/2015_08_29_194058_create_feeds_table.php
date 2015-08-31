@@ -15,12 +15,11 @@ class CreateFeedsTable extends Migration {
 		Schema::create('feeds', function(Blueprint $table)
 		{
 			$table->increments('id');
-            $table->string('subject');
-            $table->string('body');
+            $table->string('title');
             $table->string('type');
             $table->unsignedInteger('feedable_id');
             $table->string('feedable_type');
-            $table->unsignedInteger('project_id');
+            $table->unsignedInteger('project_id')->default(0);
 			$table->timestamps();
 		});
 	}

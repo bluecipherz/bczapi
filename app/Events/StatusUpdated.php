@@ -1,11 +1,14 @@
 <?php namespace App\Events;
 
 use App\Events\Event;
-use App\Events\Contracts\NotifiableEvent;
+use App\Events\Contracts\FeedableEvent;
 
 use Illuminate\Queue\SerializesModels;
+use App\User;
+use App\Project;
+use App\Status;
 
-class StatusUpdated extends Event implements NotifiableEvent {
+class StatusUpdated extends Event implements FeedableEvent {
 
 	use SerializesModels;
 
@@ -16,17 +19,14 @@ class StatusUpdated extends Event implements NotifiableEvent {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project = null)
+	public function __construct(User $user, Status $status, Project $project = null)
 	{
 		$this->user = $user;
+		$this->status = $status;
 		$this->project = $project;
 	}
 	
-	public function getSubject() {
-		return 'Status Updated';
-	}
-	
-	public function getBody() {
+	public function getTitle() {
 		if($this->project) {
 			return "{$this->user->email} posted status in project {$this->project->name}";
 		} else {
@@ -34,8 +34,12 @@ class StatusUpdated extends Event implements NotifiableEvent {
 		}
 	}
 	
-	public function getType() {
-		return 'StatusUpdated';
+	public function getFeedable() {
+		return $this->status;
 	}
-
+	
+	public function getProject() {
+		return $this->project;
+	}
+	
 }
