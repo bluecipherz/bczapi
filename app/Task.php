@@ -13,7 +13,7 @@ class Task extends Model {
 	}
 	
 	public function completedBy() {
-		return $this->belongsTo('App\User');
+		return $this->belongsTo('App\User', 'completed_by');
 	}
 	
 	public function images() {

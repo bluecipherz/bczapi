@@ -1,37 +1,41 @@
 <?php namespace App\Events;
 
 use App\Events\Event;
-use App\Events\Contracts\NotifiableEvent;
+use App\Events\Contracts\FeedableEvent;
 
 use Illuminate\Queue\SerializesModels;
+use App\User;
+use App\Project;
+use App\Chat;
 
-class ChatRoomCreated extends Event implements NotifiableEvent {
+class ChatRoomCreated extends Event implements FeedableEvent {
 
 	use SerializesModels;
 
-	protected $user, $chat;
+	protected $user, $project, $chat;
 	
 	/**
 	 * Create a new event instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Chat $chat)
+	public function __construct(User $user, Project $project, Chat $chat)
 	{
 		$this->user = $user;
 		$this->chat = $chat;
+		$this->project = $project;
 	}
 	
-	public function getSubject() {
-		return 'Chat Room Created';
+	public function getFeedable() {
+		return $this->chat;
 	}
 	
-	public function getBody() {
-		return "{$this->user->email} started Chat in {$this->project-name}";
+	public function getTitle() {
+		return "{$this->user->email} started Chat in {$this->project->name}";
 	}
 	
-	public function getType() {
-		return 'ChatRoomCreated';
+	public function getProject() {
+		return $this->project;
 	}
 
 

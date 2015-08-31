@@ -7,6 +7,7 @@ use App\User;
 use App\Project;
 use App\Task;
 use App\Events\TaskCompleted;
+use DateTime;
 
 class CompleteTask extends Command implements SelfHandling {
 
@@ -30,9 +31,11 @@ class CompleteTask extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->task->completedBy()->associate($this->user);
+		// $this->task->completed_at = time();
 		$this->task->completed_at = new DateTime;
 		$this->task->save();
 		event(new TaskCompleted($this->user, $this->project, $this->task));
+		return $this->task;
 	}
 
 }

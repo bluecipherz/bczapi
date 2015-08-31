@@ -44,5 +44,9 @@ class Project extends Model {
 	public function forums() {
 		return $this->hasMany('App\Forum');
 	}
+	
+	public function chats() {
+		return $this->hasMany('App\Chat');
+	}
 
 }
