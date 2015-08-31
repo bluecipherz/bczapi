@@ -270,7 +270,6 @@ class ModelsTest extends TestCase {
 		$task = Task::create($this->taskdata);
 		Bus::dispatch(new CompleteTask($user, $project, $task));
 		$this->assertEquals($user->id, $task->completedBy->id);
-		echo "\n{$task->completed_at->getTimeStamp()}";
 	}
 	
 	
