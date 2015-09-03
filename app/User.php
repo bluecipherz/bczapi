@@ -29,8 +29,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['password', 'remember_token'];
+	protected $hidden = ['password', 'remember_token', 'userable_id', 'userable_type'];
+	
+	protected $appends = ['user_type'];
 
+	public function getUserTypeAttribute() {
+		$tokens = explode('\\', $this->userable_type);
+		return $tokens[sizeof($tokens)-1];
+	}
+	
 	public function userable() {
 		return $this->morphTo();
 	}
@@ -55,6 +62,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $this->belongsToMany('App\Chat', 'users_chats');
 	}
 	
+	public function statuses() {
+		return $this->hasMany('App\Status');
+	}
+	
 	public function images() {
 		return $this->morphMany('App\Image', 'imageable');
 	}
@@ -75,10 +86,22 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $query->where('userable_type', 'App\ClientUser');
     }
     
-    public function feed() {
-		return $this->morphOne('App\Feed', 'feedable');
+	public function feeds() {
+		return $this->morphMany('App\Feed', 'App\Feed');
 	}
-    
+	
+	public function ownChats() {
+		return $this->hasMany('App\Chat', 'user_id');
+	}
+	
+	public function ownProjects() {
+		return $this->hasMany('App\Project', 'user_id');
+	}
+	
+	public function completedTasks() {
+		return $this->hasMany('App\Task', 'completed_by');
+	}
+	
     public function relatedFeeds() {
         $commonFeeds = Feed::common()->orderBy('created_at');
         $myFeeds = Feed::whereIn('project_id', $this->projects->lists('id'))->orderBy('created_at');

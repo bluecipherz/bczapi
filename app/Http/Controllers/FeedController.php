@@ -4,16 +4,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Project;
-use App\Commands\CreateProject;
+use App\Feed;
 use JWTAuth;
-use Input;
 
-class ProjectController extends Controller {
-
-	public function __construct() {
-		// $this->middleware('jwt.auth', ['except' => ['index']]);
-	}
+class FeedController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -23,22 +17,49 @@ class ProjectController extends Controller {
 	public function index()
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		return $user->ownProjects;
-		// return Project::all();
+		return Feed::with('subject.owner')->with('origin.userable')->with('target')->get();
 	}
-	
+
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+		//
+	}
+
 	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
-	public function store(Request $request)
+	public function store()
 	{
-        $user = JWTAuth::parseToken()->authenticate();
-        $project = $this->dispatch(
-            new CreateProject($user, $request->except('token'))
-        );
-        return $project;
+		//
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function show($id)
+	{
+		//
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		//
 	}
 
 	/**

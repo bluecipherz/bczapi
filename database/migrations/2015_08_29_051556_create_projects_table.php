@@ -17,14 +17,13 @@ class CreateProjectsTable extends Migration {
 			$table->increments('id');
 			$table->string('name');
 			$table->text('description');
-			$table->unsignedInteger('user_id');
-			$table->unsignedInteger('client_id');
 			$table->timestamps();
 		});
 		Schema::create('users_projects', function(Blueprint $table)
 		{
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('project_id');
+			$table->string('type');
 		});
 	}
 

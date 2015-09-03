@@ -33,6 +33,10 @@ class Project extends Model {
 		return $this->hasMany('App\Chat');
 	}
 	
+	public function statuses() {
+		return $this->hasMany('App\Status');
+	}
+	
 	/**
 	 * Members involved in this project. Stored in pivot.
 	 */

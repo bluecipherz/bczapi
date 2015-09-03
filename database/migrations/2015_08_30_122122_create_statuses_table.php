@@ -17,6 +17,7 @@ class CreateStatusesTable extends Migration {
 			$table->increments('id');
 			$table->string('message');
 			$table->unsignedInteger('project_id');
+			$table->unsignedInteger('user_id');
 			$table->timestamps();
 		});
 	}

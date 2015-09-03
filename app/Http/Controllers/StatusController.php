@@ -5,15 +5,11 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Project;
-use App\Commands\CreateProject;
+use App\Status;
+use App\Commands\UpdateStatus;
 use JWTAuth;
-use Input;
 
-class ProjectController extends Controller {
-
-	public function __construct() {
-		// $this->middleware('jwt.auth', ['except' => ['index']]);
-	}
+class StatusController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -22,11 +18,19 @@ class ProjectController extends Controller {
 	 */
 	public function index()
 	{
-		$user = JWTAuth::parseToken()->authenticate();
-		return $user->ownProjects;
-		// return Project::all();
+		return Status::all();
 	}
-	
+
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+		//
+	}
+
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -34,11 +38,31 @@ class ProjectController extends Controller {
 	 */
 	public function store(Request $request)
 	{
-        $user = JWTAuth::parseToken()->authenticate();
-        $project = $this->dispatch(
-            new CreateProject($user, $request->except('token'))
-        );
-        return $project;
+		$user = JWTAuth::parseToken()->authenticate();
+		$status = $this->dispatch(new UpdateStatus($user, $request->all()));
+		return $status;
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function show($id)
+	{
+		//
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		//
 	}
 
 	/**

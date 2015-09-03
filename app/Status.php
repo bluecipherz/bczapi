@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model {
 
+	protected $fillable = ['message'];
+	
 	public function images() {
 		return $this->morphMany('App\Image', 'imageable');
 	}
@@ -18,6 +20,14 @@ class Status extends Model {
 	
 	public function project() {
 		return $this->belongsTo('App\Project');
+	}
+	
+	public function scopeCommon($query) {
+		return $query->where('project_id', '=', 0);
+	}
+	
+	public function scopeCommon($query) {
+		return $query->where('project_id', '>', 0);
 	}
 
 }

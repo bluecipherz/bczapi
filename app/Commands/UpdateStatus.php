@@ -15,11 +15,10 @@ class UpdateStatus extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, array $data, Project $project = null)
+	public function __construct(User $user, array $data)
 	{
 		$this->user = $user;
 		$this->data = $data;
-		$this->project = $project;
 	}
 
 	/**
@@ -29,10 +28,13 @@ class UpdateStatus extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{	
+		$project = isset($this->data['project']) ? Project::find($this->data['project']) : null;
 		$status = Status::create($this->data);
-		$status->owner()->associate($this->user);
-		if($this->project) $status->project()->associate($this->project);
-		event(new StatusUpdated($this->user, $status, $this->project));
+		$this->user->statuses()->save($status);
+		// $status->owner()->associate($this->user);
+		// $status->save();
+		if($project) $project->statuses()->save($status);
+		event(new StatusUpdated($this->user, $status, $project));
 		return $status;
 	}
 

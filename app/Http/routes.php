@@ -16,7 +16,7 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
-//Route::model('projects', 'App\Project');
+// Route::model('projects', 'App\Project');
 //Route::model('tasks', 'App\Task');
 		
 Route::group(array('prefix' => 'api','after' => 'cors',), function() {
@@ -26,16 +26,26 @@ Route::group(array('prefix' => 'api','after' => 'cors',), function() {
     Route::resource('authenticate', 'AuthController', ['only' => ['index']]);
     Route::group(['middleware' => 'jwt.auth'], function() {
 		Route::resource('home', 'HomeController');
-        Route::resource('projects', 'ProjectController');
+        Route::resource('feeds', 'FeedController');
+        Route::resource('projects', 'ProjectController', ['except' => ['create', 'show', 'edit']]);
         Route::get('projects/{projects}/tasks/{tasks}/complete', 'TaskController@complete');
         Route::resource('projects.tasks', 'TaskController');
         Route::resource('projects.forums', 'ForumController');
-        Route::resource('chats', 'ChatController');
-        Route::resource('chats.messages', 'MessageController');
+		Route::resource('status', 'StatusController');
+		Route::resource('chats', 'ChatController');
+        Route::resource('projects.chats.messages', 'MessageController');
         Route::resource('expenses', 'ExpenseController');
         Route::resource('invoices', 'InvoiceController');
         Route::resource('images', 'ImageController');
+		
+		// duplicates
+		Route::resource('status', 'StatusController');
+		Route::resource('chats', 'ChatController');
     });
+});
+
+Route::group(['domain' => 'api.bluecipherz.com'], function() {
+	Route::get('test', function() { return 'on api subdomain'; });
 });
 
 Route::filter('cors', function($route, $request, $response) {

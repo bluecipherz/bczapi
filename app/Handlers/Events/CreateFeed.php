@@ -37,9 +37,7 @@ class CreateFeed {
 		$feed->origin()->associate($event->getOrigin());
         $feed->subject()->associate($event->getSubject());
         $target = $event->getTarget();
-        if($target) {
-			$feed->target()->associate($target);
-		}
+        if($target) { $feed->target()->associate($target); }
         
 		$feed->save();
 //		echo "\n{$this->feeder->getFeedMessage($feed)}"; // debug

@@ -59,9 +59,11 @@ class AuthController extends Controller {
 
     public function register(Request $request) {
         $newuser = $request->all();
-        $password = Hash::make($request->get('password'));
+        $password = \Hash::make($request->get('password'));
         $newuser['password'] = $password;
         return User::create($newuser);
+		// return $request->all();
+		// return $request->get('password');
     }
 
 }
