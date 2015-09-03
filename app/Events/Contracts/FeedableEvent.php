@@ -3,10 +3,10 @@
 
 interface FeedableEvent {
 	
-	public function getTitle();
+	public function getOrigin();
 	
-	public function getFeedable();
+	public function getSubject();
 	
-	public function getProject();
+	public function getTarget();
 	
 }

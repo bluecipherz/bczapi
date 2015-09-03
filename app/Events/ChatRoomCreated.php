@@ -19,22 +19,22 @@ class ChatRoomCreated extends Event implements FeedableEvent {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, Chat $chat)
+	public function __construct(User $user, Project $project = null, Chat $chat)
 	{
 		$this->user = $user;
 		$this->chat = $chat;
 		$this->project = $project;
 	}
 	
-	public function getFeedable() {
+	public function getSubject() {
 		return $this->chat;
 	}
 	
-	public function getTitle() {
-		return "{$this->user->email} started Chat in {$this->project->name}";
+	public function getOrigin() {
+		return $this->user;
 	}
 	
-	public function getProject() {
+	public function getTarget() {
 		return $this->project;
 	}
 

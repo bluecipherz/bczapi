@@ -16,7 +16,7 @@ class CreateProject extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, $data)
+	public function __construct(User $user, array $data)
 	{
 		$this->user = $user;
 		$this->data = $data;
@@ -30,7 +30,8 @@ class CreateProject extends Command implements SelfHandling {
 	public function handle()
 	{
 		$project = Project::create($this->data);
-		$this->user->userable->ownProjects()->save($project);
+//		$this->user->userable->ownProjects()->save($project);
+        $project->owner()->associate($this->user);
 		event(new ProjectCreated($this->user, $project));
 		return $project;
 	}

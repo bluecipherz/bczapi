@@ -52,7 +52,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 	
 	public function chats() {
-		return $this->belongsToMany('App\Chat');
+		return $this->belongsToMany('App\Chat', 'users_chats');
 	}
 	
 	public function images() {

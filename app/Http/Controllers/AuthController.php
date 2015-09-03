@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use App\User;
 
 class AuthController extends Controller {
 
 	public function __construct() {
-		$this->middleware('jwt.auth', ['only' => ['index']]);
+		$this->middleware('jwt.auth', ['only' => ['index', 'getAuthenticatedUser']]);
 	}
 
 	public function authenticate(Request $request) {
@@ -39,69 +41,27 @@ class AuthController extends Controller {
 		$users = User::all();
 		return $users;
 	}
+    
+    public function getAuthenticatedUser() {
+        try {
+            if(!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+        } catch(TokenExpiredException $e) {
+            return response()->json(['token_expired'], $e->getStatusCode());
+        } catch(TokenInvalidException $e) {
+            return response()->json(['token_invalid'], $e->getStatusCode());
+        } catch(JWTException $e) {
+            return $response()->json(['token_absent'], $e->getStatusCode());
+        }
+        return response()->json(compact('user'));
+    }
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
+    public function register(Request $request) {
+        $newuser = $request->all();
+        $password = Hash::make($request->get('password'));
+        $newuser['password'] = $password;
+        return User::create($newuser);
+    }
 
 }

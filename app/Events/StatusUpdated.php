@@ -26,19 +26,15 @@ class StatusUpdated extends Event implements FeedableEvent {
 		$this->project = $project;
 	}
 	
-	public function getTitle() {
-		if($this->project) {
-			return "{$this->user->email} posted status in project {$this->project->name}";
-		} else {
-			return "{$this->user->email} posted status";
-		}
+	public function getOrigin() {
+		return $this->user;
 	}
 	
-	public function getFeedable() {
+	public function getSubject() {
 		return $this->status;
 	}
 	
-	public function getProject() {
+	public function getTarget() {
 		return $this->project;
 	}
 	

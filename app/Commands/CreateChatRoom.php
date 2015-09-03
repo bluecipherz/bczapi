@@ -17,7 +17,7 @@ class CreateChatRoom extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, $data)
+	public function __construct(User $user, Project $project = null, array $data)
 	{
 		$this->user = $user;
 		$this->project = $project;
@@ -31,7 +31,11 @@ class CreateChatRoom extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		
+		$chat = Chat::create($this->data);
+		$chat->owner()->associate($this->user);
+		if($this->project) $chat->project()->associate($this->project);
+		event(new ChatRoomCreated($this->user, $this->project, $chat));
+		return $chat;
 	}
 
 }

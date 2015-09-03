@@ -25,15 +25,15 @@ class CommentPosted extends Event implements FeedableEvent {
 		$this->commentable = $commentable;
 	}
 	
-	public function getFeedable() {
+	public function getSubject() {
 		return $this->comment;
 	}
 	
-	public function getTitle() {
-		return "{$this->user->email} posted comment";
+	public function getOrigin() {
+		return $this->user;
 	}
 	
-	public function getProject() {
-		return $this->commentable->project;
+	public function getTarget() {
+		return $this->commentable;
 	}
 }

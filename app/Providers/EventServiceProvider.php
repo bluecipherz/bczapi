@@ -35,6 +35,15 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\ForumPosted' => [
 			'App\Handlers\Events\CreateFeed',
 		],
+		'App\Events\MessagePosted' => [
+			'App\Handlers\Events\NotifyUsers',
+		],
+		'App\Events\ChatUserJoined' => [
+			'App\Handlers\Events\PostMessage',
+		],
+		'App\Events\ChatUserLeft' => [
+			'App\Handlers\Events\PostMessage',
+		],
 	];
 
 	/**

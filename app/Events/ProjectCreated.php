@@ -4,6 +4,7 @@ use App\Events\Event;
 use App\Events\Contracts\FeedableEvent;
 
 use Illuminate\Queue\SerializesModels;
+use App\User;
 use App\Project;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -18,21 +19,21 @@ class ProjectCreated extends Event implements FeedableEvent {
 	 *
 	 * @return void
 	 */
-	public function __construct($user, $project)
+	public function __construct(User $user, Project $project)
 	{
 		$this->project = $project;
 		$this->user = $user;
 	}
 	
-	public function getTitle() {
-		return "{$this->user->email} created a new project {$this->project->name}";
+	public function getOrigin() {
+		return $this->user;
 	}
 	
-	public function getFeedable() {
+	public function getSubject() {
 		return $this->project;
 	}
 	
-	public function getProject() {
+	public function getTarget() {
 		return null;
 	}
 

@@ -20,8 +20,8 @@ class Task extends Model {
 		return $this->morphMany('App\Image', 'imageable');
 	}
     
-    public function feed() {
-        return $this->morphOne('App\Feed', 'feedable');
+    public function feeds() {
+        return $this->morphMany('App\Feed', 'subject');
     }
     
     public function comments() {

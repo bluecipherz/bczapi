@@ -17,7 +17,7 @@ class PostForum extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, $data)
+	public function __construct(User $user, Project $project, array $data)
 	{
 		$this->user = $user;
 		$this->project = $project;
@@ -31,7 +31,15 @@ class PostForum extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		//
+		$forum = Forum::create($this->data);
+		//~ $forum->owner()->save($this->user); // belongsTo : error
+		$forum->owner()->associate($this->user); // belongsTo
+		//~ $this->user->forums()->save($forum); // hasMany
+		//~ $forum->project()->save($this->project); // belongsTo : error
+		$forum->project()->associate($this->project); // belongsTo
+		//~ $this->project->forums()->save($forum); // hasMany
+		event(new ForumPosted($this->user, $this->project, $forum));
+		return $forum;
 	}
 
 }

@@ -10,8 +10,14 @@ class Comment extends Model {
         return $this->morphTo();
     }
     
-    public function feed() {
-        return $this->morphOne('App\Feed', 'feedable');
+    // no need. project in feed
+    // just to restrict feed from showing outside of project
+    //~ public function project() {
+		//~ return $this->belongsTo('App\Project');
+	//~ }
+    
+    public function feeds() {
+        return $this->morphMany('App\Feed', 'subject');
     }
 	
 	public function images() {

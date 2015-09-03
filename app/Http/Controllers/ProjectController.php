@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Project;
 use App\Commands\CreateProject;
-use Auth;
+use JWTAuth;
 
 class ProjectController extends Controller {
 
 	public function __construct() {
-//		$this->middleware('jwt.auth');
+		// $this->middleware('jwt.auth', ['except' => ['index']]);
 	}
 
 	/**
@@ -21,20 +21,13 @@ class ProjectController extends Controller {
 	 */
 	public function index()
 	{
-		return Project::all();
-		// return ['success' => true];
+		if(Input::get('token')) {
+			$user = JWTAuth::parseToken()->authenticate();
+			return $user->projects;
+		}
+		return response(['error' => 'wheres_the_f***ing_token'], 400);
 	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
+	
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -42,36 +35,11 @@ class ProjectController extends Controller {
 	 */
 	public function store(Request $request)
 	{
-		// $this->dispatch(
-			// new CreateProject(Auth::user(), $request->all())
-		// );
-		$project = Project::create($this->data);
-		// $project->owner()->associate($this->user);
-		// $project->push();
-		$this->user->userable->ownProjects()->save($project);
-		event(new ProjectCreated($this->user, $project));
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+        $user = JWTAuth::parseToken()->authenticate();
+        $project = $this->dispatch(
+            new CreateProject($user, $request->except('token'))
+        );
+        return $project;
 	}
 
 	/**

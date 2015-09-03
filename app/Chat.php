@@ -15,16 +15,27 @@ class Chat extends Model {
 	}
 	
 	public function users() {
-		return $this->belongsToMany('App\User');
+		return $this->belongsToMany('App\User', 'users_chats');
 	}
 	
 	public function project() {
 		return $this->belongsTo('App\Project');
 	}
 	
-	public function feed() {
-		return $this->morphOne('App\Feed', 'feedable');
+	public function feeds() {
+		return $this->morphMany('App\Feed', 'subject');
+	}
+	
+    public function memberActions() {
+		return $this->morphMany('App\MemberAction', 'memberable');
 	}
     
+    public function scopeCommon($query) {
+		return $query->where('project_id', '=', 0);
+	}
+	
+	public function scopeProject($query) {
+		return $query->where('project_id', '>', 0);
+	}
 
 }

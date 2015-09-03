@@ -4,7 +4,7 @@ use App\Events\Event;
 
 use Illuminate\Queue\SerializesModels;
 
-class ChatMessage extends Event {
+class UserRemovedFromProject extends Event {
 
 	use SerializesModels;
 

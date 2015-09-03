@@ -1,10 +1,34 @@
 <?php
 
 class TestCase extends Illuminate\Foundation\Testing\TestCase {
-
-	//~ public function setUp() {
-		//~ parent::setUp();
-	//~ }
+	
+	protected $projectdata = [
+		'name' => 'asd',
+		'description' => 'qweqwe',
+	];
+	
+	protected $taskdata = [
+		'name' => 'xcoivujos',
+		'description' => 'oiurwe',
+	];
+	
+	protected $commentdata = [
+		'comment' => 'shitzu'
+	];
+	
+	// can be used with both Message & Status
+	protected $messagedata = [
+		'message' => 'fuckzem'
+	];
+	
+	protected $forumdata = [
+		'name' => 'sjihisdf',
+		'description' => 'dosifhbdof'
+	];
+	
+	protected $chatroomdata = [
+		'name' => 'iuxgsdf'
+	];
 	
 	/**
 	 * Creates the application.
@@ -20,8 +44,4 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		return $app;
 	}
     
-    //~ public function tearDown() {
-		//~ Artisan::call('migrate:reset');
-	//~ }
-
 }

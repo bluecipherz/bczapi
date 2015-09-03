@@ -17,7 +17,7 @@ class CreateTask extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, $data)
+	public function __construct(User $user, Project $project, array $data)
 	{
 		$this->user = $user;
 		$this->project = $project;

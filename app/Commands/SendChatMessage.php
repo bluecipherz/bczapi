@@ -3,17 +3,23 @@
 use App\Commands\Command;
 
 use Illuminate\Contracts\Bus\SelfHandling;
+use App\User;
+use App\Chat;
 
 class SendChatMessage extends Command implements SelfHandling {
+
+	protected $user, $chat, $data;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(User $user, Chat $chat, array $data)
 	{
-		//
+		$this->user = $user;
+		$this->chat = $chat;
+		$this->data = $data;
 	}
 
 	/**
@@ -23,7 +29,11 @@ class SendChatMessage extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		//
+		$message = Message::create($this->data);
+		$message->user()->associate($this->user);
+		$chat->messsages()->associate($message);
+		event(new MessagePosted($this->chat, $message, $this->user));
+		return $message;
 	}
 
 }

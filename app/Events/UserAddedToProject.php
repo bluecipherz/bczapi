@@ -26,15 +26,15 @@ class UserAddedToProject extends Event implements FeedableEvent {
 		$this->project = $project;
 	}
 	
-	public function getFeedable() {
+	public function getSubject() {
 		return $this->user;
 	}
 	
-	public function getTitle() {
-		return "{$this->owner->email} added {$this->user->email} to {$this->project->name}";
+	public function getOrigin() {
+		return $this->owner;
 	}
 	
-	public function getProject() {
+	public function getTarget() {
 		return $this->project;
 	}
 

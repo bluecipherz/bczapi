@@ -4,7 +4,7 @@ use App\Commands\Command;
 
 use Illuminate\Contracts\Bus\SelfHandling;
 
-class CreateForum extends Command implements SelfHandling {
+class RemoveUserFromProject extends Command implements SelfHandling {
 
 	/**
 	 * Create a new command instance.

@@ -11,11 +11,6 @@
 |
 */
 
-Route::get('start', function() {
-	return 'ok1';
-});
-
-
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
@@ -23,27 +18,24 @@ Route::controllers([
 
 //Route::model('projects', 'App\Project');
 //Route::model('tasks', 'App\Task');
-
-
-Route::post('authenticate', 'AuthController@authenticate');
-Route::resource('authenticate', 'AuthController', ['only' => ['index']]);
-
-		Route::resource('projects', 'ProjectController');
 		
-Route::group(array(
-//    'prefix' => 'api',
-    'after' => 'cors',
-//    'domain' => 'api.bluecipherz.com'
-    'middleware' => 'jwt.auth'
-    ), function() {
-        Route::get('/', 'HomeController@index');
-		Route::resource('projects.tasks', 'TaskController');
-		Route::resource('forums', 'ForumController');
-		Route::resource('chats', 'ChatController');
-		Route::resource('messages', 'MessageController');
-		Route::resource('expenses', 'ExpenseController');
-		Route::resource('invoices', 'InvoiceController');
-		Route::resource('images', 'ImageController');
+Route::group(array('prefix' => 'api','after' => 'cors',), function() {
+    Route::post('authenticate', 'AuthController@authenticate');
+    Route::get('authenticate/user', 'AuthController@getAuthenticatedUser');
+    Route::post('register', 'AuthController@register');
+    Route::resource('authenticate', 'AuthController', ['only' => ['index']]);
+    Route::group(['middleware' => 'jwt.auth'], function() {
+		Route::resource('home', 'HomeController');
+        Route::resource('projects', 'ProjectController');
+        Route::get('projects/{projects}/tasks/{tasks}/complete', 'TaskController@complete');
+        Route::resource('projects.tasks', 'TaskController');
+        Route::resource('projects.forums', 'ForumController');
+        Route::resource('chats', 'ChatController');
+        Route::resource('chats.messages', 'MessageController');
+        Route::resource('expenses', 'ExpenseController');
+        Route::resource('invoices', 'InvoiceController');
+        Route::resource('images', 'ImageController');
+    });
 });
 
 Route::filter('cors', function($route, $request, $response) {
@@ -51,9 +43,9 @@ Route::filter('cors', function($route, $request, $response) {
 });
 
 Route::get('test', function() {
-	return view('test');
+	return ['method' => 'get', \Input::all()];
 });
 
-Route::get('stop', function() {
-	return 'ok2';
+Route::post('test', function() {
+	return array_merge(['method' => 'post'], \Input::all());
 });

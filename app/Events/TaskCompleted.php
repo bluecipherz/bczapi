@@ -26,15 +26,15 @@ class TaskCompleted extends Event implements FeedableEvent {
 		$this->task = $task;
 	}
 	
-	public function getTitle() {
-		return "{$this->user->email} completed Task in {$this->project->name}";
+	public function getOrigin() {
+		return $this->user;
 	}
 	
-	public function getFeedable() {
+	public function getSubject() {
 		return $this->task;
 	}
 	
-	public function getProject() {
+	public function getTarget() {
 		return $this->project;
 	}
 

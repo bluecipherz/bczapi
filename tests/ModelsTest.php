@@ -8,6 +8,8 @@ use App\Commands\PostForum;
 use App\Commands\PostComment;
 use App\Commands\AddUserToProject;
 use App\Commands\CreateChatRoom;
+use App\Commands\JoinChat;
+use App\Commands\LeaveChat;
 use App\User;
 use App\Project;
 use App\Feed;
@@ -31,27 +33,9 @@ class ModelsTest extends TestCase {
 	private $project, $user, $owner, $task, $comment, $message, $status;
 	
 	
-	private $projectdata = [
-		'name' => 'asd',
-		'description' => 'qweqwe',
-	];
-	
-	private $taskdata = [
-		'name' => 'xcoivujos',
-		'description' => 'oiurwe'
-	];
-	
-	private $commentdata = [
-		'comment' => 'shitzu'
-	];
-	
-	private $messagedata = [
-		'message' => 'fuckzem'
-	];	
-	
 	public function setUp() {
 		parent::setUp();
-        // Artisan::call('migrate:refresh'); // slower
+        //~ Artisan::call('migrate:refresh'); // slower
         Artisan::call('migrate');
 		$this->seed(); // comment this to make even faster
 		// currently there are no seed files for some tables so they have to be manually cleaned
@@ -60,9 +44,10 @@ class ModelsTest extends TestCase {
 		DB::table('tasks')->delete();
 		//~ DB::table('comments')->delete();
 		DB::table('statuses')->delete();
+		DB::table('messages')->delete();
 		// $this->initVars();
 	}
-	
+    
 	public function initVars() {
 		$this->project = Project::create($this->projectdata);
 		$this->task = Task::create($this->taskdata);
@@ -79,13 +64,13 @@ class ModelsTest extends TestCase {
 	 *  EVENTS TESTS
 	 */
 	 
-	public function testProjectCreated()
+	public function stestProjectCreated()
 	{
 		$project = Project::create($this->projectdata);
 		$user = User::firstOrFail();
-		// $project->owner()->associate($this->user);
-		// $project->owner()->save($this->user);
-		$user->userable->ownProjects()->save($project);
+		// $project->owner()->associate($this->user); // belongsTo
+		// $project->owner()->save($this->user); // belongsTo
+		$user->userable->ownProjects()->save($project); // hasMany
 		event(new ProjectCreated($user, $project));
 		$this->assertEquals(1, Project::all()->count());
 		$this->assertEquals(ProjectCreated::class, $project->feed->type);
@@ -95,7 +80,7 @@ class ModelsTest extends TestCase {
 		$this->assertEquals(0, $project->feed->project_id);
 	}
 	
-	public function testTasksCreated() {
+	public function stestTasksCreated() {
 		$project = Project::firstOrCreate($this->projectdata);
 		$task = Task::create($this->taskdata);
 		$project->tasks()->save($task);
@@ -112,7 +97,7 @@ class ModelsTest extends TestCase {
 		$this->assertEquals(1, $task->comments()->count());
 	}
 	
-	public function testTaskCompleted() {
+	public function stestTaskCompleted() {
 		$task = Task::create($this->taskdata);
 		$user = User::firstOrFail();
 		$project = Project::create($this->projectdata);
@@ -125,7 +110,7 @@ class ModelsTest extends TestCase {
 		$this->assertEquals(TaskCompleted::class, $task->feed->type);
 	}
 	
-	public function testStatusUpdate() {
+	public function stestStatusUpdate() {
 		$status = Status::create($this->messagedata);
 		$user = User::firstOrFail();
 		$status->owner()->associate($user);
@@ -136,7 +121,7 @@ class ModelsTest extends TestCase {
 		$this->assertEquals(StatusUpdated::class, $status->feed->type);
 	}
 	
-	public function testProjectStatusUpdate() {
+	public function stestProjectStatusUpdate() {
 		$status = Status::create($this->messagedata);
 		$user = User::firstOrFail();
 		$status->owner()->associate($user);
@@ -148,13 +133,10 @@ class ModelsTest extends TestCase {
 		$this->assertEquals(StatusUpdated::class, $status->feed->type);
 	}
 	
-	public function testForumPosted() {
+	public function stestForumPosted() {
 		$project = Project::create($this->projectdata);
 		$user = User::firstOrFail();
-		$forum = Forum::create([
-			'name' => 'sjihisdf',
-			'description' => 'dosifhbdof'
-		]);
+		$forum = Forum::create($this->forumdata);
 		//~ $user->forums()->save($forum);
 		$forum->owner()->associate($user);
 		$project->forums()->save($forum);
@@ -169,7 +151,7 @@ class ModelsTest extends TestCase {
 		$this->assertEquals(ForumPosted::class, $forum->feed->type);
 	}
 	
-	public function testUserAddedToProject() {
+	public function stestUserAddedToProject() {
 		$owner = User::firstOrFail();
 		$user = User::all()->last();
 		$this->assertNotNull($user);
@@ -187,7 +169,7 @@ class ModelsTest extends TestCase {
 		$this->assertEquals(UserAddedToProject::class, $user->feed->type);
 	}
 	
-	public function testChatRoomCreated() {
+	public function stestChatRoomCreated() {
 		$chat = Chat::create(['name' => 'asdasdasd']);
 		$user = User::firstOrFail();
 		$user->userable->ownChats()->save($chat);
@@ -206,13 +188,13 @@ class ModelsTest extends TestCase {
 	 * COMMENTS TESTS
 	 */
 	 
-	public function testProjectCreatedCommentPosted() {
+	public function stestProjectCreatedCommentPosted() {
 		$comment = Comment::create($this->commentdata);
 		$user = User::firstOrFail();
 		$project = Project::create($this->projectdata);
-		//~ $comment->owner()->associate($user);
-		//~ $comment->owner()->save($user);
-		$user->comments()->save($comment);
+		//~ $comment->owner()->associate($user); // morphTo : fails
+		//~ $comment->owner()->save($user); // morphTo : fails
+		$user->comments()->save($comment); // morphMany
 		$comment->commentable()->associate($project);
 		event(new CommentPosted($user, $comment, $project));
 		$this->assertEquals(1, $user->comments->count());
@@ -222,7 +204,7 @@ class ModelsTest extends TestCase {
 		//~ $this->assertEquals(1, $user->relatedFeeds()->count());
 	}
 	
-	public function testTaskCreatedCommentPosted() {
+	public function stestTaskCreatedCommentPosted() {
 		$user = User::firstOrFail(); // variable
 		$project = Project::create($this->projectdata); // variable
 		$task = Task::create($this->taskdata); // variable
@@ -231,9 +213,9 @@ class ModelsTest extends TestCase {
 		$comment = Comment::create($this->commentdata); // variable
 		$user->comments()->save($comment);
 		$this->assertEquals($user->id, $comment->owner->id); // test
-		// $comment->commentable()->associate($task); // fails
-		// $comment->commentable()->save($task); // fails
-		$task->comments()->save($comment); // ok
+		// $comment->commentable()->associate($task); // morphTo : fails
+		// $comment->commentable()->save($task); // morphTo : fails
+		$task->comments()->save($comment); // morphMany : ok
 		$this->assertEquals($task->id, $comment->commentable->id); // test
 		event(new TaskCreated($user, $project, $task));
 		$this->assertEquals(1, Feed::count()); // test
@@ -256,22 +238,99 @@ class ModelsTest extends TestCase {
 		$this->assertEquals($project->owner->id, $user->id);
 	}
 	
-	public function testCreateTask() {
+	public function stestCreateTask() {
 		$user = User::firstOrFail();
 		$project = Project::create($this->projectdata);
 		$task = Bus::dispatch(new CreateTask($user, $project, $this->taskdata));
 		$this->assertEquals($user->id, $task->owner->id);
 		$this->assertEquals($project->id, $task->project->id);
+		$this->assertEquals($user, $task->owner);
+		$this->assertEquals($project->id, $task->project->id);
+		$this->assertNull($project->task);
 	}
 	
-	public function testCompleteTask() {
+	public function stestCompleteTask() {
 		$user = User::firstOrFail();
 		$project = Project::create($this->projectdata);
 		$task = Task::create($this->taskdata);
 		Bus::dispatch(new CompleteTask($user, $project, $task));
 		$this->assertEquals($user->id, $task->completedBy->id);
+		$this->assertNull($project->owner);
+		$this->assertNull($task->project);
 	}
 	
+	public function stestUpdateStatus() {
+		$user = User::firstOrFail();
+		$status = Bus::dispatch(new UpdateStatus($user, $this->messagedata));
+		$this->assertNull($status->project);
+		$this->assertEquals($user->id, $status->owner->id);
+		$project = Project::create($this->projectdata);
+		$status = Bus::dispatch(new UpdateStatus($user, $this->messagedata, $project));
+		$this->assertEquals($project->id, $status->project->id);
+	}
+	
+	public function stestPostForum() {
+		$user = User::firstOrFail();
+		$project = Project::create($this->projectdata);
+		$forum = Bus::dispatch(new PostForum($user, $project, $this->forumdata));
+		$this->assertNull($project->owner);
+		$this->assertEquals($user->id, $forum->owner->id);
+		$this->assertEquals($project->id, $forum->project->id);
+	}
+	
+	public function stestPostComment() {
+		$user = User::firstOrFail();
+		$project = Bus::dispatch(new CreateProject($user, $this->projectdata));
+		$this->assertNotNull($project);
+		$this->assertEquals($user->id, $project->owner->id);
+		$comment = Bus::dispatch(new PostComment($user, $this->commentdata, $project));
+		$this->assertEquals($user->id, $comment->owner->id);
+		$this->assertEquals($project->id, $comment->commentable->id);
+	}
+	
+	public function stestAddUserToProject() {
+		$owner = User::firstOrFail();
+		$project = Project::create($this->projectdata);
+		$user = User::all()->last();
+		$this->assertNotEquals($owner->id, $user->id);
+		Bus::dispatch(new AddUserToProject($owner, $project, $user));
+		$this->assertNull($project->owner);
+		//~ $this->assertTrue($user->projects->contains($project->id)); // failure
+		$this->assertTrue($project->users->contains($user->id));
+		//~ echo "\nProject:\n{$project}";
+		//~ echo "\nUser:\n{$user}";
+		//~ echo "\nUser contains project : {$user->projects->contains($project->id)}"; doesnt return true
+		//~ echo "\nProject contains user : {$project->users->contains($user->id)}";
+	}
+	
+	public function stestCreateChatRoom() {
+		$user = User::firstOrFail();
+		$chat1 = Bus::dispatch(new CreateChatRoom($user, null, $this->chatroomdata));
+		$this->assertNull($chat1->project);
+		$project = Project::create($this->projectdata);
+		$chat2 = Bus::dispatch(new CreateChatRoom($user, $project, $this->chatroomdata));
+		$this->assertEquals($project->id, $chat2->project->id);
+		$this->assertEquals($user->id, $chat2->owner->id);
+	}
+    
+    public function stestJoinChat() {
+        $user = User::firstOrFail();
+        $chat = Chat::create($this->chatroomdata);
+        $action = Bus::dispatch(new JoinChat($user, $chat)); // add
+        $this->assertNull($action->admin);
+        $this->assertTrue($chat->users->contains($user->id));
+        $this->assertEquals(1, $chat->messages->count());
+        $this->assertEquals(1, $chat->users->count());
+        $action = Bus::dispatch(new LeaveChat($user, $chat)); // remove
+        $this->assertEquals(2, Message::count());
+//        $this->assertEquals(0, $chat->users->count());
+        $admin = User::all()->last();
+        $this->assertNotNull($admin);
+        $this->assertNotEquals($admin->id, $user->id);
+        $action = Bus::dispatch(new JoinChat($user, $chat, $admin)); // add
+        $this->assertEquals($action->admin->id, $admin->id);
+        $action = Bus::dispatch(new LeaveChat($user, $chat, $admin)); // remove
+    }
 	
 	public function tearDown() {
 		parent::tearDown();
@@ -279,4 +338,3 @@ class ModelsTest extends TestCase {
 	}
 
 }
-

@@ -26,15 +26,15 @@ class ForumPosted extends Event implements FeedableEvent {
 		$this->forum = $forum;
 	}
 	
-	public function getFeedable() {
+	public function getSubject() {
 		return $this->forum;
 	}
 	
-	public function getTitle() {
-		return "{$this->user->email} posted Forum in {$this->project->name}";
+	public function getOrigin() {
+		return $this->user;
 	}
 	
-	public function getProject() {
+	public function getTarget() {
 		return $this->project;
 	}
 
