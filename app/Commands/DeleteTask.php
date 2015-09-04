@@ -18,7 +18,7 @@ class DeleteTask extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, Task $task, Collection $audience)
+	public function __construct(User $user, Project $project, Task $task, Collection $audience = null)
 	{
 		$this->user = $user;
 		$this->project = $project;
@@ -33,7 +33,8 @@ class DeleteTask extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		$this->project->tasks()->detach($task->id);
+		$this->project->tasks()->detach($this->task->id);
+		$this->task->delete();
 		event(new TaskDeleted($this->user, $this->project, $this->task, $this->audience));
 	}
 
