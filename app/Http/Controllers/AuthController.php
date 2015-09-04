@@ -36,10 +36,15 @@ class AuthController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($users = null)
 	{
-		$users = User::all();
-		return $users;
+		//~ $users = User::all();
+		if($users) {
+			$users = array_unique(explode(',', $users));
+			return User::find($users);
+		} else {
+			return User::all();
+		}
 	}
     
     public function getAuthenticatedUser() {

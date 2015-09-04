@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration {
 			$table->unsignedInteger('userable_id');
 			$table->rememberToken();
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

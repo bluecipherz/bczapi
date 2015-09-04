@@ -19,6 +19,7 @@ class CreateMessagesTable extends Migration {
 			$table->unsignedInteger('chat_id');
 			$table->text('message');
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

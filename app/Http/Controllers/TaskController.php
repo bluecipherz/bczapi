@@ -4,6 +4,11 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Project;
+use App\Task;
+use App\Commands\CreateTask;
+use App\Commands\CompleteTask;
+use App\Commands\DeleteTask;
 
 class TaskController extends Controller {
 

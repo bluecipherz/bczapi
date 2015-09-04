@@ -20,6 +20,7 @@ class CreateForumsTable extends Migration {
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('project_id');
 			$table->timestamps();
+			$table->softDeletes();
 		});
 		//~ Schema::create('users_forums', function(Blueprint $table)
 		//~ {

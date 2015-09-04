@@ -24,7 +24,7 @@ Route::group(array('prefix' => 'api','after' => 'cors',), function() {
     Route::post('authenticate', 'AuthController@authenticate');
     Route::get('authenticate/user', 'AuthController@getAuthenticatedUser');
     Route::post('register', 'AuthController@register');
-    Route::resource('authenticate', 'AuthController', ['only' => ['index']]);
+    Route::get('authenticate/{user?}', 'AuthController@index');
     Route::group(['middleware' => 'jwt.auth'], function() {
 		Route::resource('home', 'HomeController');
         Route::resource('feeds', 'FeedController');

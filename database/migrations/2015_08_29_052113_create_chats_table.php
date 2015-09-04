@@ -18,6 +18,7 @@ class CreateChatsTable extends Migration {
 			$table->string('name');
 			$table->unsignedInteger('project_id')->default(0);
 			$table->timestamps();
+			$table->softDeletes();
 		});
 		Schema::create('users_chats', function(Blueprint $table)
 		{

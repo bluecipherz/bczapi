@@ -23,6 +23,7 @@ class CreateTasksTable extends Migration {
 			$table->unsignedInteger('completed_by');
 			$table->timestamp('completed_at');
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 
