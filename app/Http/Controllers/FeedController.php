@@ -17,7 +17,7 @@ class FeedController extends Controller {
 	public function index()
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		return Feed::with('subject.owner')->with('origin.userable')->with('target')->get();
+		return $user->feeds()->with('subject.owner')->with('origin.userable')->with('context')->get();
 	}
 
 	/**

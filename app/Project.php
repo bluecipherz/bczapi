@@ -1,8 +1,11 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model {
+	
+	use SoftDeletes;
 
 	protected $fillable = ['name', 'description'];
 
@@ -10,12 +13,6 @@ class Project extends Model {
 		return $this->hasMany('App\Task');
 	}
 	
-	/**
-	 * Creator of the project. Stored in same table.
-	 */
-	public function owner() {
-		return $this->belongsTo('App\User', 'user_id');
-	}
 	
 	public function invoice() {
 		return $this->hasOne('App\Invoice');
@@ -41,7 +38,7 @@ class Project extends Model {
 	 * Members involved in this project. Stored in pivot.
 	 */
 	public function users() {
-		return $this->belongsToMany('App\User', 'users_projects');
+		return $this->belongsToMany('App\User', 'users_projects')->withPivot('type');
 	}
     
     public function feeds() {
@@ -52,12 +49,19 @@ class Project extends Model {
 		return $this->morphMany('App\MemberAction', 'memberable');
 	}
     
-    public function scopeClients($query) {
-		
+    public function clients($query) {
+		return $this->users()->whereType('client');
 	}
 	
-	public function scopeDevelopers($query) {
-		
+	public function developers($query) {
+		return $this->users()->whereType('developer');
+	}
+	
+	/**
+	 * Creator of the project. Stored in same table.
+	 */
+	public function owner() {
+		return $this->users()->whereType('owner');
 	}
 
 }

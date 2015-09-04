@@ -19,6 +19,7 @@ class CreateStatusesTable extends Migration {
 			$table->unsignedInteger('project_id');
 			$table->unsignedInteger('user_id');
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 
@@ -29,7 +30,7 @@ class CreateStatusesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('statuses');
+		Schema::dropIfExists('statuses');
 	}
 
 }

@@ -3,13 +3,14 @@
 use App\Events\Event;
 use App\Events\Contracts\FeedableEvent as FeedableContract;
 use App\Events\Traits\FeedableEvent as FeedableTrait;
+use Illuminate\Database\Eloquent\Collection;
 
 use Illuminate\Queue\SerializesModels;
 use App\User;
 use App\Project;
-use Illuminate\Database\Eloquent\Collection;
+use App\Status;
 
-class ProjectCreated extends Event implements FeedableContract {
+class StatusUpdated extends Event implements FeedableContract {
 
 	use SerializesModels;
 	use FeedableTrait;
@@ -19,10 +20,12 @@ class ProjectCreated extends Event implements FeedableContract {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, Collection $audience = null)
+	public function __construct(User $user, Status $status, Project $project = null, Collection $audience = null)
 	{
-		$this->subject = $project;
 		$this->origin = $user;
+		$this->subject = $status;
+		$this->context = $project;
 		$this->audience = $audience;
 	}
+	
 }

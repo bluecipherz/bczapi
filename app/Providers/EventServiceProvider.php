@@ -14,13 +14,19 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\ProjectCreated' => [
 			'App\Handlers\Events\CreateFeed',
 		],
+		'App\Events\ProjectDeleted' => [
+			'App\Handlers\Events\CreateFeed',
+		],
 		'App\Events\TaskCreated' => [
+			'App\Handlers\Events\CreateFeed',
+		],
+		'App\Events\TaskDeleted' => [
 			'App\Handlers\Events\CreateFeed',
 		],
 		'App\Events\CommentPosted' => [
 			'App\Handlers\Events\CreateFeed',
 		],
-		'App\Events\StatusUpdated' => [
+		'App\Events\StatusPosted' => [
 			'App\Handlers\Events\CreateFeed',
 		],
 		'App\Events\TaskCompleted' => [
@@ -30,6 +36,9 @@ class EventServiceProvider extends ServiceProvider {
 			'App\Handlers\Events\CreateFeed',
 		],
 		'App\Events\UserAddedToProject' => [
+			'App\Handlers\Events\CreateFeed',
+		],
+		'App\Events\RemoveUserFromProject' => [
 			'App\Handlers\Events\CreateFeed',
 		],
 		'App\Events\ForumPosted' => [
@@ -43,6 +52,12 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		'App\Events\ChatUserLeft' => [
 			'App\Handlers\Events\PostMessage',
+		],
+		'App\Events\MemberAdded' => [
+			'App\Handlers\Events\MemberAddition'
+		],
+		'App\Events\MemberRemoved' => [
+			'App\Handlers\Events\MemberRemoval'
 		],
 	];
 

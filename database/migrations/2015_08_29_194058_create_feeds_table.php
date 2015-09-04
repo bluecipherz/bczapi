@@ -19,9 +19,13 @@ class CreateFeedsTable extends Migration {
             $table->unsignedInteger('origin_id');
             $table->unsignedInteger('subject_id');
             $table->string('subject_type');
-            $table->unsignedInteger('target_id'); // only for comment, status & project
-            $table->string('target_type');
+            $table->unsignedInteger('context_id'); // only for comment, status & project
+            $table->string('context_type');
 			$table->timestamps();
+		});
+		Schema::create('feeds_users', function(Blueprint $table) {
+			$table->unsignedInteger('user_id');
+			$table->unsignedInteger('feed_id');
 		});
 	}
 
@@ -32,7 +36,8 @@ class CreateFeedsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('feeds');
+		Schema::dropIfExists('feeds_users');
+		Schema::dropIfExists('feeds');
 	}
 
 }

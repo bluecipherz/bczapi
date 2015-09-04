@@ -55,7 +55,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 	
 	public function projects() {
-		return $this->belongsToMany('App\Project', 'users_projects');
+		return $this->belongsToMany('App\Project', 'users_projects')->withPivot('type');
 	}
 	
 	public function chats() {
@@ -87,7 +87,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
     
 	public function feeds() {
-		return $this->morphMany('App\Feed', 'App\Feed');
+		return $this->belongsToMany('App\Feed', 'feeds_users');
 	}
 	
 	public function ownChats() {
@@ -95,7 +95,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 	
 	public function ownProjects() {
-		return $this->hasMany('App\Project', 'user_id');
+		return $this->projects()->whereType('owner');
 	}
 	
 	public function completedTasks() {

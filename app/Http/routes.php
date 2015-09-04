@@ -16,7 +16,8 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
-// Route::model('projects', 'App\Project');
+Route::model('projects', 'App\Project');
+Route::model('users', 'App\User');
 //Route::model('tasks', 'App\Task');
 		
 Route::group(array('prefix' => 'api','after' => 'cors',), function() {
@@ -27,6 +28,9 @@ Route::group(array('prefix' => 'api','after' => 'cors',), function() {
     Route::group(['middleware' => 'jwt.auth'], function() {
 		Route::resource('home', 'HomeController');
         Route::resource('feeds', 'FeedController');
+        Route::get('projects/{projects}/users', 'ProjectController@users');
+        Route::post('projects/{projects}/users/{users}', 'ProjectController@join');
+        Route::delete('projects/{projects}/users/{users}', 'ProjectController@leave');
         Route::resource('projects', 'ProjectController', ['except' => ['create', 'show', 'edit']]);
         Route::get('projects/{projects}/tasks/{tasks}/complete', 'TaskController@complete');
         Route::resource('projects.tasks', 'TaskController');

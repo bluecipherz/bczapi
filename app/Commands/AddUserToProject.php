@@ -6,22 +6,25 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Project;
 use App\Events\UserAddedToProject;
-use App\MemberAction;
+use App\Events\MemberAdded;
+use Illuminate\Database\Eloquent\Collection;
 
 class AddUserToProject extends Command implements SelfHandling {
 
-	protected $user, $project, $owner;
+	protected $user, $project, $owner, $type, $audience;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $owner, Project $project, User $user)
+	public function __construct(User $owner, Project $project, User $user, $type, Collection $audience = null)
 	{
 		$this->owner = $owner;
 		$this->project = $project;
 		$this->user = $user;
+		$this->type = $type;
+		$this->audience = $audience;
 	}
 
 	/**
@@ -31,15 +34,9 @@ class AddUserToProject extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		$this->project->users()->save($this->user); // belongsToMany
-		$addAction = MemberAction::create([
-			'action' => UserAddedToProject::class
-		]);
-		$addAction->admin()->associate($this->owner);
-		$addAction->user()->associate($this->user);
-		$addAction->memberable()->associate($this->project);
-		//~ $this->user->projects()->save($this->project); // belongsToMany : same, works
-		event(new UserAddedToProject($this->owner, $this->project, $this->user));
+		$this->project->users()->save($this->user, ['type' => $this->type]); // belongsToMany
+		event(new MemberAdded($this->user, $this->project, $this->owner));
+		event(new UserAddedToProject($this->owner, $this->project, $this->user, $this->audience));
 		return $this->user;
 	}
 

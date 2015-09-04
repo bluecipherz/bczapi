@@ -7,6 +7,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
 use App\Feed;
 use App\Project;
+use App\User;
 use App\Services\FeedMessageService;
 
 class CreateFeed {
@@ -36,10 +37,19 @@ class CreateFeed {
 		
 		$feed->origin()->associate($event->getOrigin());
         $feed->subject()->associate($event->getSubject());
-        $target = $event->getTarget();
-        if($target) { $feed->target()->associate($target); }
-        
+        $context = $event->getContext();
+        if($context) { $feed->context()->associate($context); }
 		$feed->save();
+        
+        if(isset($event->audience)) {
+			foreach($event->audience as $audience) {
+				$feed->users()->save($audience);
+			}
+		} else {
+			$users = User::all();
+			$feed->users()->saveMany($users->all());
+		}
+        
 //		echo "\n{$this->feeder->getFeedMessage($feed)}"; // debug
 	}
 

@@ -1,41 +1,31 @@
 <?php namespace App\Events;
 
 use App\Events\Event;
-use App\Events\Contracts\FeedableEvent;
+use App\Events\Contracts\FeedableEvent as FeedableContract;
+use App\Events\Traits\FeedableEvent as FeedableTrait;
+use Illuminate\Database\Eloquent\Collection;
 
 use Illuminate\Queue\SerializesModels;
 use App\User;
 use App\Project;
 use App\Task;
 
-class TaskCompleted extends Event implements FeedableEvent {
+class TaskCompleted extends Event implements FeedableContract {
 
 	use SerializesModels;
-
-	protected $user, $project, $task;
-	
+	use FeedableTrait;
+		
 	/**
 	 * Create a new event instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, Task $task)
+	public function __construct(User $user, Project $project, Task $task, Collection $audience = null)
 	{
-		$this->user = $user;
-		$this->project = $project;
-		$this->task = $task;
+		$this->origin = $user;
+		$this->context = $project;
+		$this->subject = $task;
+		$this->audience = $audience;
 	}
 	
-	public function getOrigin() {
-		return $this->user;
-	}
-	
-	public function getSubject() {
-		return $this->task;
-	}
-	
-	public function getTarget() {
-		return $this->project;
-	}
-
 }

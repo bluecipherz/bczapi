@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class MemberAction extends Model {
 
+	protected $fillable = ['type'];
+
 	public function memberable() {
 		return $this->morphTo();
 	}

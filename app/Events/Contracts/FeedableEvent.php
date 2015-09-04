@@ -7,6 +7,8 @@ interface FeedableEvent {
 	
 	public function getSubject();
 	
-	public function getTarget();
+	public function getContext();
+	
+	public function getAudience();
 	
 }

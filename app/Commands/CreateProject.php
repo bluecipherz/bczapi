@@ -6,20 +6,22 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\Project;
 use App\Events\ProjectCreated;
 use App\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class CreateProject extends Command implements SelfHandling {
 
-	protected $data, $user;
+	protected $data, $user, $audience;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, array $data)
+	public function __construct(User $user, array $data, Collection $audience = null)
 	{
 		$this->user = $user;
 		$this->data = $data;
+		$this->audience = $audience;
 	}
 
 	/**
@@ -34,7 +36,7 @@ class CreateProject extends Command implements SelfHandling {
 		$this->user->projects()->save($project, ['type' => 'owner']);
         // $project->owner()->associate($this->user);
 		// $project->save();
-		event(new ProjectCreated($this->user, $project));
+		event(new ProjectCreated($this->user, $project, $this->audience));
 		return $project;
 	}
 

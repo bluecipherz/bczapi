@@ -7,21 +7,23 @@ use App\User;
 use App\Forum;
 use App\Project;
 use App\Events\ForumPosted;
+use Illuminate\Database\Eloquent\Collection;
 
 class PostForum extends Command implements SelfHandling {
 
-	protected $user, $project, $data;
+	protected $user, $project, $data, $audience;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, array $data)
+	public function __construct(User $user, Project $project, array $data, Collection $audience = null)
 	{
 		$this->user = $user;
 		$this->project = $project;
 		$this->data = $data;
+		$this->audience = $audience;
 	}
 
 	/**
@@ -32,13 +34,9 @@ class PostForum extends Command implements SelfHandling {
 	public function handle()
 	{
 		$forum = Forum::create($this->data);
-		//~ $forum->owner()->save($this->user); // belongsTo : error
 		$forum->owner()->associate($this->user); // belongsTo
-		//~ $this->user->forums()->save($forum); // hasMany
-		//~ $forum->project()->save($this->project); // belongsTo : error
 		$forum->project()->associate($this->project); // belongsTo
-		//~ $this->project->forums()->save($forum); // hasMany
-		event(new ForumPosted($this->user, $this->project, $forum));
+		event(new ForumPosted($this->user, $this->project, $forum, $this->audience));
 		return $forum;
 	}
 

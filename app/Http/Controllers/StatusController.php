@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Project;
 use App\Status;
-use App\Commands\UpdateStatus;
+use App\Commands\PostStatus;
 use JWTAuth;
 
 class StatusController extends Controller {
@@ -39,7 +39,7 @@ class StatusController extends Controller {
 	public function store(Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$status = $this->dispatch(new UpdateStatus($user, $request->all()));
+		$status = $this->dispatch(new PostStatus($user, $request->all()));
 		return $status;
 	}
 
