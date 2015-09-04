@@ -38,7 +38,7 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\UserAddedToProject' => [
 			'App\Handlers\Events\CreateFeed',
 		],
-		'App\Events\RemoveUserFromProject' => [
+		'App\Events\UserRemovedFromProject' => [
 			'App\Handlers\Events\CreateFeed',
 		],
 		'App\Events\ForumPosted' => [

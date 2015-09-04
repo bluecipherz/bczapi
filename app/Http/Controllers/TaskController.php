@@ -9,6 +9,7 @@ use App\Task;
 use App\Commands\CreateTask;
 use App\Commands\CompleteTask;
 use App\Commands\DeleteTask;
+use JWTAuth;
 
 class TaskController extends Controller {
 
@@ -16,14 +17,18 @@ class TaskController extends Controller {
 //		$this->middleware('jwt.auth');
 	}
 	
+	public function complete() {
+	
+	}
+	
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Project $project)
 	{
-		//
+		return $project->tasks;
 	}
 
 	/**
@@ -43,11 +48,8 @@ class TaskController extends Controller {
 	 */
 	public function store(Request $request, Project $project)
 	{
-		$task = Task::create($request);
-		$user = Auth::user();
-		$user->tasks()->save($task);
-		$project->tasks()->save($task);
-		event(new TaskCreated($user, $project, $task));
+		$user = JWTAuth::parseToken()->authenticate();
+		$task = $this->dispatch(new CreateTask($user, $project, $request->all()));
 		return $task;
 	}
 
@@ -90,9 +92,10 @@ class TaskController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Task $task, Project $project)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$this->dispatch(new DeleteTask($user, $project, $task));
 	}
 
 }

@@ -35,9 +35,7 @@ class CreateTask extends Command implements SelfHandling {
 	{
 		$task = Task::create($this->data);
 		$this->project->tasks()->save($task);
-		$this->user->ownTasks()->save($task);
-		// $task->owner()->associate($this->user);
-		// $task->save();
+		$this->user->tasks()->save($task);
 		event(new TaskCreated($this->user, $this->project, $task, $this->audience));
 		return $task;
 	}

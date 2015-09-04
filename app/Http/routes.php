@@ -18,7 +18,7 @@ Route::controllers([
 
 Route::model('projects', 'App\Project');
 Route::model('users', 'App\User');
-//Route::model('tasks', 'App\Task');
+Route::model('tasks', 'App\Task');
 		
 Route::group(array('prefix' => 'api','after' => 'cors',), function() {
     Route::post('authenticate', 'AuthController@authenticate');
