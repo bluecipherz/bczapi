@@ -32,7 +32,7 @@ class DeleteProject extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->project->delete();
-		event(new ProjectDeleted($this->user, $this->project, $audience));
+		event(new ProjectDeleted($this->user, $this->project, $this->audience));
 	}
 
 }

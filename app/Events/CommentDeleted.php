@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use App\User;
 use App\Comment;
 
-class CommentPosted extends Event implements FeedableContract {
+class CommentDeleted extends Event implements FeedableContract {
 
 	use SerializesModels;
 	use FeedableTrait;

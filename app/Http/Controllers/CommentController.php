@@ -8,6 +8,10 @@ use Validator;
 use App\Commands\PostComment;
 use JWTAuth;
 use App;
+use App\Comment;
+use App\Commands\DeleteComment;
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\DeleteCommentRequest;
 
 class CommentController extends Controller {
 
@@ -36,20 +40,13 @@ class CommentController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(Request $request)
+	public function store(StoreCommentRequest $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$rules = [
-			'commentable_id' => 'required',
-			'commentable_type' => 'required|in:feed',
-			'comment' => 'required'
-		];
 		$input = $request->all();
-		$validator = Validator::make($input, $rules);
-		if($validator->fails()) return response()->json(['fail' => true, 'messages' => $validator->messages()], 400);
 		$commentable = App::make('App\\' . ucfirst($input['commentable_type']))->findOrFail($input['commentable_id']);
-		$this->dispatch(new PostComment($user, $input, $commentable));
-		return response()->json(['success' => true], 200);
+		$comment = $this->dispatch(new PostComment($user, $input, $commentable));
+		return response()->json(['success' => true, 'message' => 'Comment Posted.', 'comment' => $comment], 200);
 	}
 
 	/**
@@ -91,9 +88,11 @@ class CommentController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(DeleteCommentRequest $request, Comment $comment)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$this->dispatch(new DeleteComment($user, $comment));
+		return response()->json(['success' => true, 'message' => 'Comment Deleted.']);
 	}
 
 }

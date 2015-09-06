@@ -26,6 +26,9 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\CommentPosted' => [
 			'App\Handlers\Events\CreateFeed',
 		],
+		'App\Events\CommentDeleted' => [
+			'App\Handlers\Events\DeleteFeed',
+		],
 		'App\Events\StatusPosted' => [
 			'App\Handlers\Events\CreateFeed',
 		],

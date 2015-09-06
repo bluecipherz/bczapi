@@ -28,29 +28,25 @@ Route::group(array('prefix' => 'api','after' => 'cors',), function() {
     Route::post('register', 'AuthController@register');
     Route::get('authenticate/{user?}', 'AuthController@index');
     Route::group(['middleware' => 'jwt.auth'], function() {
-		Route::resource('home', 'HomeController');
+		Route::resource('home', 'HomeController', ['only' => ['index']]);
 		Route::resource('comments', 'CommentController', ['only' => ['store', 'destroy']]);
-        Route::get('feeds/{feeds}/comments', 'FeedController@getComments');
-        Route::post('feeds/{feeds}/comments', 'FeedController@postComment');
-        Route::delete('feeds/{feeds}/comments/{comments}', 'FeedController@deleteComment');
+        // Route::get('feeds/{feeds}/comments', 'FeedController@getComments');
+        // Route::post('feeds/{feeds}/comments', 'FeedController@postComment');
+        // Route::delete('feeds/{feeds}/comments/{comments}', 'FeedController@deleteComment');
         Route::resource('feeds', 'FeedController', ['only' => ['index']]);
         Route::get('projects/{projects}/users', 'ProjectController@users');
         Route::post('projects/{projects}/users/{users}', 'ProjectController@join');
         Route::delete('projects/{projects}/users/{users}', 'ProjectController@leave');
         Route::resource('projects', 'ProjectController', ['except' => ['create', 'show', 'edit']]);
         Route::post('projects/{projects}/tasks/{tasks}', 'TaskController@complete');
-        Route::resource('projects.tasks', 'TaskController');
-        Route::resource('projects.forums', 'ForumController');
-		Route::resource('status', 'StatusController');
-		Route::resource('chats', 'ChatController');
-        Route::resource('projects.chats.messages', 'MessageController');
-        Route::resource('expenses', 'ExpenseController');
-        Route::resource('invoices', 'InvoiceController');
-        Route::resource('images', 'ImageController');
-		
-		// duplicates
-		Route::resource('status', 'StatusController');
-		Route::resource('chats', 'ChatController');
+        Route::resource('projects.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
+        Route::resource('projects.forums', 'ForumController', ['except' => ['create', 'show', 'edit']]);
+		Route::resource('status', 'StatusController', ['except' => ['create', 'show', 'edit']]);
+		Route::resource('chats', 'ChatController', ['except' => ['create', 'show', 'edit']]);
+        Route::resource('chats.messages', 'MessageController', ['except' => ['create', 'show', 'edit']]);
+        Route::resource('expenses', 'ExpenseController', ['except' => ['create', 'show', 'edit']]);
+        Route::resource('invoices', 'InvoiceController', ['except' => ['create', 'show', 'edit']]);
+        Route::resource('images', 'ImageController', ['except' => ['create', 'show', 'edit']]);
     });
 });
 

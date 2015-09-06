@@ -12,7 +12,7 @@ class UserTableSeeder extends Seeder {
 	public function run()
 	{
 		DB::table('users')->delete();
-		DB::table('portal_users')->delete();;
+		DB::table('portal_users')->delete();
 		
 		$user1 = App\User::create(['email' => 'asd@g.com', 'password' => Hash::make('asdasd')]);
 		$user2 = App\User::create(['email' => 'qwe@g.com', 'password' => Hash::make('asdasd')]);

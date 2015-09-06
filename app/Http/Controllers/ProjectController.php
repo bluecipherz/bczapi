@@ -18,6 +18,7 @@ class ProjectController extends Controller {
 
 	public function __construct() {
 		// $this->middleware('jwt.auth', ['except' => ['index']]);
+		$this->middleware('project.auth', ['only' => ['destroy']]);
 	}
 
 	/**
@@ -72,7 +73,7 @@ class ProjectController extends Controller {
 	{
 		$user = JWTAuth::parseToken()->authenticate();
 		$this->dispatch(new DeleteProject($user, $project));
-		return response()->json(['success' => true]);
+		return response()->json(['success' => true, 'message' => 'Project deleted.']);
 	}
 	
 	public function join(Project $project, User $user, Request $request) {

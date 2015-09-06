@@ -1,6 +1,7 @@
 <?php
 
 use App\Commands\PostComment;
+use App\Commands\DeleteComment;
 use App\Feed;
 use App\User;
 
@@ -35,7 +36,7 @@ class ControllersTest extends TestCase {
         $this->assertResponseStatus(200);
     }
     
-    public function testComment() {
+    public function stestComment() {
 		$cd = [
 			'comment' => 'lets bring the pain'
 		];
@@ -48,12 +49,32 @@ class ControllersTest extends TestCase {
 		$this->assertEquals($user->id, Feed::all()->last()->origin->id);
 		//~ echo "old count : {$count}, new count : {$ncount}";
 	}
-	
-	public function testMakeModel() {
+
+	public function stestMakeModel() {
 		$feed = $this->app->make('App\Feed')->firstOrFail();
 		$this->assertNotNull($feed);
 		echo "\n{$feed}";
 	}
-    
+	
+	public function testDeleteFeed() {
+		DB::table('comments')->delete();
+		$cd = [
+			'comment' => 'lets bring the pain'
+		];
+		$feed = Feed::firstOrFail();
+		$user1 = User::firstOrFail();
+		$user2 = User::all()->last();
+		$comment1 = Bus::dispatch(new PostComment($user1, $cd, $feed));
+		$comment2 = Bus::dispatch(new PostComment($user2, $cd, $feed));
+		$commentFeed = Feed::whereType('App\Events\CommentPosted')->whereContextId($feed->id)->firstOrFail();
+		$this->assertEquals($user2->id, $commentFeed->origin->id);
+		$this->assertEquals($comment2->id, $commentFeed->subject->id);
+		Bus::dispatch(new DeleteComment($user2, $comment2));
+		$this->assertEquals($user1->id, $commentFeed->origin->id);
+		$this->assertEquals($comment1->id, $commentFeed->subject->id);
+	}
+	public function testSample() {
+		$this->assertTrue(true);
+	}
 
 }

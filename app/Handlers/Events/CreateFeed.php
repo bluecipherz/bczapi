@@ -1,6 +1,6 @@
 <?php namespace App\Handlers\Events;
 
-use App\Event;
+use App\Events\Event;
 use App\Events\Contracts\FeedableEvent;
 
 use Illuminate\Queue\InteractsWithQueue;
@@ -34,13 +34,16 @@ class CreateFeed {
 	{
 		if($event instanceof \App\Events\CommentPosted) {
 			/**
-			 * if last feed was a comment on same context, dont create new feed,
+			 * if context has a previous comment feed, dont create new feed,
 			 * instead associate its origin with the new one
+			 * eg : ProjectCreated, TaskCompleted etc.
 			 */
 			$lastFeed = Feed::whereType('App\Events\CommentPosted')->whereContextId($event->getContext()->id)->first();
 			if($lastFeed) {
+				// echo "\n{$event->getOrigin()->id}";
 				$lastFeed->origin()->associate($event->getOrigin());
-				$lastFeed->touch();
+				// echo "\n{$lastFeed->origin->id}";
+				$lastFeed->subject()->associate($event->getSubject());
 				$lastFeed->save();
 			} else {
 				$this->_createFeed($event);

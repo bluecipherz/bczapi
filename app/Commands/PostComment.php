@@ -6,6 +6,7 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Comment;
 use App\Events\CommentPosted;
+use Illuminate\Database\Eloquent\Model;
 
 class PostComment extends Command implements SelfHandling {
 
@@ -16,7 +17,7 @@ class PostComment extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, array $data, $commentable)
+	public function __construct(User $user, array $data, Model $commentable)
 	{
 		$this->user = $user;
 		$this->data = $data;

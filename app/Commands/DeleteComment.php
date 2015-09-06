@@ -16,11 +16,11 @@ class DeleteComment extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Comment $comment, $commentable)
+	public function __construct(User $user, Comment $comment)
 	{
 		$this->user = $user;
 		$this->comment = $comment;
-		$this->commentable = $commentable;
+		$this->commentable = $comment->commentable;
 	}
 
 	/**
@@ -32,7 +32,6 @@ class DeleteComment extends Command implements SelfHandling {
 	{
 		$this->comment->delete();
 		event(new CommentDeleted($this->user, $this->comment, $this->commentable));
-		return $comment;
 	}
 
 }

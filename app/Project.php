@@ -13,7 +13,6 @@ class Project extends Model {
 		return $this->hasMany('App\Task');
 	}
 	
-	
 	public function invoice() {
 		return $this->hasOne('App\Invoice');
 	}
