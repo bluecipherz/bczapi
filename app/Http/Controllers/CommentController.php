@@ -4,27 +4,12 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Feed;
-use JWTAuth;
+use Validator;
 use App\Commands\PostComment;
-use App\Commands\DeleteComment;
+use JWTAuth;
+use App;
 
-class FeedController extends Controller {
-
-	public function getComments(Feed $feed) {
-		return $feed->comments;
-	}
-
-	public function postComment(Feed $feed, Request $request) {
-		$user = JWTAuth::parseToken()->authenticate();
-		$comment = $this->dispatch(new PostComment($user, $request->all(), $feed));
-		return $comment;
-	}
-	
-	public function deleteComment(Feed $feed, Comment $comment) {
-		$user = JWTAuth::parseToken()->authenticate();
-		$this->dispatch(new DeleteComment($user, $comment, $feed));
-	}
+class CommentController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -33,14 +18,7 @@ class FeedController extends Controller {
 	 */
 	public function index()
 	{
-		$user = JWTAuth::parseToken()->authenticate();
-		return $user->feeds()
-			->with('subject.owner')
-			->with('origin.userable')
-			->with('context')
-			->with('comments')
-			->orderBy('updated_at')
-			->get();
+		//
 	}
 
 	/**
@@ -58,9 +36,20 @@ class FeedController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Request $request)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$rules = [
+			'commentable_id' => 'required',
+			'commentable_type' => 'required|in:feed',
+			'comment' => 'required'
+		];
+		$input = $request->all();
+		$validator = Validator::make($input, $rules);
+		if($validator->fails()) return response()->json(['fail' => true, 'messages' => $validator->messages()], 400);
+		$commentable = App::make('App\\' . ucfirst($input['commentable_type']))->findOrFail($input['commentable_id']);
+		$this->dispatch(new PostComment($user, $input, $commentable));
+		return response()->json(['success' => true], 200);
 	}
 
 	/**

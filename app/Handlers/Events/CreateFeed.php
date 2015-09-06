@@ -32,25 +32,48 @@ class CreateFeed {
 	 */
 	public function handle(FeedableEvent $event)
 	{
+		if($event instanceof \App\Events\CommentPosted) {
+			/**
+			 * if last feed was a comment on same context, dont create new feed,
+			 * instead associate its origin with the new one
+			 */
+			$lastFeed = Feed::whereType('App\Events\CommentPosted')->whereContextId($event->getContext()->id)->first();
+			if($lastFeed) {
+				$lastFeed->origin()->associate($event->getOrigin());
+				$lastFeed->touch();
+				$lastFeed->save();
+			} else {
+				$this->_createFeed($event);
+			}
+		} else {
+			$this->_createFeed($event);
+		}
+        
+//		echo "\n{$this->feeder->getFeedMessage($feed)}"; // debug
+	}
+	
+	private function _createFeed(FeedableEvent $event) {
 		$feed = new Feed;
 		$feed->type = get_class($event);
 		
 		$feed->origin()->associate($event->getOrigin());
-        $feed->subject()->associate($event->getSubject());
-        $context = $event->getContext();
-        if($context) { $feed->context()->associate($context); }
+		$feed->subject()->associate($event->getSubject());
+		$context = $event->getContext();
+		if($context) { $feed->context()->associate($context); }
 		$feed->save();
-        
-        if(isset($event->audience)) {
-			foreach($event->audience as $audience) {
+		
+		if($event->getAudience()) {
+			foreach($event->getAudience() as $audience) {
 				$feed->users()->save($audience);
 			}
+		//~ } else if($event->getTarget()->audience) {
+			//~ foreach($event->getTarget()->audience as $audience) {
+				//~ $feed->users()->save($audience);
+			//~ }
 		} else {
 			$users = User::all();
 			$feed->users()->saveMany($users->all());
 		}
-        
-//		echo "\n{$this->feeder->getFeedMessage($feed)}"; // debug
 	}
 
 }

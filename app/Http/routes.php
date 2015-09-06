@@ -19,6 +19,8 @@ Route::controllers([
 Route::model('projects', 'App\Project');
 Route::model('users', 'App\User');
 Route::model('tasks', 'App\Task');
+Route::model('comments', 'App\Comment');
+Route::model('feeds', 'App\Feed');
 		
 Route::group(array('prefix' => 'api','after' => 'cors',), function() {
     Route::post('authenticate', 'AuthController@authenticate');
@@ -27,12 +29,16 @@ Route::group(array('prefix' => 'api','after' => 'cors',), function() {
     Route::get('authenticate/{user?}', 'AuthController@index');
     Route::group(['middleware' => 'jwt.auth'], function() {
 		Route::resource('home', 'HomeController');
-        Route::resource('feeds', 'FeedController');
+		Route::resource('comments', 'CommentController', ['only' => ['store', 'destroy']]);
+        Route::get('feeds/{feeds}/comments', 'FeedController@getComments');
+        Route::post('feeds/{feeds}/comments', 'FeedController@postComment');
+        Route::delete('feeds/{feeds}/comments/{comments}', 'FeedController@deleteComment');
+        Route::resource('feeds', 'FeedController', ['only' => ['index']]);
         Route::get('projects/{projects}/users', 'ProjectController@users');
         Route::post('projects/{projects}/users/{users}', 'ProjectController@join');
         Route::delete('projects/{projects}/users/{users}', 'ProjectController@leave');
         Route::resource('projects', 'ProjectController', ['except' => ['create', 'show', 'edit']]);
-        Route::get('projects/{projects}/tasks/{tasks}/complete', 'TaskController@complete');
+        Route::post('projects/{projects}/tasks/{tasks}', 'TaskController@complete');
         Route::resource('projects.tasks', 'TaskController');
         Route::resource('projects.forums', 'ForumController');
 		Route::resource('status', 'StatusController');

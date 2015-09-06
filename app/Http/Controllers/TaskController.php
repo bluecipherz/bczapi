@@ -17,8 +17,10 @@ class TaskController extends Controller {
 //		$this->middleware('jwt.auth');
 	}
 	
-	public function complete() {
-	
+	public function complete(Project $project, Task $task) {
+		$user = JWTAuth::parseToken()->authenticate();
+		$this->dispatch(new CompleteTask($user, $project, $task));
+		return response()->json(['success' => true]);
 	}
 	
 	/**

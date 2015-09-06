@@ -32,8 +32,9 @@ class PostComment extends Command implements SelfHandling {
 	{
 		$comment = Comment::create($this->data);
 		$comment->owner()->associate($this->user); // belongsTo
-		//~ $comment->commentable()->save($this->commentable); // morphTo : error
-		$comment->commentable()->associate($this->commentable);
+		//~ $comment->commentable()->associate($this->commentable);
+		//~ $comment->save();
+		$this->commentable->comments()->save($comment);
 		event(new CommentPosted($this->user, $comment, $this->commentable));
 		return $comment;
 	}

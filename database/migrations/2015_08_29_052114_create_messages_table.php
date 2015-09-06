@@ -21,6 +21,11 @@ class CreateMessagesTable extends Migration {
 			$table->timestamps();
 			$table->softDeletes();
 		});
+		Schema::create('users_messages', function(Blueprint $table) {
+			$table->unsignedInteger('user_id');
+			$table->unsignedInteger('chat_id');
+			$table->boolean('read');
+		});
 	}
 
 	/**
@@ -30,6 +35,7 @@ class CreateMessagesTable extends Migration {
 	 */
 	public function down()
 	{
+		Schema::dropIfExists('users_messages');
 		Schema::dropIfExists('messages');
 	}
 

@@ -26,6 +26,7 @@ class CreateFeedsTable extends Migration {
 		Schema::create('feeds_users', function(Blueprint $table) {
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('feed_id');
+			$table->boolean('read');
 		});
 	}
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Feed extends Model {
 
-	protected $hidden = ['origin_id', 'subject_id', 'subject_type', 'context_id', 'context_type'];
+	protected $hidden = ['origin_id', 'subject_id', 'subject_type', 'context_id', 'context_type', 'pivot'];
 
 	public function origin() {
 		return $this->belongsTo('App\User');
@@ -20,6 +20,14 @@ class Feed extends Model {
 	
 	public function users() {
 		return $this->belongsToMany('App\User', 'feeds_users');
+	}
+	
+	public function feedable() {
+		return $this->morphTo();
+	}
+	
+	public function comments() {
+		return $this->morphMany('App\Comment', 'commentable');
 	}
 	
 	public function getTypeAttribute($value) {

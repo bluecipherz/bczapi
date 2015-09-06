@@ -1,8 +1,12 @@
 <?php
 
+use App\Commands\PostComment;
+use App\Feed;
+use App\User;
+
 class ControllersTest extends TestCase {
 
-    public function testHomeroute() {
+    public function stestHomeroute() {
         $response = $this->call('GET', '/api/home'); // home
         $this->assertResponseStatus(400);
         $response = $this->call('POST', '/api/projects'); // create project
@@ -12,7 +16,7 @@ class ControllersTest extends TestCase {
         // $this->assertResponseStatus(400);
     }
     
-    public function testAuthTest() {
+    public function stestAuthTest() {
         $credentials = [
             'email' => 'asd@g.com',
             'password' => 'asdasd'
@@ -30,6 +34,26 @@ class ControllersTest extends TestCase {
         echo $response->getContent();
         $this->assertResponseStatus(200);
     }
+    
+    public function testComment() {
+		$cd = [
+			'comment' => 'lets bring the pain'
+		];
+		$count = Feed::count();
+		$feed = Feed::firstOrFail();
+		$user = User::firstOrFail();
+		$comment = Bus::dispatch(new PostComment($user, $cd, $feed));
+		$ncount = Feed::count();
+		$this->assertEquals($count, $ncount);
+		$this->assertEquals($user->id, Feed::all()->last()->origin->id);
+		//~ echo "old count : {$count}, new count : {$ncount}";
+	}
+	
+	public function testMakeModel() {
+		$feed = $this->app->make('App\Feed')->firstOrFail();
+		$this->assertNotNull($feed);
+		echo "\n{$feed}";
+	}
     
 
 }
