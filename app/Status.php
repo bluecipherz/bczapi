@@ -29,7 +29,7 @@ class Status extends Model {
 		return $query->where('project_id', '=', 0);
 	}
 	
-	public function scopeCommon($query) {
+	public function scopeProject($query) {
 		return $query->where('project_id', '>', 0);
 	}
 

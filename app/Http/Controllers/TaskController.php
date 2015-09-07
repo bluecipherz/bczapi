@@ -20,7 +20,7 @@ class TaskController extends Controller {
 	public function complete(Project $project, Task $task) {
 		$user = JWTAuth::parseToken()->authenticate();
 		$this->dispatch(new CompleteTask($user, $project, $task));
-		return response()->json(['success' => true]);
+		return response()->json(['success' => true, 'message' => 'Task Completed.']);
 	}
 	
 	/**
@@ -52,7 +52,7 @@ class TaskController extends Controller {
 	{
 		$user = JWTAuth::parseToken()->authenticate();
 		$task = $this->dispatch(new CreateTask($user, $project, $request->all()));
-		return $task;
+		return response()->json(['success' => true, 'message' => 'Task Created.', 'task' => $task]);
 	}
 
 	/**
@@ -94,10 +94,11 @@ class TaskController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Task $task, Project $project)
+	public function destroy(Project $project, Task $task)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
 		$this->dispatch(new DeleteTask($user, $project, $task));
+        return response()->json(['success' => true, 'message' => 'Task Deleted.']);
 	}
 
 }

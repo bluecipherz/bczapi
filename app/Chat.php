@@ -18,7 +18,7 @@ class Chat extends Model {
 	}
 	
 	public function users() {
-		return $this->belongsToMany('App\User', 'users_chats');
+		return $this->belongsToMany('App\User', 'users_chats')->withPivot('type');
 	}
 	
 	public function project() {

@@ -11,18 +11,19 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PostStatus extends Command implements SelfHandling {
 
-	protected $user, $data, $audience;
+	protected $user, $data, $audience, $project;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, array $data, Collection $audience)
+	public function __construct(User $user, Project $project = null, array $data, Collection $audience = null)
 	{
 		$this->user = $user;
 		$this->data = $data;
 		$this->audience = $audience;
+        $this->project = $project;
 	}
 
 	/**
@@ -32,13 +33,10 @@ class PostStatus extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{	
-		$project = isset($this->data['project']) ? Project::find($this->data['project']) : null;
 		$status = Status::create($this->data);
 		$this->user->statuses()->save($status);
-		// $status->owner()->associate($this->user);
-		// $status->save();
-		if($project) $project->statuses()->save($status);
-		event(new StatusPosted($this->user, $status, $project, $this->audience));
+		if($this->project) $this->project->statuses()->save($status);
+		event(new StatusPosted($this->user, $status, $this->project, $this->audience));
 		return $status;
 	}
 

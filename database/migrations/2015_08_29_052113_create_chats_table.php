@@ -35,8 +35,8 @@ class CreateChatsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('chats');
 		Schema::dropIfExists('users_chats');
+		Schema::dropIfExists('chats');
 	}
 
 }

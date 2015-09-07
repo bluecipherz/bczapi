@@ -10,7 +10,7 @@ use App\User;
 use App\Project;
 use App\Status;
 
-class StatusUpdated extends Event implements FeedableContract {
+class StatusPosted extends Event implements FeedableContract {
 
 	use SerializesModels;
 	use FeedableTrait;

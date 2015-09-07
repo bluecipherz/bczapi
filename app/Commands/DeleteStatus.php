@@ -9,17 +9,18 @@ use App\Events\StatusDeleted;
 
 class DeleteStatus extends Command implements SelfHandling {
 
-	protected $user, $status;
+	protected $user, $status, $audience;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Status $status)
+	public function __construct(User $user, Status $status, Collection $audience = null)
 	{
 		$this->user = $user;
 		$this->status = $status;
+        $this->audience = $audience;
 	}
 
 	/**
@@ -29,9 +30,9 @@ class DeleteStatus extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		$this->status->feeds()->delete();
+//		$this->status->feeds()->delete();
 		$this->status->delete();
-		event(new StatusDeleted());
+		event(new StatusDeleted($this->user, $this->status, $this->audience));
 	}
 
 }

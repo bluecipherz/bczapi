@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Project;
 use App\Status;
 use App\Commands\PostStatus;
+use App\Commands\DeleteStatus;
 use JWTAuth;
 
 class StatusController extends Controller {
@@ -18,7 +19,8 @@ class StatusController extends Controller {
 	 */
 	public function index()
 	{
-		return Status::all();
+        $user = JWTAuth::parseToken()->authenticate();
+		return $user->statuses;
 	}
 
 	/**
@@ -39,8 +41,9 @@ class StatusController extends Controller {
 	public function store(Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$status = $this->dispatch(new PostStatus($user, $request->all()));
-		return $status;
+        $project = Project::find($request->get('project'));
+		$status = $this->dispatch(new PostStatus($user, $project, $request->all()));
+		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status]);
 	}
 
 	/**
@@ -82,9 +85,11 @@ class StatusController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Status $status)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+        $this->dispatch(new DeleteStatus($user, $status));
+        return response()->json(['success' => true, 'message' => 'Status Deleted.']);
 	}
 
 }

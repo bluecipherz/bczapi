@@ -32,10 +32,7 @@ class CreateProject extends Command implements SelfHandling {
 	public function handle()
 	{
 		$project = Project::create($this->data);
-		// $this->user->ownProjects()->save($project);
 		$this->user->projects()->save($project, ['type' => 'owner']);
-        // $project->owner()->associate($this->user);
-		// $project->save();
 		event(new ProjectCreated($this->user, $project, $this->audience));
 		return $project;
 	}

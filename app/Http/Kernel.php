@@ -30,6 +30,8 @@ class Kernel extends HttpKernel {
 		'jwt.auth' => '\Tymon\JWTAuth\Middleware\GetUserFromToken',
 		'jwt.refresh' => '\Tymon\JWTAuth\Middleware\RefreshToken',
 		'project.auth' => 'App\Http\Middleware\IsProjectOwner',
+		'project.access' => 'App\Http\Middleware\HasProjectProjectAccess',
+		'chat.admin' => 'App\Http\Middleware\ChatAdmin',
 	];
 
 }

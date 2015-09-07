@@ -48,7 +48,12 @@ class DeleteFeed {
 					echo 'feed deleted';
 				}
 			}
-		}
+		} else if($event instanceof \App\Events\ProjectDeleted) {
+            Feed::whereContextId($event->getSubject()->id)->whereContextType(get_class($event->getSubject()))->delete();
+            Feed::whereSubjectId($event->getSubject()->id)->whereSubjectType(get_class($event->getSubject()))->delete();
+		} else {
+            Feed::whereSubjectId($event->getSubject()->id)->delete();
+        }
 	}
 
 }

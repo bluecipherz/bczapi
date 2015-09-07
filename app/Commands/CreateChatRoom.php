@@ -34,8 +34,8 @@ class CreateChatRoom extends Command implements SelfHandling {
 	public function handle()
 	{
 		$chat = Chat::create($this->data);
-		$chat->owner()->associate($this->user);
-		if($this->project) $chat->project()->associate($this->project);
+        $this->user->chats()->save($chat, ['type' => 'admin']);
+		if($this->project) $this->project->chats()->save($chat);
 		event(new ChatRoomCreated($this->user, $this->project, $chat, $this->audience));
 		return $chat;
 	}

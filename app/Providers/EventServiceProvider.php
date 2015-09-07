@@ -15,13 +15,16 @@ class EventServiceProvider extends ServiceProvider {
 			'App\Handlers\Events\CreateFeed',
 		],
 		'App\Events\ProjectDeleted' => [
-			'App\Handlers\Events\CreateFeed',
+			'App\Handlers\Events\DeleteFeed',
 		],
 		'App\Events\TaskCreated' => [
 			'App\Handlers\Events\CreateFeed',
 		],
-		'App\Events\TaskDeleted' => [
+		'App\Events\TaskCompleted' => [
 			'App\Handlers\Events\CreateFeed',
+		],
+		'App\Events\TaskDeleted' => [
+			'App\Handlers\Events\DeleteFeed',
 		],
 		'App\Events\CommentPosted' => [
 			'App\Handlers\Events\CreateFeed',
@@ -32,11 +35,14 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\StatusPosted' => [
 			'App\Handlers\Events\CreateFeed',
 		],
-		'App\Events\TaskCompleted' => [
-			'App\Handlers\Events\CreateFeed',
+		'App\Events\StatusDeleted' => [
+			'App\Handlers\Events\DeleteFeed',
 		],
 		'App\Events\ChatRoomCreated' => [
 			'App\Handlers\Events\CreateFeed',
+		],
+		'App\Events\ChatRoomDeleted' => [
+			'App\Handlers\Events\DeleteFeed',
 		],
 		'App\Events\UserAddedToProject' => [
 			'App\Handlers\Events\CreateFeed',
@@ -46,6 +52,9 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		'App\Events\ForumPosted' => [
 			'App\Handlers\Events\CreateFeed',
+		],
+		'App\Events\ForumDeleted' => [
+			'App\Handlers\Events\DeleteFeed',
 		],
 		'App\Events\MessagePosted' => [
 			'App\Handlers\Events\NotifyUsers',

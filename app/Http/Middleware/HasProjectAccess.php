@@ -14,11 +14,18 @@ class HasProjectAccess {
 	public function handle($request, Closure $next)
 	{
         $user = JWTAuth::parseToken()->authenticate();
-        $project = Project::find($request->get('project'));
-        if($project->users->contains($user->id)) {
-            return $next($request);   
+        $project = $request->projects;
+        if($project) {
+            if($project->users()->whereUserId($user->id)->exists()) {
+                return $next($request);
+            }
+        } else {
+            $project = Project::find($request->get('project'));
+            if($project->users()->whereUserId($user->id)->exists()) {
+                return $next($request);
+            }
         }
-        return response(['project access denied'], 401);
+        return response()->json(['fail' => true, 'message' => 'Project Access Denied.'], 403);
 	}
 
 }

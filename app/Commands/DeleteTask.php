@@ -33,7 +33,8 @@ class DeleteTask extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		$this->project->tasks()->detach($this->task->id);
+//        $this->task->project_id = null;
+//        $this->task->save();
 		$this->task->delete();
 		event(new TaskDeleted($this->user, $this->project, $this->task, $this->audience));
 	}

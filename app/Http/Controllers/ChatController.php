@@ -4,11 +4,19 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use JWTAuth;
+use App\Commands\CreateChatRoom;
+use App\Chat;
+use App\Project;
+use App\Commands\DeleteChatRoom;
+use App\Http\Requests\CreateChatRequest;
+use App\Http\Requests\DeleteChatRequest;
 
 class ChatController extends Controller {
 
 	public function __construct() {
 //		$this->middleware('jwt.auth');
+//        $this->middleware('chat.admin');
 	}
 	
 	/**
@@ -18,7 +26,8 @@ class ChatController extends Controller {
 	 */
 	public function index()
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+        return $user->chats;
 	}
 
 	/**
@@ -28,7 +37,7 @@ class ChatController extends Controller {
 	 */
 	public function create()
 	{
-		//
+        //
 	}
 
 	/**
@@ -36,9 +45,12 @@ class ChatController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(CreateChatRequest $request)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+        $project = Project::find($request->get('project'));
+        $chat = $this->dispatch(new CreateChatRoom($user, $project, $request->all()));
+        return response()->json(['success' => true, 'message' => 'Chat Created.', 'chat' => $chat]);
 	}
 
 	/**
@@ -80,9 +92,11 @@ class ChatController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Chat $chat)
 	{
-		//
+        $user = JWTAuth::parseToken()->authenticate();
+        $this->dispatch(new DeleteChatRoom($user, $chat));
+        return response()->json(['success' => true, 'message' => 'Chat Deleted.']);
 	}
 
 }
