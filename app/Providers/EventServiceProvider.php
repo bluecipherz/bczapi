@@ -16,6 +16,7 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		'App\Events\ProjectDeleted' => [
 			'App\Handlers\Events\DeleteFeed',
+			'App\Handlers\Events\CreateFeed',
 		],
 		'App\Events\TaskCreated' => [
 			'App\Handlers\Events\CreateFeed',
