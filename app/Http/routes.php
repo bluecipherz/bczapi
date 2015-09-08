@@ -36,6 +36,7 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
         // Route::post('feeds/{feeds}/comments', 'FeedController@postComment');
         // Route::delete('feeds/{feeds}/comments/{comments}', 'FeedController@deleteComment');
         Route::resource('feeds', 'FeedController', ['only' => ['index']]);
+        Route::get('projects/all', 'ProjectController@all');
         Route::get('projects/{projects}/users', 'ProjectController@users');
         Route::post('projects/{projects}/users/{users}', 'ProjectController@join');
         Route::delete('projects/{projects}/users/{users}', 'ProjectController@leave');

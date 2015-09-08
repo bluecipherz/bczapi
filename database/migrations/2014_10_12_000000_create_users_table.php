@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration {
 			$table->string('password', 60);
 			$table->string('userable_type');
 			$table->unsignedInteger('userable_id');
+            $table->tinyInteger('privilege_level')->default(0);
 			$table->rememberToken();
 			$table->timestamps();
 			$table->softDeletes();

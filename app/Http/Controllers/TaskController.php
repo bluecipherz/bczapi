@@ -33,15 +33,6 @@ class TaskController extends Controller {
 		return $project->tasks;
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
 
 	/**
 	 * Store a newly created resource in storage.
@@ -53,28 +44,6 @@ class TaskController extends Controller {
 		$user = JWTAuth::parseToken()->authenticate();
 		$task = $this->dispatch(new CreateTask($user, $project, $request->all()));
 		return response()->json(['success' => true, 'message' => 'Task Created.', 'task' => $task]);
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
 	}
 
 	/**
