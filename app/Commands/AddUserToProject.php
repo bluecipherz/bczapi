@@ -35,7 +35,6 @@ class AddUserToProject extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->project->users()->save($this->user, ['type' => $this->type]); // belongsToMany
-		event(new MemberAdded($this->user, $this->project, $this->owner));
 		event(new UserAddedToProject($this->owner, $this->project, $this->user, $this->audience));
 		return $this->user;
 	}

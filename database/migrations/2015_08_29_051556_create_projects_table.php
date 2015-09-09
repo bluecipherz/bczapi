@@ -25,6 +25,7 @@ class CreateProjectsTable extends Migration {
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('project_id');
 			$table->string('type');
+            $table->timestamps();
 		});
 	}
 

@@ -52,9 +52,11 @@ class TaskController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Project $project, Task $task, Request $request)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+        $this->dispatch(new UpdateTask($user, $task, $request->all(), null));
+        return response()->json(['success' => true, 'message' => 'Task Updated.']);
 	}
 
 	/**

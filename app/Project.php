@@ -37,7 +37,7 @@ class Project extends Model {
 	 * Members involved in this project. Stored in pivot.
 	 */
 	public function users() {
-		return $this->belongsToMany('App\User', 'users_projects')->withPivot('type');
+		return $this->belongsToMany('App\User', 'users_projects')->withTimestamps()->withPivot('type');
 	}
     
     public function feeds() {

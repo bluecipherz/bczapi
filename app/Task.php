@@ -13,8 +13,12 @@ class Task extends Model {
 		return $this->belongsTo('App\Project');
 	}
 
+    public function users() {
+        return $this->belongsToMany('App\User', 'users_tasks')->withTimestamps()->withPivot('type');
+    }
+    
 	public function owner() {
-		return $this->belongsTo('App\User', 'user_id');
+		return $this->users()->whereType('owner');
 	}
 	
 	public function completedBy() {

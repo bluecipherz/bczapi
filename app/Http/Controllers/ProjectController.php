@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Http\Requests\JoinProjectRequest;
+use App\Http\Requests\LeaveProjectRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -13,14 +15,12 @@ use App\Commands\DeleteProject;
 use JWTAuth;
 use Input;
 use Validator;
-use App\Http\Requests\StoreProjectRequest;
-use App\Http\Requests\JoinProjectRequest;
 
 class ProjectController extends Controller {
 
 	public function __construct() {
 		// $this->middleware('jwt.auth', ['except' => ['index']]);
-		$this->middleware('project.auth', ['only' => ['update', 'destroy', 'leave', 'join']]);
+		$this->middleware('project.auth', ['only' => ['update', 'destroy', 'leave', 'join', 'updateUser']]);
 		$this->middleware('project.access', ['only' => ['users']]);
         $this->middleware('privilege', ['only' => ['all', 'store']]);
 	}
@@ -80,8 +80,9 @@ class ProjectController extends Controller {
 		return response()->json(['success' => true, 'message' => 'Project deleted.']);
 	}
 	
-	public function join(Project $project, User $user, JoinProjectRequest $request) {
+	public function join(Project $project, JoinProjectRequest $request) {
 		$admin = JWTAuth::parseToken()->authenticate();
+        $user = User::findOrFail($request->get('user_id'));
 		$type = $request->get('type');
 		$this->dispatch(new AddUserToProject($admin, $project, $user, $type));
 		return response()->json(['success' => true, 'message' => 'User Joined Project.']);
@@ -92,6 +93,14 @@ class ProjectController extends Controller {
 		$this->dispatch(new RemoveUserFromProject($admin, $project, $user));
 		return response()->json(['success' => true, 'message' => 'User Left Project.']);
 	}
+    
+    public function updateUser(Project $project, User $user, JoinProjectRequest $request) {
+        $data = [
+            'type' => $request->get('type')
+        ];
+        $project->users()->updateExistingPivot($user->id, $data);
+        return response()->json(['success' => true, 'message' => 'Project Member updated.']);
+    }
 	
 	public function users(Project $project) {
 		return $project->users;

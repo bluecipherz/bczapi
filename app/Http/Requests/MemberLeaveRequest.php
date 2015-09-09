@@ -2,8 +2,8 @@
 
 use App\Http\Requests\Request;
 
-class JoinProjectRequest extends Request {
-    
+class MemberLeaveRequest extends Request {
+
 	/**
 	 * Determine if the user is authorized to make this request.
 	 *
@@ -11,7 +11,7 @@ class JoinProjectRequest extends Request {
 	 */
 	public function authorize()
 	{
-        return true;
+		return false;
 	}
 
 	/**
@@ -22,7 +22,7 @@ class JoinProjectRequest extends Request {
 	public function rules()
 	{
 		return [
-			'type' => 'required|in:owner,developer,client'
+			//
 		];
 	}
 

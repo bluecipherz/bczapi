@@ -20,10 +20,10 @@ class TaskCompleted extends Event implements FeedableContract {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, Task $task, Collection $audience = null)
+	public function __construct(User $user, Task $task, Collection $audience = null)
 	{
 		$this->origin = $user;
-		$this->context = $project;
+		$this->context = $task->project;
 		$this->subject = $task;
 		$this->audience = $audience;
 	}

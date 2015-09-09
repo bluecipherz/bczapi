@@ -42,11 +42,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	public function userable() {
 		return $this->morphTo();
 	}
-	
-	public function tasks() {
-		return $this->hasMany('App\Task');
-	}
-	
 	public function messages() {
 		return $this->hasMany('App\Message');
 	}
@@ -56,13 +51,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 	
 	public function projects() {
-		return $this->belongsToMany('App\Project', 'users_projects')->withPivot('type');
+		return $this->belongsToMany('App\Project', 'users_projects')->withPivot('type')->withTimestamps();
 	}
 	
 	public function chats() {
-		return $this->belongsToMany('App\Chat', 'users_chats')->withPivot('type');
+		return $this->belongsToMany('App\Chat', 'users_chats')->withPivot('type')->withTimestamps();
 	}
 	
+	public function tasks() {
+		return $this->belongsToMany('App\Task', 'users_tasks')->withPivot('type')->withTimestamps();
+	}
+		
 	public function statuses() {
 		return $this->hasMany('App\Status');
 	}

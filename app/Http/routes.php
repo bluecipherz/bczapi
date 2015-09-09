@@ -44,7 +44,8 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
 		// PROJECT
         Route::get('projects/all', 'ProjectController@all');
         Route::get('projects/{projects}/users', 'ProjectController@users');
-        Route::post('projects/{projects}/users/{users}', 'ProjectController@join');
+        Route::post('projects/{projects}/users', 'ProjectController@join');
+        Route::post('projects/{projects}/users/{users}', 'ProjectController@updateUser');
         Route::delete('projects/{projects}/users/{users}', 'ProjectController@leave');
         Route::resource('projects', 'ProjectController', ['except' => ['create', 'show', 'edit']]);
 		

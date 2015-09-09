@@ -17,14 +17,22 @@ class CreateTasksTable extends Migration {
 			$table->increments('id');
 			$table->string('name');
 			$table->text('description');
-			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('project_id');
+			$table->timestamp('start_date');
 			$table->integer('duration');
-			$table->unsignedInteger('completed_by');
+            $table->integer('priority');
 			$table->timestamp('completed_at');
+            $table->integer('percentage_completed');
+            $table->integer('whpd');
 			$table->timestamps();
 			$table->softDeletes();
 		});
+        Schema::create('users_tasks', function(Blueprint $table)
+        {
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('task_id');
+            $table->timestamps();
+        });
 	}
 
 	/**
@@ -34,6 +42,7 @@ class CreateTasksTable extends Migration {
 	 */
 	public function down()
 	{
+		Schema::dropIfExists('users_tasks');
 		Schema::dropIfExists('tasks');
 	}
 

@@ -32,7 +32,6 @@ class RemoveUserFromProject extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->project->users()->detach($this->user->id); // belongsToMany
-		event(new MemberRemoved($this->user, $this->project, $this->owner));
 		event(new UserRemovedFromProject($this->owner, $this->project, $this->user));
 		return $this->user;
 	}

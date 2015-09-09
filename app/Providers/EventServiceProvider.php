@@ -24,6 +24,9 @@ class EventServiceProvider extends ServiceProvider {
 		'App\Events\TaskCompleted' => [
 			'App\Handlers\Events\CreateFeed',
 		],
+		'App\Events\TaskPercentChanged' => [
+			'App\Handlers\Events\CreateFeed',
+		],
 		'App\Events\TaskDeleted' => [
 			'App\Handlers\Events\DeleteFeed',
 		],
