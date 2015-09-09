@@ -2,6 +2,7 @@
 
 use App\Http\Requests;
 use App\Http\Requests\JoinProjectRequest;
+use App\Http\Requests\UpdateProjectUserRequest;
 use App\Http\Requests\LeaveProjectRequest;
 use App\Http\Controllers\Controller;
 
@@ -50,7 +51,7 @@ class ProjectController extends Controller {
 	{
         $user = JWTAuth::parseToken()->authenticate();
         $project = $this->dispatch(new CreateProject($user, $request->all()));
-        return $project;
+        return response()->json(['success' => true, 'message' => 'Project Created.', 'project' => $project]);
 	}
 
 	/**
@@ -92,10 +93,8 @@ class ProjectController extends Controller {
 		return response()->json(['success' => true, 'message' => 'User Left Project.']);
 	}
     
-    public function updateUser(Project $project, User $user, JoinProjectRequest $request) {
-        $data = [
-            'type' => $request->get('type')
-        ];
+    public function updateUser(Project $project, User $user, UpdateProjectUserRequest $request) {
+        $data = ['type' => $request->get('type')];
         $project->users()->updateExistingPivot($user->id, $data);
         return response()->json(['success' => true, 'message' => 'Project Member updated.']);
     }

@@ -2,8 +2,8 @@
 
 use App\Http\Requests\Request;
 
-class StoreCommentRequest extends Request {
-
+class UpdateProjectUserRequest extends Request {
+    
 	/**
 	 * Determine if the user is authorized to make this request.
 	 *
@@ -11,7 +11,7 @@ class StoreCommentRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return true;
+        return true;
 	}
 
 	/**
@@ -22,7 +22,8 @@ class StoreCommentRequest extends Request {
 	public function rules()
 	{
 		return [
-			'comment' => 'required'
+			'type' => 'in:owner,developer,client',
+			'user_id' => 'exists:users_projects'
 		];
 	}
 

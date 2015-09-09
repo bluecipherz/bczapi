@@ -12,6 +12,7 @@ use App\Comment;
 use App\Commands\DeleteComment;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\DeleteCommentRequest;
+use App\Feed;
 
 class CommentController extends Controller {
 
@@ -26,60 +27,16 @@ class CommentController extends Controller {
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
-	public function store(StoreCommentRequest $request)
+	public function store(Feed $feed, StoreCommentRequest $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
 		$input = $request->all();
-		$commentable = App::make('App\\' . ucfirst($input['commentable_type']))->findOrFail($input['commentable_id']);
-		$comment = $this->dispatch(new PostComment($user, $input, $commentable));
-		return response()->json(['success' => true, 'message' => 'Comment Posted.', 'comment' => $comment], 200);
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
+		$comment = $this->dispatch(new PostComment($user, $input, $feed));
+		return response()->json(['success' => true, 'message' => 'Comment Posted.', 'comment' => $comment]);
 	}
 
 	/**
@@ -88,7 +45,7 @@ class CommentController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(DeleteCommentRequest $request, Comment $comment)
+	public function destroy(Feed $feed, Comment $comment, DeleteCommentRequest $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
 		$this->dispatch(new DeleteComment($user, $comment));

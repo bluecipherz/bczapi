@@ -48,6 +48,13 @@ class CreateFeed {
 			} else {
 				$this->_createFeed($event);
 			}
+		} else if($event instanceof \App\Events\TaskPercentChanged || $event instanceof \App\Events\TaskCompleted) {
+			$lastFeed = Feed::whereSubjectId($event->getSubject()->id)->first();
+			if($lastFeed) {
+				$lastFeed->type = get_class($event);
+				$lastFeed->origin()->associate($event->getOrigin());
+				$lastFeed->save();
+			}
 		} else {
 			$this->_createFeed($event);
 		}
@@ -69,10 +76,10 @@ class CreateFeed {
 			foreach($event->getAudience() as $audience) {
 				$feed->users()->save($audience);
 			}
-		//~ } else if($event->getTarget()->audience) {
-			//~ foreach($event->getTarget()->audience as $audience) {
-				//~ $feed->users()->save($audience);
-			//~ }
+		} else if($event->getContext() instanceof \App\Project) {
+			foreach($event->getContext()->users as $user) {
+				$feed->users()->save($user);
+			}
 		} else {
 			$users = User::all();
 			$feed->users()->saveMany($users->all());

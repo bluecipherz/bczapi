@@ -21,10 +21,6 @@ class Task extends Model {
 		return $this->users()->whereType('owner');
 	}
 	
-	public function completedBy() {
-		return $this->belongsTo('App\User', 'completed_by');
-	}
-	
 	public function images() {
 		return $this->morphMany('App\Image', 'imageable');
 	}

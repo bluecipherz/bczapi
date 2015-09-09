@@ -15,12 +15,23 @@ class TaskController extends Controller {
 
 	public function __construct() {
 //		$this->middleware('jwt.auth');
+		$this->middleware('project.access');
 	}
 	
-	public function complete(Project $project, Task $task) {
-		$user = JWTAuth::parseToken()->authenticate();
-		$this->dispatch(new CompleteTask($user, $project, $task));
-		return response()->json(['success' => true, 'message' => 'Task Completed.']);
+	public function users(Task $task) {
+		
+	}
+	
+	public function updateUser(Task $task) {
+		
+	}
+	
+	public function addUser(Task $task) {
+		
+	}
+	
+	public function removeUser(Task $task) {
+		
 	}
 	
 	/**
@@ -55,7 +66,7 @@ class TaskController extends Controller {
 	public function update(Project $project, Task $task, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-        $this->dispatch(new UpdateTask($user, $task, $request->all(), null));
+        $this->dispatch(new UpdateTask($user, $task, $request->all()));
         return response()->json(['success' => true, 'message' => 'Task Updated.']);
 	}
 

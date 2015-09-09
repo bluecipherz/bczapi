@@ -41,7 +41,7 @@ class Project extends Model {
 	}
     
     public function feeds() {
-        return $this->morphMany('App\Feed', 'subject');
+        return $this->morphMany('App\Feed', 'context');
     }
     
     public function memberActions() {

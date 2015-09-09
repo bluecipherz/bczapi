@@ -6,22 +6,22 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Comment;
 use App\Events\CommentPosted;
-use Illuminate\Database\Eloquent\Model;
+use App\Feed;
 
 class PostComment extends Command implements SelfHandling {
 
-	protected $user, $data, $commentable;
+	protected $user, $data, $feed;
 	
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, array $data, Model $commentable)
+	public function __construct(User $user, array $data, Feed $feed)
 	{
 		$this->user = $user;
 		$this->data = $data;
-		$this->commentable = $commentable;
+		$this->feed = $feed;
 	}
 
 	/**
@@ -32,11 +32,9 @@ class PostComment extends Command implements SelfHandling {
 	public function handle()
 	{
 		$comment = Comment::create($this->data);
-		$comment->owner()->associate($this->user); // belongsTo
-		//~ $comment->commentable()->associate($this->commentable);
-		//~ $comment->save();
-		$this->commentable->comments()->save($comment);
-		event(new CommentPosted($this->user, $comment, $this->commentable));
+		$this->user->comments()->save($comment);
+		$this->feed->comments()->save($comment);
+		event(new CommentPosted($this->user, $comment, $this->feed));
 		return $comment;
 	}
 

@@ -5,7 +5,7 @@ use App\User;
 use App\Project;
 use App\Commands\CreateProject;
 use App\Commands\CreateTask;
-use App\Commands\CompleteTask;
+use App\Commands\UpdateTask;
 use App\Commands\AddUserToProject;
 
 class ProjectsTasksTableSeeder extends Seeder {
@@ -45,7 +45,7 @@ class ProjectsTasksTableSeeder extends Seeder {
 		$project = Bus::dispatch(new CreateProject($user1, $projectdetails));
 		$task = Bus::dispatch(new CreateTask($user1, $project, $taskdetails));
 		Bus::dispatch(new AddUserToProject($user1, $project, $user2, 'developer'));
-		Bus::dispatch(new CompleteTask($user2, $project, $task));
+		Bus::dispatch(new UpdateTask($user2, $task, ['percentage_completed' => 100]));
 		$task2 = Bus::dispatch(new CreateTask($user2, $project, $taskdetails2));
 	}
 

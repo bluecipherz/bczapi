@@ -35,11 +35,9 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
 		// HOME
 		Route::resource('home', 'HomeController', ['only' => ['index']]);
 		
-		// COMMENTS
-		Route::resource('comments', 'CommentController', ['only' => ['store', 'destroy']]);
-		
 		// FEEDS
         Route::resource('feeds', 'FeedController', ['only' => ['index']]);
+		Route::resource('feeds.comments', 'CommentController', ['only' => ['store', 'destroy']]);
 		
 		// PROJECT
         Route::get('projects/all', 'ProjectController@all');
@@ -50,7 +48,7 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
         Route::resource('projects', 'ProjectController', ['except' => ['create', 'show', 'edit']]);
 		
 		// TASK
-        Route::post('projects/{projects}/tasks/{tasks}', 'TaskController@complete');
+        // Route::post('projects/{projects}/tasks/{tasks}', 'TaskController@complete');
         Route::resource('projects.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
 		
 		// FORUM

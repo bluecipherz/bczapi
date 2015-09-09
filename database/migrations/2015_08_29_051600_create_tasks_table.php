@@ -31,6 +31,7 @@ class CreateTasksTable extends Migration {
         {
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('task_id');
+			$table->string('type');
             $table->timestamps();
         });
 	}

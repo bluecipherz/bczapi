@@ -8,6 +8,7 @@ use App\Task;
 use Illuminate\Database\Eloquent\Collection;
 use App\Events\TaskCompleted;
 use App\Events\TaskPercentChanged;
+use DateTime;
 
 class UpdateTask extends Command implements SelfHandling {
 
@@ -18,7 +19,7 @@ class UpdateTask extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Task $task, array $data, Collection $audience)
+	public function __construct(User $user, Task $task, array $data, Collection $audience = null)
 	{
 		$this->user = $user;
         $this->task = $task;
@@ -39,7 +40,6 @@ class UpdateTask extends Command implements SelfHandling {
             event(new TaskPercentChanged($this->user, $this->task, $this->audience));
         }
         if($this->task->percentage_completed == 100) {
-            $this->task->completed_by = $this->user;
             $this->task->completed_at = new DateTime;
             $this->task->save();
             event(new TaskCompleted($this->user, $this->task, $this->audience));

@@ -32,6 +32,7 @@ class RemoveUserFromProject extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->project->users()->detach($this->user->id); // belongsToMany
+		$this->user->feeds()->whereContextType('App\Project')->whereContextId($this->project->id)->delete();
 		event(new UserRemovedFromProject($this->owner, $this->project, $this->user));
 		return $this->user;
 	}
