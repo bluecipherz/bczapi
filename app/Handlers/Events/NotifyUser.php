@@ -1,6 +1,6 @@
 <?php namespace App\Handlers\Events;
 
-use App\Events\;
+use App\Events\Event;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
@@ -23,7 +23,7 @@ class NotifyUser {
 	 * @param  Events  $event
 	 * @return void
 	 */
-	public function handle(Events $event)
+	public function handle(Event $event)
 	{
 		//
 	}

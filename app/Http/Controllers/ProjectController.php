@@ -49,9 +49,7 @@ class ProjectController extends Controller {
 	public function store(StoreProjectRequest $request)
 	{
         $user = JWTAuth::parseToken()->authenticate();
-        $project = $this->dispatch(
-            new CreateProject($user, $request->except('token'))
-        );
+        $project = $this->dispatch(new CreateProject($user, $request->all()));
         return $project;
 	}
 

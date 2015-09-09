@@ -4,18 +4,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class UserController extends Controller {
-
-    public function join(User $user, MemberJoinRequest $request) {
-		$input = $request->all();
-		$memberable = App::make('App\\' . ucfirst($input['memberable_type']))->findOrFail($input['memberable_id']);
-        
-    }
-    
-    public function leave(MemberLeaveRequest $request, User $user) {
-        
-    }
     
 	/**
 	 * Display a listing of the resource.
@@ -28,56 +19,15 @@ class UserController extends Controller {
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(User $user, Request $request)
 	{
-		//
+		$user->update($request->all());
+        return response()->json(['success' => true, 'message' => 'User updated.']);
 	}
 
 	/**
@@ -86,7 +36,7 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(User $user)
 	{
 		//
 	}

@@ -78,6 +78,9 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
 		
 		// IMAGES
         Route::resource('images', 'ImageController', ['except' => ['create', 'show', 'edit']]);
+        
+        // USERS
+        Route::resource('users', 'UserController', ['only' => ['index', 'update', 'destroy']]);
     });
 });
 
