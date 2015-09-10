@@ -19,7 +19,7 @@ class Feed extends Model {
 	}
 	
 	public function users() {
-		return $this->belongsToMany('App\User', 'feeds_users');
+		return $this->belongsToMany('App\User', 'feeds_users')->withPivot('read');
 	}
 	
 	public function feedable() {
@@ -27,7 +27,7 @@ class Feed extends Model {
 	}
 	
 	public function comments() {
-		return $this->morphMany('App\Comment', 'commentable');
+		return $this->hasMany('App\Comment');
 	}
 	
 	public function getTypeAttribute($value) {

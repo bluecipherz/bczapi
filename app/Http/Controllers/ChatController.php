@@ -24,10 +24,11 @@ class ChatController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-		$user = JWTAuth::parseToken()->authenticate();
-        return $user->chats;
+        $project = Project::find($request->get('project_id'));
+        if($project) return $project->chats;
+        return Chat::all();
 	}
 
 	/**

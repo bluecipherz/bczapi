@@ -1,11 +1,11 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Project\MileStone;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-class ForumController extends Controller {
+class TaskListController extends Controller {
 
 	/**
 	 * Display a listing of the resource.

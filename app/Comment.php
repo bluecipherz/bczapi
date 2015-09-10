@@ -10,17 +10,11 @@ class Comment extends Model {
 	protected $fillable = ['comment'];
 
 	public function commentable() {
-        return $this->morphTo();
+        return $this->belongsTo('App\Feed', 'feed_id');
     }
     
-    // no need. project in feed
-    // just to restrict feed from showing outside of project
-    //~ public function project() {
-		//~ return $this->belongsTo('App\Project');
-	//~ }
-    
-    public function feeds() {
-        return $this->morphMany('App\Feed', 'subject');
+    public function feed() {
+        return $this->morphOne('App\Feed', 'subject');
     }
 	
 	public function images() {
@@ -30,5 +24,9 @@ class Comment extends Model {
 	public function owner() {
 		return $this->belongsTo('App\User', 'user_id');
 	}
+    
+    public function attachments() {
+        return $this->morphMany('App\Attachment', 'attachable');
+    }
 
 }

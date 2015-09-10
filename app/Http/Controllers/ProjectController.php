@@ -22,12 +22,36 @@ class ProjectController extends Controller {
 	public function __construct() {
 		// $this->middleware('jwt.auth', ['except' => ['index']]);
 		$this->middleware('project.auth', ['only' => ['update', 'destroy', 'leave', 'join', 'updateUser']]);
-		$this->middleware('project.access', ['only' => ['users']]);
+		$this->middleware('project.access', ['only' => ['users', 'tasks', 'tasklists', 'milestones', 'forums', 'statuses', 'chats']]);
         $this->middleware('privilege', ['only' => ['all', 'store']]);
 	}
 
     public function all() {
         return Project::all();
+    }
+    
+    public function tasks(Project $project) {
+        return $project->tasks;
+    }
+    
+    public function tasklists(Project $project) {
+        return $project->tasklists;
+    }
+    
+    public function milestones(Project $project) {
+        return $project->milestones;
+    }
+    
+    public function forums(Project $project) {
+        return $project->forums;
+    }
+    
+    public function statuses(Project $project) {
+        return $project->statuses;
+    }
+    
+    public function chats(Project $project) {
+        return $project->chats;
     }
     
 	/**

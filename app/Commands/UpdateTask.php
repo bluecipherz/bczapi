@@ -8,6 +8,8 @@ use App\Task;
 use Illuminate\Database\Eloquent\Collection;
 use App\Events\TaskCompleted;
 use App\Events\TaskPercentChanged;
+use App\Events\TaskUsersChanged;
+use App\Events\TaskPriorityChanged;
 use DateTime;
 
 class UpdateTask extends Command implements SelfHandling {
@@ -35,7 +37,11 @@ class UpdateTask extends Command implements SelfHandling {
 	public function handle()
 	{
 		$percent = $this->task->percentage_completed;
+        $priority = $this->task->priority;
         $this->task->update($this->data);
+        if($this->task->priority != $priority) {
+            event(new TaskPriorityChanged($this->user, $this->task, $this->audience));
+        }
         if($this->task->percentage_completed != $percent && $this->task->percentage_completed != 100) {
             event(new TaskPercentChanged($this->user, $this->task, $this->audience));
         }

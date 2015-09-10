@@ -25,14 +25,10 @@ class Chat extends Model {
 		return $this->belongsTo('App\Project');
 	}
 	
-	public function feeds() {
-		return $this->morphMany('App\Feed', 'subject');
+	public function feed() {
+		return $this->morphOne('App\Feed', 'subject');
 	}
 	
-    public function memberActions() {
-		return $this->morphMany('App\MemberAction', 'memberable');
-	}
-    
     public function scopeCommon($query) {
 		return $query->where('project_id', '=', 0);
 	}

@@ -40,6 +40,10 @@ class Project extends Model {
 		return $this->belongsToMany('App\User', 'users_projects')->withTimestamps()->withPivot('type');
 	}
     
+    public function feed() {
+        return $this->morphOne('App\Feed', 'subject');
+    }
+    
     public function feeds() {
         return $this->morphMany('App\Feed', 'context');
     }
@@ -62,5 +66,9 @@ class Project extends Model {
 	public function owner() {
 		return $this->users()->whereType('owner');
 	}
+    
+    public function attachments() {
+        return $this->morphMany('App\Attachment', 'attachable');
+    }
 
 }

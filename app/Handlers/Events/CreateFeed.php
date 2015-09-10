@@ -48,7 +48,10 @@ class CreateFeed {
 			} else {
 				$this->_createFeed($event);
 			}
-		} else if($event instanceof \App\Events\TaskPercentChanged || $event instanceof \App\Events\TaskCompleted) {
+		} else if($event instanceof \App\Events\TaskPercentChanged ||
+                  $event instanceof \App\Events\TaskCompleted ||
+                  $event instanceof \App\Events\TaskPriorityChanged ||
+                  $event instanceof \App\Events\TaskUsersChanged) {
 			$lastFeed = Feed::whereSubjectId($event->getSubject()->id)->first();
 			if($lastFeed) {
 				$lastFeed->type = get_class($event);

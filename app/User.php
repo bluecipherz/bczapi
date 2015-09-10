@@ -87,7 +87,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
     
 	public function feeds() {
-		return $this->belongsToMany('App\Feed', 'feeds_users');
+		return $this->belongsToMany('App\Feed', 'feeds_users')->withPivot('read');
 	}
 	
 	public function ownChats() {

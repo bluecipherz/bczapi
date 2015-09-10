@@ -4,7 +4,7 @@ use App\Events\Event;
 
 use Illuminate\Queue\SerializesModels;
 
-class ClientAddedToProject extends Event {
+class TaskUsersChanged extends Event {
 
 	use SerializesModels;
 

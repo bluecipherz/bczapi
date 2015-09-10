@@ -17,8 +17,8 @@ class Status extends Model {
 		return $this->belongsTo('App\User', 'user_id');
 	}
 	
-	public function feeds() {
-		return $this->morphMany('App\Feed', 'subject');
+	public function feed() {
+		return $this->morphOne('App\Feed', 'subject');
 	}
 	
 	public function project() {
@@ -32,5 +32,9 @@ class Status extends Model {
 	public function scopeProject($query) {
 		return $query->where('project_id', '>', 0);
 	}
+    
+    public function attachments() {
+        return $this->morphMany('App\Attachment', 'attachable');
+    }
 
 }

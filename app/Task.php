@@ -25,12 +25,20 @@ class Task extends Model {
 		return $this->morphMany('App\Image', 'imageable');
 	}
     
-    public function feeds() {
-        return $this->morphMany('App\Feed', 'subject');
+    public function feed() {
+        return $this->morphOne('App\Feed', 'subject');
     }
     
-    public function comments() {
-		return $this->morphMany('App\Comment', 'commentable');
-	}
+    public function attachments() {
+        return $this->morphMany('App\Attachment', 'attachable');
+    }
+    
+    public function tasklist() {
+        return $this->belongsTo('App\TaskList');
+    }
+    
+    public function checklists() {
+        return $this->hasMany('App\CheckList');
+    }
     
 }

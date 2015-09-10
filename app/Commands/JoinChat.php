@@ -31,14 +31,7 @@ class JoinChat extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		$this->chat->users()->attach($this->user->id); // belongsToMany
-		$action = new MemberAction([
-			'action' => ChatUserJoined::class
-		]);
-		if($this->admin) $action->admin()->associate($this->admin);
-		$action->user()->associate($this->user);
-		$action->memberable()->associate($this->chat);
-//        event(new MemberJoined($this->user, $this->chat, $this->admin));
+		$this->chat->users()->attach($this->user->id, ['type' => 'member']); // belongsToMany
 		event(new ChatUserJoined($this->user, $this->chat, $this->admin));
         return $action;
 	}

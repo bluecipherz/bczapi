@@ -8,6 +8,10 @@ use App\User;
 
 class UserController extends Controller {
     
+	public function __construct() {
+		$this->middleware('privilege');
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -15,7 +19,7 @@ class UserController extends Controller {
 	 */
 	public function index()
 	{
-		//
+		return User::all();
 	}
 
 	/**
@@ -38,7 +42,8 @@ class UserController extends Controller {
 	 */
 	public function destroy(User $user)
 	{
-		//
+		$user->delete();
+		return response()->json(['success' => true, 'message' => 'User deleted.']);
 	}
 
 }

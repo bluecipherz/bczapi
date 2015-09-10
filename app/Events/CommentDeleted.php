@@ -4,7 +4,7 @@ use App\Events\Event;
 use App\Events\Contracts\FeedableEvent as FeedableContract;
 use App\Events\Traits\FeedableEvent as FeedableTrait;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use App\Feed;
 
 use Illuminate\Queue\SerializesModels;
 use App\User;
@@ -20,11 +20,11 @@ class CommentDeleted extends Event implements FeedableContract {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Comment $comment, Model $commentable, Collection $audience = null)
+	public function __construct(User $user, Comment $comment, Feed $feed, Collection $audience = null)
 	{
 		$this->origin = $user;
 		$this->subject = $comment;
-		$this->context = $commentable;
+		$this->context = $feed;
 		$this->audience = $audience;
 	}
 	

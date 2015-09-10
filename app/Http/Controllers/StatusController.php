@@ -19,8 +19,7 @@ class StatusController extends Controller {
 	 */
 	public function index()
 	{
-        $user = JWTAuth::parseToken()->authenticate();
-		return $user->statuses;
+    	return Status::all();
 	}
 
 	/**

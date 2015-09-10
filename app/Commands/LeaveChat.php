@@ -32,12 +32,6 @@ class LeaveChat extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->chat->users()->detach($this->user->id);
-		$action = new MemberAction([
-			'action' => ChatUserLeft::class
-		]);
-		if($this->admin) $action->admin()->associate($this->admin);
-		$action->user()->associate($this->user);
-		$action->memberable()->associate($this->chat);
 		event(new ChatUserLeft($this->user, $this->chat, $this->admin));
         return $action;
 	}

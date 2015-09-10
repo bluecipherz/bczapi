@@ -13,12 +13,16 @@ class Forum extends Model {
 		return $this->belongsTo('App\User', 'user_id');
 	}
     
-    public function feeds() {
-        return $this->morphMany('App\Feed', 'subject');
+    public function feed() {
+        return $this->morphOne('App\Feed', 'subject');
     }
     
 	public function project() {
 		return $this->belongsTo('App\Project');
 	}
+    
+    public function attachments() {
+        return $this->morphMany('App\Attachment', 'attachable');
+    }
 
 }

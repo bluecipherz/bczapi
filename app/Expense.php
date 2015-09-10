@@ -8,8 +8,4 @@ class Expense extends Model {
         return $this->belongsTo('App\User');
     }
     
-    public function feeds() {
-        return $this->morphMany('App\Feed', 'feedable');
-    }
-    
 }
