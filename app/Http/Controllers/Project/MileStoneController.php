@@ -1,18 +1,18 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Project;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use App\Project
+use App\Project;
+use App\Milestone;
+use JWTAuth;
+use App\Commands\CreateMileStone;
+use App\Commands\DeleteMileStone;
+use App\Commands\UpdateMileStone;
 
 class MileStoneController extends Controller {
 
-    public function __construct()
-    {
-        $this->middleware('project.access');
-    }
-    
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -24,45 +24,16 @@ class MileStoneController extends Controller {
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Project $project, Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$milestone = $this->dispatch(new CreateMileStone($user, $project, $request->all(), $audience)));
+		return response()->json(['success' => true, 'message' => 'Project Milestone Created.', 'milestone' => $milestone]);
 	}
 
 	/**
@@ -71,9 +42,11 @@ class MileStoneController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Project $project, MileStone $milestone, Request $request)
 	{
-		//
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new UpdateMileStone($user, $milestone, $request->all(), $audience));
+		return response()->json(['success' => true, 'message' => 'Project Milestone Updated']);
 	}
 
 	/**
@@ -82,9 +55,12 @@ class MileStoneController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Project $project, MileStone $milestone)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteMileStone($user, $project, $milestone, $audience)));
+		return response()->json(['success' => true, 'message' => 'Project Milestone Deleted.']);
 	}
 
 }

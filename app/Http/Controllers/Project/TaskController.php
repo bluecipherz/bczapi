@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Project;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -14,24 +14,7 @@ use JWTAuth;
 class TaskController extends Controller {
 
 	public function __construct() {
-//		$this->middleware('jwt.auth');
-		$this->middleware('project.access');
-	}
-	
-	public function users(Task $task) {
-		
-	}
-	
-	public function updateUser(Task $task) {
-		
-	}
-	
-	public function addUser(Task $task) {
-		
-	}
-	
-	public function removeUser(Task $task) {
-		
+		// $this->middleware('project.access');
 	}
 	
 	/**
@@ -53,7 +36,8 @@ class TaskController extends Controller {
 	public function store(Request $request, Project $project)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$task = $this->dispatch(new CreateTask($user, $project, $request->all()));
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$task = $this->dispatch(new CreateTask($user, $project, $request->all(), $audience));
 		return response()->json(['success' => true, 'message' => 'Task Created.', 'task' => $task]);
 	}
 
@@ -66,7 +50,8 @@ class TaskController extends Controller {
 	public function update(Project $project, Task $task, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-        $this->dispatch(new UpdateTask($user, $task, $request->all()));
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $this->dispatch(new UpdateTask($user, $task, $request->all(), $audience));
         return response()->json(['success' => true, 'message' => 'Task Updated.']);
 	}
 
@@ -79,7 +64,8 @@ class TaskController extends Controller {
 	public function destroy(Project $project, Task $task)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$this->dispatch(new DeleteTask($user, $project, $task));
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteTask($user, $project, $task, $audience));
         return response()->json(['success' => true, 'message' => 'Task Deleted.']);
 	}
 

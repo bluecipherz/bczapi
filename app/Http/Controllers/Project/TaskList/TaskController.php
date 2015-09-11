@@ -7,56 +7,33 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller {
 
+	public function __construct() {
+//		$this->middleware('jwt.auth');
+		// $this->middleware('project.access');
+	}
+	
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Project $project, TaskList $tasklist)
 	{
-		//
+		return $tasklist->tasks;
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
 
 	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Project $project, TaskList $tasklist, Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$task = $this->dispatch(new CreateTask($user, $project, $request->all(), $audience));
+		return response()->json(['success' => true, 'message' => 'Task Created.', 'task' => $task]);
 	}
 
 	/**
@@ -65,9 +42,12 @@ class TaskController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Project $project, TaskList $tasklist, Task $task, Request $request)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $this->dispatch(new UpdateTask($user, $task, $request->all(), $audience));
+        return response()->json(['success' => true, 'message' => 'Task Updated.']);
 	}
 
 	/**
@@ -76,9 +56,12 @@ class TaskController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Project $project, TaskList $tasklist, Task $task)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteTask($user, $project, $task, $audience));
+        return response()->json(['success' => true, 'message' => 'Task Deleted.']);
 	}
 
 }

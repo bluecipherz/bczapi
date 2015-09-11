@@ -23,7 +23,7 @@ class StoreProjectRequest extends Request {
 	{
 		return [
 			'name' => 'required',
-			'description' => 'required'
+			'description' => 'required',
 		];
 	}
 

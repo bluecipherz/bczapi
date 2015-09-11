@@ -75,7 +75,7 @@ class CreateFeed {
 		if($context) { $feed->context()->associate($context); }
 		$feed->save();
 		
-		if($event->getAudience()) {
+		if($event->getAudience() != null && $event->getAudience()->count() > 0) {
 			foreach($event->getAudience() as $audience) {
 				$feed->users()->save($audience);
 			}

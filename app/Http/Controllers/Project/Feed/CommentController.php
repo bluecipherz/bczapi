@@ -8,66 +8,17 @@ use Illuminate\Http\Request;
 class CommentController extends Controller {
 
 	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Project $project, Feed $feed, StoreCommentRequest $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$input = $request->all();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$comment = $this->dispatch(new PostComment($user, $input, $feed, $audience));
+		return response()->json(['success' => true, 'message' => 'Comment Posted.', 'comment' => $comment]);
 	}
 
 	/**
@@ -76,9 +27,12 @@ class CommentController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Project $project, Feed $feed, Comment $comment, DeleteCommentRequest $request)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteComment($user, $comment, $audience));
+		return response()->json(['success' => true, 'message' => 'Comment Deleted.']);
 	}
 
 }

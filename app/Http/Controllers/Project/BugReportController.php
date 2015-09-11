@@ -1,17 +1,18 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Project;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Project;
+use App\BugReport;
 
 class BugReportController extends Controller {
 
-    public function __construct()
-    {
-        $this->middleware('project.access');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('project.access');
+    // }
     
 	/**
 	 * Display a listing of the resource.
@@ -24,45 +25,14 @@ class BugReportController extends Controller {
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Project $project, Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$bugreport = $project->bugreports()->create($request->all());
+		return response()->json(['success' => true, 'message' => 'Bugreport Created.', 'bugreport' => $bugreport]);
 	}
 
 	/**
@@ -71,9 +41,10 @@ class BugReportController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Project $project, BugReport $bugreport, Request $request)
 	{
-		//
+		$bugreport->update($request->all());
+		return response()->json(['success' => true, 'message' => 'Bugreport Updated.']);
 	}
 
 	/**
@@ -82,9 +53,10 @@ class BugReportController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Project $project, BugReport $bugreport)
 	{
-		//
+		$bugreport->delete();
+		return response()->json(['success' => true, 'message' => 'Bugreport Deleted.']);
 	}
 
 }

@@ -12,19 +12,9 @@ class CheckListController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Project $project, TaskList $task, Task $task)
 	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
+		return $task->checklists;
 	}
 
 	/**
@@ -32,31 +22,12 @@ class CheckListController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Project $project, TaskList $task, Task $task, Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$checklist = $this->dispatch(new CreateCheckList($user, $project, $task, $request->all(), $audience));
+		return response()->json(['success' => true, 'message' => 'Checklist created.', 'checklist' => $checklist]);
 	}
 
 	/**
@@ -65,9 +36,12 @@ class CheckListController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Project $project, TaskList $task, Task $task, CheckList $checklist, Request $request)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new UpdateCheckList($user, $project, $task, $checklist, $request->all(), $audience));
+		return response()->json(['success' => true, 'message' => 'Checklist updated.']);
 	}
 
 	/**
@@ -76,9 +50,12 @@ class CheckListController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Project $project, TaskList $task, Task $task, CheckList $checklist)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteCheckList($user, $project, $task, $checklist, $audience));
+		return response()->json(['success' => true, 'message' => 'Checklist deleted']);
 	}
 
 }

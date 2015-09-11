@@ -4,6 +4,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Expense;
+
 
 class ExpenseController extends Controller {
 
@@ -14,17 +16,7 @@ class ExpenseController extends Controller {
 	 */
 	public function index()
 	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
+		return Expense::all();
 	}
 
 	/**
@@ -32,31 +24,10 @@ class ExpenseController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$expense = Expense::create($request->all());
+		return response()->json(['success' => true, 'message' => 'Expense Record Created.', 'expense' => $expense]);
 	}
 
 	/**
@@ -65,9 +36,10 @@ class ExpenseController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Expense $expense, Request $request)
 	{
-		//
+		$expense->update($request->all());
+		return response()->json(['success' => true, 'message' => 'Expense Record Updated.']);
 	}
 
 	/**
@@ -76,9 +48,10 @@ class ExpenseController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Expense $expense)
 	{
-		//
+		$expense->delete();
+		return response()->json(['success' => true, 'message' => 'Expense Record Deleted.']);
 	}
 
 }

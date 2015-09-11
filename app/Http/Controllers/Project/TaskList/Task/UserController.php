@@ -12,9 +12,9 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Project $project, TaskList $tasklist, Task $task)
 	{
-		//
+		return $task->users;
 	}
 
 	/**

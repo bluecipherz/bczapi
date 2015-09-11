@@ -30,8 +30,8 @@ class SendChatMessage extends Command implements SelfHandling {
 	public function handle()
 	{
 		$message = Message::create($this->data);
-		$message->user()->associate($this->user);
-		$chat->messsages()->associate($message);
+		$this->user->messages()->save($message);
+		$this->chat->messsages()->save($message);
 		event(new MessagePosted($this->chat, $message, $this->user));
 		return $message;
 	}

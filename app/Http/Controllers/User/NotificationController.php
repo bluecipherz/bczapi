@@ -4,6 +4,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\User;
+use App\Notification;
 
 class NotificationController extends Controller {
 
@@ -12,19 +14,9 @@ class NotificationController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(User $user)
 	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
+		return $user->notifications;
 	}
 
 	/**
@@ -32,31 +24,10 @@ class NotificationController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(User $user, Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$notification = $user->notifications()->create($request->all());
+		return response()->json(['success' => true, 'message' => 'Notification created.']);
 	}
 
 	/**
@@ -65,9 +36,10 @@ class NotificationController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(User $user, Notification $notification, Request $request)
 	{
-		//
+		$notification->update($request->all());
+		return response()->json(['success' => true, 'message' => 'Notification updated.']);
 	}
 
 	/**
@@ -76,9 +48,10 @@ class NotificationController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(User $user, Notification $notification)
 	{
-		//
+		$notification->delete();
+		return response()->json(['success' => true, 'message' => 'Notification deleted.']);
 	}
 
 }

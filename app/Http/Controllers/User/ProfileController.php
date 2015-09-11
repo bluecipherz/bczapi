@@ -12,19 +12,9 @@ class ProfileController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(User $user)
 	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
+		return $user->profile;
 	}
 
 	/**
@@ -32,31 +22,10 @@ class ProfileController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(User $user, Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$profile = $user->profile()->create($request->all());
+		return response()->json(['success' => true, 'message' => 'Profile created.', 'profile' => $profile]);
 	}
 
 	/**
@@ -65,20 +34,10 @@ class ProfileController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(User $user, Profile $profile, Request $request)
 	{
-		//
+		$profile->update($request->all());
+		return response()->json(['success' => true, 'message' => 'Profile updated.']);
 	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
-
+	
 }

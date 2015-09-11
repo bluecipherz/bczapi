@@ -7,10 +7,11 @@ use App\Project;
 use App\Events\ProjectCreated;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
+use App\Http\Requests\StoreProjectRequest;
 
 class CreateProject extends Command implements SelfHandling {
 
-	protected $data, $user, $audience;
+	protected $user, $data, $audience;
 
 	/**
 	 * Create a new command instance.
@@ -33,7 +34,6 @@ class CreateProject extends Command implements SelfHandling {
 	{
 		$project = Project::create($this->data);
 		$this->user->projects()->save($project, ['type' => 'owner']);
-//        $audience = User::whereIn($data['audience'])->get();
 		event(new ProjectCreated($this->user, $project, $this->audience));
 		return $project;
 	}

@@ -23,16 +23,6 @@ class StatusController extends Controller {
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
@@ -40,31 +30,9 @@ class StatusController extends Controller {
 	public function store(Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-        $project = Project::find($request->get('project'));
-		$status = $this->dispatch(new PostStatus($user, $project, $request->all()));
+       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$status = $this->dispatch(new PostStatus($user, null, $request->all(), $audience));
 		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status]);
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
 	}
 
 	/**
@@ -73,9 +41,10 @@ class StatusController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Status $status, Request $request)
 	{
-		//
+		$status->update($request->all());
+		return response()->json(['success' => true, 'message' => 'Status Updated.']);
 	}
 
 	/**
@@ -84,10 +53,11 @@ class StatusController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Status $status)
+	public function destroy(Status $status, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-        $this->dispatch(new DeleteStatus($user, $status));
+       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $this->dispatch(new DeleteStatus($user, $status, $audience));
         return response()->json(['success' => true, 'message' => 'Status Deleted.']);
 	}
 

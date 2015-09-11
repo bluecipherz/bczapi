@@ -4,6 +4,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Project;
+use App\User;
+use JWTAuth;
+use App\Commands\AddUserToProject;
+use App\Commands\RemoveUserFromProject;
+use App\Http\Requests\JoinProjectRequest;
+use App\Http\Requests\UpdateProjectUserRequest;
 
 class UserController extends Controller {
 
@@ -12,19 +19,9 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Project $project)
 	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
+		return $project->users;
 	}
 
 	/**
@@ -32,31 +29,14 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Project $project, JoinProjectRequest $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$admin = JWTAuth::parseToken()->authenticate();
+        $user = User::findOrFail($request->get('user_id'));
+		$type = $request->get('type');
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new AddUserToProject($admin, $project, $user, $type, $audience));
+		return response()->json(['success' => true, 'message' => 'User Joined Project.']);
 	}
 
 	/**
@@ -65,9 +45,11 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Project $project, User $user, UpdateProjectUserRequest $request)
 	{
-		//
+        $data = ['type' => $request->get('type')];
+        $project->users()->updateExistingPivot($user->id, $data);
+        return response()->json(['success' => true, 'message' => 'Project Member updated.']);
 	}
 
 	/**
@@ -76,9 +58,12 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Project $project, User $user)
 	{
-		//
+		$admin = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new RemoveUserFromProject($admin, $project, $user, $audience));
+		return response()->json(['success' => true, 'message' => 'User Left Project.']);
 	}
 
 }

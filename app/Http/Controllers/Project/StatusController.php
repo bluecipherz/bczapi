@@ -4,6 +4,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Project;
+use App\Status;
+use JWTAuth;
 
 class StatusController extends Controller {
 
@@ -12,19 +15,9 @@ class StatusController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Project $project)
 	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
+    	return $project->statuses;
 	}
 
 	/**
@@ -32,31 +25,12 @@ class StatusController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Project $project, Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$status = $this->dispatch(new PostStatus($user, $project, $request->all(), $audience));
+		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status]);
 	}
 
 	/**
@@ -65,9 +39,10 @@ class StatusController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Project $project, Status $status, Request $request)
 	{
-		//
+		$status->update($request->all());
+		return response()->json(['success' => true, 'message' => 'Status Updated.']);
 	}
 
 	/**
@@ -76,9 +51,13 @@ class StatusController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Project $project, Status $status)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $this->dispatch(new DeleteStatus($user, $status, $audience));
+        return response()->json(['success' => true, 'message' => 'Status Deleted.']);
 	}
+
 
 }

@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Feed;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -17,16 +17,6 @@ use App\Feed;
 class CommentController extends Controller {
 
 	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
@@ -34,8 +24,7 @@ class CommentController extends Controller {
 	public function store(Feed $feed, StoreCommentRequest $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$input = $request->all();
-		$comment = $this->dispatch(new PostComment($user, $input, $feed));
+		$comment = $this->dispatch(new PostComment($user, $request->all(), $feed));
 		return response()->json(['success' => true, 'message' => 'Comment Posted.', 'comment' => $comment]);
 	}
 

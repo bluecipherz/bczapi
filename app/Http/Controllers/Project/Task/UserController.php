@@ -12,19 +12,9 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Project $project, Task $task)
 	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
+		return $task->users;
 	}
 
 	/**
@@ -32,31 +22,13 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Project $project, Task $task, Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$admin = JWTAuth::parseToken()->authenticate();
+		$user = User::findOrFail($request->get('user_id'));
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new AddUserToTask($admin, $task, $user, $audience));
+		return response()->json(['success' => true, 'message' => 'User assigned to task.']);
 	}
 
 	/**
@@ -65,9 +37,10 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Project $project, Task $task, User $user, Request $request)
 	{
-		//
+		$task->users()->updateExistingPivot($user->id, $request->only('type'));
+		return response()->json(['success' => true, 'message' => 'Task assignee updated.']);
 	}
 
 	/**
@@ -76,9 +49,12 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Project $project, Task $task, User $user)
 	{
-		//
+		$admin = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new RemoveUserFromTask($admin, $task, $user, $audience));
+		return response()->json(['success' => true, 'message' => 'User unassigned from task.']);
 	}
 
 }

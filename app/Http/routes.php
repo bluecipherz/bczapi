@@ -30,10 +30,13 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
     Route::post('register', 'AuthController@register');
     Route::get('authenticate/{user?}', 'AuthController@index');
     Route::group(['middleware' => 'jwt.auth'], function() {
-		// LINE START ====================================================================
 	
 		// HOME
 		Route::resource('home', 'HomeController', ['only' => ['index']]);
+
+        // ME
+        Route::get('/me/projects', 'MeController@projects');
+        Route::get('/me/feeds', 'MeController@feeds');
 		
 		// FEEDS
         Route::resource('feeds', 'FeedController', ['only' => ['index']]);
@@ -41,56 +44,101 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
 
         // COMMENTS
         Route::resource('feeds.comments', 'Feed\CommentController', ['only' => ['store', 'destroy']]);
-        Route::resource('projects.feeds.comments', 'Project\Feed\CommentController', ['only' => ['store', 'destroy']]);
+        // Route::resource('projects.feeds.comments', 'Project\Feed\CommentController', ['only' => ['store', 'destroy']]);
 		
-		// PROJECTS
+        // PROJECTS GROUP =============================================================
+
+        // PROJECTS
         Route::get('projects/all', 'ProjectController@all');
         Route::resource('projects', 'ProjectController', ['except' => ['create', 'show', 'edit']]);
-		
-        // MILESTONES
-        Route::resource('projects.milestones', 'Project\MileStoneController', ['except' => ['create', 'show', 'edit']]);
         
-        // TASKLISTS
-        Route::resource('projects.tasklists', 'Project\TaskListController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.milestones.tasklists', 'Project\TaskListController', ['except' => ['create', 'show', 'edit']]);
+		// Project namespace
+        Route::group(['namespace' => 'Project', 'middleware' => 'project.access'], function() {
+            // MILESTONES
+            Route::resource('projects.milestones', 'MileStoneController', ['except' => ['create', 'show', 'edit']]);
+            // TASKLISTS
+            Route::resource('projects.tasklists', 'TaskListController', ['except' => ['create', 'show', 'edit']]);
+            Route::resource('projects.milestones.tasklists', 'TaskListController', ['except' => ['create', 'show', 'edit']]);
+            // TASKS
+            Route::resource('projects.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
+            // Project/Milestone namespace
+            Route::group(['namespace' => 'MileStone'], function() {
+                // TASKLISTS
+                Route::resource('projects.milestones.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
+                // Project/MileStone/TaskList namespace
+                Route::group(['namespace' => 'TaskList'], function() {
+                    // TASKLISTS
+                    Route::resource('projects.milestones.tasklists.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
+                    // Project/MileStone/TaskList/Task namespace
+                    Route::group(['namespace' => 'Task'], function() {                            
+                        // CHECKLISTS
+                        Route::resource('projects.milestones.tasklists.tasks.checklists', 'CheckListController', ['except' => ['create', 'show', 'edit']]);
+                        // USERS
+                        Route::resource('projects.milestone.tasklists.tasks.users', 'UserController', ['except' => ['create', 'show', 'edit']]);
+                    });
+                });
+            });
+
+            // Project/TaskList namespace
+            Route::group(['namespace' => 'TaskList'], function() {
+                // TASKLISTS
+                Route::resource('projects.tasklists.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
+                // Project/TaskList/Task namespace
+                Route::group(['namespace' => 'Task'], function() {
+                    // CHECKLISTS
+                    Route::resource('projects.tasklists.tasks.checklists', 'CheckListController', ['except' => ['create', 'show', 'edit']]);    
+                    // USERS
+                    Route::resource('projects.tasklists.tasks.users', 'UserController', ['except' => ['create', 'show', 'edit']]);
+                });
+            });
+
+            // Project/Task namespace
+            Route::group(['namespace' => 'Task'], function() {
+                // CHECKLISTS
+                Route::resource('projects.tasks.checklists', 'CheckListController', ['except' => ['create', 'show', 'edit']]);
+                // USERS
+                Route::resource('projects.tasks.users', 'UserController', ['except' => ['create', 'show', 'edit']]);
+            });
+
+            Route::group(['namespace' => 'User'], function() {
+                Route::resource('users.projects', 'ProjectController', ['only' => ['index']]);
+                Route::resource('users.profile', 'ProfileController', ['only' => ['index', 'store', 'update']]);
+                Route::resource('users.notifications', 'NotificationController', ['except' => ['create', 'edit', 'show']]);
+            });
+
+            // CHAT USERS
+            Route::resource('projects.chat.users', 'Chat\UserController', ['except' => ['create', 'show', 'edit']]);
+            
+    		// BUGREPORTS
+            Route::resource('projects.bugreports', 'BugReportController', ['except' => ['create', 'show', 'edit']]);                
+    		// FORUMS
+            Route::resource('projects.forums', 'ForumController', ['except' => ['create', 'show', 'edit']]);
+    		// STATUSES
+            Route::resource('projects.statuses', 'StatusController', ['except' => ['create', 'show', 'edit']]); // project nested
+            // INVOICES
+            Route::resource('projects.invoices', 'InvoiceController', ['except' => ['create', 'show', 'edit']]);
+    		// CHATS
+            Route::resource('projects.chats', 'ChatController', ['except' => ['create', 'show', 'edit']]); // project nested
+            // EXPENSES
+            Route::resource('projects.expenses', 'ExpenseController', ['except' => ['create', 'show', 'edit']]);
+            // USERS
+            Route::resource('projects.users', 'UserController', ['except' => ['create', 'show', 'edit']]);
+
+        });
         
-		// TASKS
-        Route::resource('projects.tasks', 'Project\TaskController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.milestones.tasks', 'Project\MileStone\TaskController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.tasklists.tasks', 'Project\TaskList\TaskController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.milestones.tasklists.tasks', 'Project\MileStone\TaskList\TaskController', ['except' => ['create', 'show', 'edit']]);
-        
-        // CHECKLISTS
-        Route::resource('projects.tasks.checklists', 'Project\Task\CheckListController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.tasklists.tasks.checklists', 'Project\TaskList\Task\CheckListController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.milestones.tasklists.tasks.checklists', 'Project\MileStone\TaskList\Task\CheckListController', ['except' => ['create', 'show', 'edit']]);
-        
-		// BUGREPORTS
-        Route::resource('projects.bugreports', 'Project\BugReportController', ['except' => ['create', 'show', 'edit']]);
-        
-		// FORUMS
-        Route::resource('projects.forums', 'Project\ForumController', ['except' => ['create', 'show', 'edit']]);
-		
-		// STATUSES
-        Route::resource('projects.statuses', 'Project\StatusController', ['except' => ['create', 'show', 'edit']]); // project nested
-		Route::resource('statuses', 'StatusController', ['except' => ['create', 'show', 'edit']]);
-		
-		// CHATS
-        Route::resource('projects.chats', 'Project\ChatController', ['except' => ['create', 'show', 'edit']]); // project nested
-		Route::resource('chats', 'ChatController', ['except' => ['create', 'show', 'edit']]);
+        // PROJECTS GROUP END ===========================================================
+
+        // STATUSES
+        Route::resource('statuses', 'StatusController', ['except' => ['create', 'show', 'edit']]);
+
+        // CHATS
+        Route::resource('chats', 'ChatController', ['except' => ['create', 'show', 'edit']]);
 		
 		// CHAT MESSAGES
-        Route::resource('chats.messages', 'MessageController', ['except' => ['create', 'show', 'edit']]);
-
-        // INVOICES
-        Route::resource('projects.invoices', 'InvoiceController', ['except' => ['create', 'show', 'edit']]);
+        Route::resource('chats.messages', 'Chat\MessageController', ['except' => ['create', 'show', 'edit']]);
 
         // EXPENSES
         Route::resource('expenses', 'ExpenseController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.expenses', 'Project\ExpenseController', ['except' => ['create', 'show', 'edit']]);
-		
-		// LINE ===========================================================
-		
 		
 		// IMAGES
         Route::resource('images', 'ImageController', ['except' => ['create', 'show', 'edit']]);
@@ -98,11 +146,6 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
         // USERS
         Route::resource('users', 'UserController', ['only' => ['index', 'update', 'destroy']]);
         Route::resource('chats.users', 'Chat\UserController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.users', 'Project\UserController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.tasks.users', 'Project\Task\UserController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.tasklists.tasks.users', 'Project\TaskList\Task\UserController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.milestone.tasklists.tasks.users', 'Project\MileStone\TaskList\Task\UserController', ['except' => ['create', 'show', 'edit']]);
-        Route::resource('projects.chat.users', 'Project\Chat\UserController', ['except' => ['create', 'show', 'edit']]);
 
         // ATTACHMENTS
     });
@@ -122,4 +165,13 @@ Route::get('test', function() {
 
 Route::post('test', function() {
 	return array_merge(['method' => 'post'], \Input::all());
+});
+
+Route::get('arr_test', function() {
+    $audience = App\User::whereIn('id', explode(',', Input::get('audience')))->get();
+    if($audience->count()) {
+        return 'audience';
+    } else {
+        return 'no audience';
+    }
 });

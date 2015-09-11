@@ -1,9 +1,11 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Project;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Project;
+use App\Invoice;
 
 class InvoiceController extends Controller {
 
@@ -12,19 +14,9 @@ class InvoiceController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Project $project)
 	{
-		//
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
+		return $project->invoice;
 	}
 
 	/**
@@ -32,31 +24,10 @@ class InvoiceController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Project $project, Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$invoice = $project->invoice()->create($request->all());
+		return response()->json(['success' => true, 'message' => 'Project Invoice Created.', 'invoice' => $invoice]);
 	}
 
 	/**
@@ -65,9 +36,10 @@ class InvoiceController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Project $project, Invoice $invoice, Request $request)
 	{
-		//
+		$invoice->update($request->all());
+		return response()->json(['success' => true, 'message' => 'Project Invoice Updated']);
 	}
 
 	/**
@@ -76,9 +48,10 @@ class InvoiceController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Project $project, Invoice $invoice)
 	{
-		//
+		$invoice->delete();
+		return response()->json(['success' => true, 'message' => 'Project Invoice Updated']);
 	}
 
 }

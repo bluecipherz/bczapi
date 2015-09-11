@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Project;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -8,10 +8,10 @@ use App\Project;
 
 class TaskListController extends Controller {
 
-    public function __construct()
-    {
-        $this->middleware('project.access');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('project.access');
+    // }
     
 	/**
 	 * Display a listing of the resource.
@@ -24,45 +24,15 @@ class TaskListController extends Controller {
 	}
 
 	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Project $project, Request $request)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$tasklist = $this->dispatch(new CreateTaskList($this->user, $project, $request->all(), $audience));
+		return response()->json(['success' => true, 'message' => 'TaskList created.', 'tasklist' => $tasklist]);
 	}
 
 	/**
@@ -71,9 +41,10 @@ class TaskListController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Project $project, TaskList $tasklist, Request $request)
 	{
-		//
+		$tasklist->update($request->all());
+		return response()->json(['success' => true, 'message' => 'TaskList updated.']);
 	}
 
 	/**
@@ -82,9 +53,11 @@ class TaskListController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Project $project, TaskList $tasklist, Request $request)
 	{
-		//
+		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteTaskList($this->user, $tasklist, $audience));
+		return response()->json(['success' => true, 'message' => 'TaskList deleted.']);
 	}
 
 }

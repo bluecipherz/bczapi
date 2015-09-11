@@ -24,21 +24,9 @@ class ChatController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index(Request $request)
+	public function index()
 	{
-        $project = Project::find($request->get('project_id'));
-        if($project) return $project->chats;
         return Chat::all();
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-        //
 	}
 
 	/**
@@ -49,31 +37,9 @@ class ChatController extends Controller {
 	public function store(CreateChatRequest $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-        $project = Project::find($request->get('project'));
-        $chat = $this->dispatch(new CreateChatRoom($user, $project, $request->all()));
+       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $chat = $this->dispatch(new CreateChatRoom($user, null, $request->all(), $audience));
         return response()->json(['success' => true, 'message' => 'Chat Created.', 'chat' => $chat]);
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
 	}
 
 	/**
@@ -82,9 +48,10 @@ class ChatController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(Chat $chat, Request $request)
 	{
-		//
+		$chat->update($request->all());
+		return response()->json(['success' => true, 'message' => 'Chat Updated.']);
 	}
 
 	/**
@@ -93,10 +60,11 @@ class ChatController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Chat $chat)
+	public function destroy(Chat $chat, DeleteChatRequest $request)
 	{
         $user = JWTAuth::parseToken()->authenticate();
-        $this->dispatch(new DeleteChatRoom($user, $chat));
+       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $this->dispatch(new DeleteChatRoom($user, $chat, $audience));
         return response()->json(['success' => true, 'message' => 'Chat Deleted.']);
 	}
 

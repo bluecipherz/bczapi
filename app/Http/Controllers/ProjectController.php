@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\JoinProjectRequest;
 use App\Http\Requests\UpdateProjectUserRequest;
 use App\Http\Requests\LeaveProjectRequest;
@@ -9,51 +10,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Project;
 use App\User;
-use App\Commands\AddUserToProject;
-use App\Commands\RemoveUserFromProject;
 use App\Commands\CreateProject;
 use App\Commands\DeleteProject;
+use App\Commands\UpdateProject;
 use JWTAuth;
-use Input;
-use Validator;
 
 class ProjectController extends Controller {
 
 	public function __construct() {
-		// $this->middleware('jwt.auth', ['except' => ['index']]);
-		$this->middleware('project.auth', ['only' => ['update', 'destroy', 'leave', 'join', 'updateUser']]);
-		$this->middleware('project.access', ['only' => ['users', 'tasks', 'tasklists', 'milestones', 'forums', 'statuses', 'chats']]);
-        $this->middleware('privilege', ['only' => ['all', 'store']]);
+		$this->middleware('project.auth', ['only' => ['update', 'destroy']]);
+        $this->middleware('privilege', ['only' => ['index', 'store']]);
 	}
 
-    public function all() {
-        return Project::all();
-    }
-    
-    public function tasks(Project $project) {
-        return $project->tasks;
-    }
-    
-    public function tasklists(Project $project) {
-        return $project->tasklists;
-    }
-    
-    public function milestones(Project $project) {
-        return $project->milestones;
-    }
-    
-    public function forums(Project $project) {
-        return $project->forums;
-    }
-    
-    public function statuses(Project $project) {
-        return $project->statuses;
-    }
-    
-    public function chats(Project $project) {
-        return $project->chats;
-    }
-    
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -61,9 +29,7 @@ class ProjectController extends Controller {
 	 */
 	public function index()
 	{
-		$user = JWTAuth::parseToken()->authenticate();
-		return $user->projects;
-		// return Project::all();
+		return Project::all();
 	}
 	
 	/**
@@ -74,7 +40,8 @@ class ProjectController extends Controller {
 	public function store(StoreProjectRequest $request)
 	{
         $user = JWTAuth::parseToken()->authenticate();
-        $project = $this->dispatch(new CreateProject($user, $request->all()));
+       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $project = $this->dispatch(new CreateProject($user, $request->all(), $audience);
         return response()->json(['success' => true, 'message' => 'Project Created.', 'project' => $project]);
 	}
 
@@ -86,7 +53,9 @@ class ProjectController extends Controller {
 	 */
 	public function update(Project $project, Request $request)
 	{
-		$project->update($request->all());
+        $user = JWTAuth::parseToken()->authenticate();
+       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new UpdateProject($user, $project, $request->all(), $audience));
         return response()->json(['success' => true, 'message' => 'Project Updated.']);
 	}
 
@@ -96,35 +65,12 @@ class ProjectController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Project $project)
+	public function destroy(Project $project, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$this->dispatch(new DeleteProject($user, $project));
+       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteProject($user, $project, $audience));
 		return response()->json(['success' => true, 'message' => 'Project deleted.']);
-	}
-	
-	public function join(Project $project, JoinProjectRequest $request) {
-		$admin = JWTAuth::parseToken()->authenticate();
-        $user = User::findOrFail($request->get('user_id'));
-		$type = $request->get('type');
-		$this->dispatch(new AddUserToProject($admin, $project, $user, $type));
-		return response()->json(['success' => true, 'message' => 'User Joined Project.']);
-	}
-	
-	public function leave(Project $project, User $user) {
-		$admin = JWTAuth::parseToken()->authenticate();
-		$this->dispatch(new RemoveUserFromProject($admin, $project, $user));
-		return response()->json(['success' => true, 'message' => 'User Left Project.']);
-	}
-    
-    public function updateUser(Project $project, User $user, UpdateProjectUserRequest $request) {
-        $data = ['type' => $request->get('type')];
-        $project->users()->updateExistingPivot($user->id, $data);
-        return response()->json(['success' => true, 'message' => 'Project Member updated.']);
-    }
-	
-	public function users(Project $project) {
-		return $project->users;
 	}
 
 }
