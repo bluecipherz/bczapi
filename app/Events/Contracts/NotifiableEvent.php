@@ -3,10 +3,10 @@
 
 interface NotifiableEvent {
 	
-	public function getSubject();
-	
-	public function getBody();
-	
-	public function getType();
+	public function getData();
+
+	public function getUser();
+
+	public function getNotifiable();
 	
 }

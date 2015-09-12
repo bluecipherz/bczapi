@@ -56,6 +56,7 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		'App\Events\UserAddedToProject' => [
 			'App\Handlers\Events\CreateFeed',
+			'App\Handlers\Events\NotifyUser'
 		],
 		'App\Events\UserRemovedFromProject' => [
 			'App\Handlers\Events\CreateFeed',
@@ -74,12 +75,6 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		'App\Events\ChatUserLeft' => [
 			'App\Handlers\Events\PostMessage',
-		],
-		'App\Events\MemberAdded' => [
-			'App\Handlers\Events\MemberAddition'
-		],
-		'App\Events\MemberRemoved' => [
-			'App\Handlers\Events\MemberRemoval'
 		],
 	];
 

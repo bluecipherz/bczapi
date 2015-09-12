@@ -40,5 +40,9 @@ class Task extends Model {
     public function checklists() {
         return $this->hasMany('App\CheckList');
     }
+
+    public function milestone() {
+        return $this->belongsTo('App\MileStone');
+    }
     
 }

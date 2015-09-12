@@ -3,19 +3,29 @@
 use App\Commands\Command;
 
 use Illuminate\Contracts\Bus\SelfHandling;
+use Illuminate\Database\Eloquent\Collection;
+use App\User;
+use App\Project;
+use App\MileStone;
+use App\TaskList;
+use App\Events\TaskListCreated;
 
 class CreateTaskList extends Command implements SelfHandling {
 
-	protected $user, $project, $milestone, $data;
+	protected $user, $project, $milestone, $data, $audience;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, MileStone $milestone = null, array $data)
+	public function __construct(User $user, Project $project, MileStone $milestone = null, array $data, Collection $audience = null)
 	{
-		//
+		$this->user = $user;
+		$this->project = $project;
+		$this->milestone = $milestone;
+		$this->data = $data;
+		$this->audience = $audience;
 	}
 
 	/**
@@ -26,8 +36,8 @@ class CreateTaskList extends Command implements SelfHandling {
 	public function handle()
 	{
 		$tasklist = TaskList::create($this->data);
-		$audience = User::whereIn($this->data['audience'])->get();
-		event(new TaskListCreated($this->user, $this->project, $this->milestone, $tasklist, $audience));
+		if($this->milestone) $this->milestone->tasklists()->save($tasklist);
+		event(new TaskListCreated($this->user, $this->project, $tasklist, $this->audience));
 	}
 
 }

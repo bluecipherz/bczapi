@@ -57,9 +57,21 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	public function chats() {
 		return $this->belongsToMany('App\Chat', 'users_chats')->withPivot('type')->withTimestamps();
 	}
+
+	public function milestones() {
+		return $this->hasMany('App\MileStone');
+	}
+
+	public function tasklists() {
+		return $this->hasMany('App\TaskList');
+	}
 	
 	public function tasks() {
-		return $this->belongsToMany('App\Task', 'users_tasks')->withPivot('type')->withTimestamps();
+		return $this->belongsToMany('App\Task', 'users_tasks')->withPivot('type')->withTimestamps();	
+	}
+
+	public function checklists() {
+		return $this->hasMany('App\CheckList');
 	}
 		
 	public function statuses() {

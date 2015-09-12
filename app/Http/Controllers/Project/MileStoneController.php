@@ -44,6 +44,7 @@ class MileStoneController extends Controller {
 	 */
 	public function update(Project $project, MileStone $milestone, Request $request)
 	{
+		$user = JWTAuth::parseToken()->authenticate();
 		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
 		$this->dispatch(new UpdateMileStone($user, $milestone, $request->all(), $audience));
 		return response()->json(['success' => true, 'message' => 'Project Milestone Updated']);

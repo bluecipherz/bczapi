@@ -35,4 +35,24 @@ class MeController extends Controller {
 		return $user->notifications;
 	}
 
+	public function tasks() {
+		$user = JWTAuth::parseToken()->authenticate();
+		return $user->tasks;
+	}
+
+	public function tasklists() {
+		$user = JWTAuth::parseToken()->authenticate();
+		return $user->tasklists;
+	}
+
+	public function milestones() {
+		$user = JWTAuth::parseToken()->authenticate();
+		return $user->milestones;
+	}
+
+	public function checklists() {
+		$user = JWTAuth::parseToken()->authenticate();
+		return $user->checklists;
+	}
+
 }

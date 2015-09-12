@@ -9,6 +9,14 @@ class Project extends Model {
 
 	protected $fillable = ['name', 'description'];
 
+	public function milestones() {
+		return $this->hasMany('App\MileStone');
+	}
+
+	public function tasklists() {
+		return $this->hasMany('App\TaskList');
+	}
+
 	public function tasks() {
 		return $this->hasMany('App\Task');
 	}

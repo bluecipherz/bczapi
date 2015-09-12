@@ -16,4 +16,16 @@ class CheckList extends Model {
         return $this->morphOne('App\Feed', 'subject');
     }
 
+    public function checkmarks() {
+    	return $this->hasMany('App\CheckMark');
+    }
+
+    public function checklistrows() {
+    	return $this->hasMany('App\CheckListRow');
+    }
+
+    public function checklistcolumns() {
+    	return $this->hasMany('App\CheckListColumn');
+    }
+
 }
