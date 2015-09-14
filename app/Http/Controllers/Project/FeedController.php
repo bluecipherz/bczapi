@@ -18,7 +18,7 @@ class FeedController extends Controller {
 	{
 		$user = JWTAuth::parseToken()->authenticate();
 		return $user->feeds()
-			->whereContext('App\Project')
+			->whereContextType('App\Project') // not needed actually
 			->whereContextId($project->id)
 			->with('subject.owner')
 			->with('origin.userable')

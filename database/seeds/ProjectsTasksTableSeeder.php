@@ -3,10 +3,12 @@
 use Illuminate\Database\Seeder;
 use App\User;
 use App\Project;
+use App\Feed;
 use App\Commands\CreateProject;
 use App\Commands\CreateTask;
 use App\Commands\UpdateTask;
 use App\Commands\AddUserToProject;
+use App\Commands\PostComment;
 
 class ProjectsTasksTableSeeder extends Seeder {
 
@@ -39,6 +41,7 @@ class ProjectsTasksTableSeeder extends Seeder {
 		
 		// optional
 		DB::table('feeds')->delete();
+		DB::table('comments')->delete();
 		
 		$user1 = User::firstOrFail();
 		$user2 = User::all()->last();
@@ -47,6 +50,8 @@ class ProjectsTasksTableSeeder extends Seeder {
 		Bus::dispatch(new AddUserToProject($user1, $project, $user2, 'developer'));
 		Bus::dispatch(new UpdateTask($user2, $task, ['percentage_completed' => 100]));
 		$task2 = Bus::dispatch(new CreateTask($user2, $project, $taskdetails2));
+		$feed = Feed::firstOrFail();
+		Bus::dispatch(new PostComment($user1, ['comment' => 'ookay'], $feed));
 	}
 
 }

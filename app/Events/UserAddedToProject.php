@@ -29,11 +29,13 @@ class UserAddedToProject extends Event implements FeedableContract, NotifiableEv
 		$this->audience = $audience;
 	}
 
+	// TEMP notification implementation below.
+
 	public function getData() {
 		return [
 			'type' => 'UserAddedToProject',
 			'subject' => 'You have been added to a project.',
-			'body' => "{$this->owner->first_name} added you to his project {$this->project->name}",
+			'body' => "{$this->origin->first_name} added you to his project {$this->context->name}",
 		];
 	}
 

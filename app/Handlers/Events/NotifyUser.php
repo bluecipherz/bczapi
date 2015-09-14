@@ -5,6 +5,7 @@ use App\Events\Event;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
 use App\Events\Contracts\NotifiableEvent;
+use App\Notification;
 
 class NotifyUser {
 

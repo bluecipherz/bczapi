@@ -8,4 +8,8 @@ class Notification extends Model {
 		return $this->belongsTo('App\User');
     }
 
+    public function notifiable() {
+    	return $this->morphTo();
+    }
+
 }

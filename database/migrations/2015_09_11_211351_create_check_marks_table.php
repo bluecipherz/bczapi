@@ -33,7 +33,7 @@ class CreateCheckMarksTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('check_marks');
+		Schema::dropIfExists('check_marks');
 	}
 
 }

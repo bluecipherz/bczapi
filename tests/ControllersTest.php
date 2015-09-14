@@ -56,7 +56,7 @@ class ControllersTest extends TestCase {
 		echo "\n{$feed}";
 	}
 	
-	public function testDeleteFeed() {
+	public function stestDeleteFeed() {
 		DB::table('comments')->delete();
 		$cd = [
 			'comment' => 'lets bring the pain'

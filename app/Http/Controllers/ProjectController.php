@@ -41,7 +41,7 @@ class ProjectController extends Controller {
 	{
         $user = JWTAuth::parseToken()->authenticate();
        	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-        $project = $this->dispatch(new CreateProject($user, $request->all(), $audience);
+        $project = $this->dispatch(new CreateProject($user, $request->all(), $audience));
         return response()->json(['success' => true, 'message' => 'Project Created.', 'project' => $project]);
 	}
 

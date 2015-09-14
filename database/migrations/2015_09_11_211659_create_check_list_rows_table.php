@@ -29,7 +29,7 @@ class CreateCheckListRowsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('check_list_rows');
+		Schema::dropIfExists('check_list_rows');
 	}
 
 }

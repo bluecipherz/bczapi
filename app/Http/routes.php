@@ -27,7 +27,7 @@ Route::model('chats', 'App\Chat');
 Route::group(array('prefix' => 'api','after' => 'cors'), function() {
     Route::post('authenticate', 'AuthController@authenticate');
     Route::get('authenticate/user', 'AuthController@getAuthenticatedUser');
-    Route::post('register', 'AuthController@register');
+    Route::post('register', 'AuthController@register'); // TODO changeto something else
     Route::get('authenticate/{user?}', 'AuthController@index');
     Route::group(['middleware' => 'jwt.auth'], function() {
 	
@@ -37,14 +37,19 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
         // ME
         Route::get('/me/projects', 'MeController@projects');
         Route::get('/me/feeds', 'MeController@feeds');
-		
+        Route::get('/me/notifications', 'MeController@feeds');
+        Route::get('/me/tasks', 'MeController@feeds');
+        Route::get('/me/tasklists', 'MeController@feeds');
+        Route::get('/me/checklists', 'MeController@feeds');
+        Route::get('/me/milestones', 'MeController@feeds');
+        
 		// FEEDS
         Route::resource('feeds', 'FeedController', ['only' => ['index']]);
         Route::resource('projects.feeds', 'Project\FeedController', ['only' => ['index']]);
 
         // COMMENTS
         Route::resource('feeds.comments', 'Feed\CommentController', ['only' => ['store', 'destroy']]);
-        // Route::resource('projects.feeds.comments', 'Project\Feed\CommentController', ['only' => ['store', 'destroy']]);
+        Route::resource('projects.feeds.comments', 'Project\Feed\CommentController', ['only' => ['store', 'destroy']]);
 		
         // PROJECTS GROUP =============================================================
 
@@ -100,12 +105,6 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
                 Route::resource('projects.tasks.users', 'UserController', ['except' => ['create', 'show', 'edit']]);
             });
 
-            Route::group(['namespace' => 'User'], function() {
-                Route::resource('users.projects', 'ProjectController', ['only' => ['index']]);
-                Route::resource('users.profile', 'ProfileController', ['only' => ['index', 'store', 'update']]);
-                Route::resource('users.notifications', 'NotificationController', ['except' => ['create', 'edit', 'show']]);
-            });
-
             // CHAT USERS
             Route::resource('projects.chat.users', 'Chat\UserController', ['except' => ['create', 'show', 'edit']]);
             
@@ -146,6 +145,16 @@ Route::group(array('prefix' => 'api','after' => 'cors'), function() {
         // USERS
         Route::resource('users', 'UserController', ['only' => ['index', 'update', 'destroy']]);
         Route::resource('chats.users', 'Chat\UserController', ['except' => ['create', 'show', 'edit']]);
+
+        // User namespace
+        Route::group(['namespace' => 'User'], function() {
+            // PROJECT
+            Route::resource('users.projects', 'ProjectController', ['only' => ['index']]);
+            // PROFILE
+            Route::resource('users.profile', 'ProfileController', ['only' => ['index', 'store', 'update']]);
+            // NOTIFICATION
+            Route::resource('users.notifications', 'NotificationController', ['except' => ['create', 'edit', 'show']]);
+        });
 
         // ATTACHMENTS
     });

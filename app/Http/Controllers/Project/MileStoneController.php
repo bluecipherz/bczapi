@@ -32,7 +32,7 @@ class MileStoneController extends Controller {
 	{
 		$user = JWTAuth::parseToken()->authenticate();
 		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$milestone = $this->dispatch(new CreateMileStone($user, $project, $request->all(), $audience)));
+		$milestone = $this->dispatch(new CreateMileStone($user, $project, $request->all(), $audience));
 		return response()->json(['success' => true, 'message' => 'Project Milestone Created.', 'milestone' => $milestone]);
 	}
 
@@ -60,7 +60,7 @@ class MileStoneController extends Controller {
 	{
 		$user = JWTAuth::parseToken()->authenticate();
 		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$this->dispatch(new DeleteMileStone($user, $project, $milestone, $audience)));
+		$this->dispatch(new DeleteMileStone($user, $project, $milestone, $audience));
 		return response()->json(['success' => true, 'message' => 'Project Milestone Deleted.']);
 	}
 
