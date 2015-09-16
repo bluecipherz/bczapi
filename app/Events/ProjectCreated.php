@@ -24,5 +24,6 @@ class ProjectCreated extends Event implements FeedableContract {
 		$this->subject = $project;
 		$this->origin = $user;
 		$this->audience = $audience;
+		$this->context = $project;
 	}
 }
