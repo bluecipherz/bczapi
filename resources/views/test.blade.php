@@ -1,6 +1,10 @@
-<form action="{{ route('projects.store') }}" method="POST">
-<input type="hidden" name="_token" value="{{ csrf_token() }}">
-<input type="text" name="name">
-<input type="text" name="description">
-<input type="submit">
-</form>
+@extends('app')
+@section('content')
+<div class="container">
+	<ul class="list-group">
+	@foreach($feeds as $feed)
+	<li class="list-group-item">{{ $feed }}</li>
+	@endforeach
+	</ul>
+</div>
+@stop

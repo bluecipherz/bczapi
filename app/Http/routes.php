@@ -24,7 +24,7 @@ Route::model('feeds', 'App\Feed');
 Route::model('statuses', 'App\Status');
 Route::model('chats', 'App\Chat');
 		
-Route::group(array('prefix' => 'api','after' => 'cors'), function() {
+Route::group(array('prefix' => 'api'), function() {
     Route::post('authenticate', 'AuthController@authenticate');
     Route::get('authenticate/user', 'AuthController@getAuthenticatedUser');
     Route::post('register', 'AuthController@register'); // TODO changeto something else
@@ -164,12 +164,59 @@ Route::group(['domain' => 'api.bluecipherz.com'], function() {
 	Route::get('test', function() { return 'on api subdomain'; });
 });
 
-Route::filter('cors', function($route, $request, $response) {
-	$response->headers->set('Access-Control-Allow-Origin', 'http://localhost:9000');
-});
-
 Route::get('test', function() {
-	return ['method' => 'get', \Input::all()];
+    $user = \App\User::firstOrFail();
+    $feeds = $user->feeds()
+        ->with('subject.owner')
+        ->with('origin.userable')
+        ->with('context')
+        ->with('comments')
+        ->with('context.context')
+        ->orderBy('updated_at')
+        ->get();
+        
+//  $feeds->load(['context.subject' => function($query) {
+//		$query->where('type', 'CommentPosted');
+//	}]);
+	
+	$feeds = App\Feed::all()->filter(function($feed) {
+		return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
+	});
+	
+	$feeds = App\Feed::with(['context' => function($query) {
+		$query->whereId(433);
+	}])->get();
+	
+	$feeds = App\Feed::all()->map(function($feed) {
+		if($feed->context_type == 'App\Feed') {
+			$feed->context = App\Feed::whereId($feed->context_id)
+			->with('subject.owner')
+			->with('origin.userable')
+			->with('context')
+			->with('comments')
+			->with('context.context')->get();
+		}
+		return $feed;
+	})->filter(function($feed) {
+		return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
+	});
+    // $feeds->load(['context.subject.owner' => function($query)
+    // {
+    //     $query->where('type', 'CommentPosted');
+    // },
+    // 'context.origin.userable' => function ($query)
+    // {
+    //     $query->where('type', 'CommentPosted');
+    // },
+    // 'context.context' => function ($query)
+    // {
+    //     $query->where('type', 'CommentPosted');
+    // },
+    // 'context.comments' => function ($query)
+    // {
+    //     $query->where('type', 'CommentPosted');
+    // }]);
+	return view('test', compact('feeds'));
 });
 
 Route::post('test', function() {

@@ -21,13 +21,25 @@ class MeController extends Controller {
 	 */
 	public function feeds() {
 		$user = JWTAuth::parseToken()->authenticate();
-		return $user->feeds()
+		$feeds = $user->feeds()
 			->with('subject.owner')
 			->with('origin.userable')
 			->with('context')
 			->with('comments')
 			->orderBy('updated_at')
-			->get();
+			->map(function($feed) {
+				if($feed->context_type == 'App\Feed') {
+					$feed->context = App\Feed::whereId($feed->context_id)
+					->with('subject.owner')
+					->with('origin.userable')
+					->with('context')
+					->with('comments')->get();
+				}
+				return $feed;
+			})->filter(function($feed) {
+				return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
+			});
+		return $feeds;
 	}
 
 	public function notifications() {

@@ -3,7 +3,9 @@
 use App\Events\Event;
 
 use Illuminate\Queue\SerializesModels;
-use App
+use App\Chat;
+use App\Message;
+use App\User;
 
 class MessagePosted extends Event {
 
