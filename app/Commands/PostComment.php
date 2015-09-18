@@ -2,14 +2,20 @@
 
 use App\Commands\Command;
 
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldBeQueued;
 use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Comment;
 use App\Events\CommentPosted;
 use App\Feed;
 
-class PostComment extends Command implements SelfHandling {
+class PostComment extends Command implements SelfHandling
+// , ShouldBeQueued // queued
+{
 
+	// use InteractsWithQueue, SerializesModels; // queued
 	protected $user, $data, $feed;
 	
 	/**

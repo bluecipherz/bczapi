@@ -2,6 +2,9 @@
 
 use App\Commands\Command;
 
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldBeQueued;
 use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Project;
@@ -9,8 +12,11 @@ use App\Task;
 use App\Events\TaskCreated;
 use Illuminate\Database\Eloquent\Collection;
 
-class CreateTask extends Command implements SelfHandling {
+class CreateTask extends Command implements SelfHandling
+// , ShouldBeQueued // queued
+{
 
+	// use InteractsWithQueue, SerializesModels; // queued
 	protected $user, $project, $data, $audience;
 
 	/**

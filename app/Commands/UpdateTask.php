@@ -2,6 +2,9 @@
 
 use App\Commands\Command;
 
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldBeQueued;
 use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Task;
@@ -12,8 +15,11 @@ use App\Events\TaskUsersChanged;
 use App\Events\TaskPriorityChanged;
 use DateTime;
 
-class UpdateTask extends Command implements SelfHandling {
+class UpdateTask extends Command implements SelfHandling
+// , ShouldBeQueued // queued
+{
 
+	// use InteractsWithQueue, SerializesModels; // queued
     protected $user, $task, $data, $audience;
     
 	/**
