@@ -200,7 +200,28 @@ Route::get('test', function() {
 	// })->filter(function($feed) {
 	// 	return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
 	// });
-    
+
+    // all round
+	// $feeds = App\Feed::with('subject.owner')
+ //            ->with('origin.userable')
+ //            ->with('comments')
+ //            ->orderBy('updated_at')
+ //            ->get()->map(function($feed) {
+ //        		if($feed->context_type == 'App\Feed') {
+ //        			$feed->context = App\Feed::whereId($feed->context_id)
+ //        			->with('subject.owner')
+ //        			->with('origin.userable')
+ //        			->with('context')
+ //        			->with('comments')
+ //        			->with('context')->first();
+ //        		} else {
+ //                    $feed->context = $feed->context;
+ //                }
+ //        		return $feed;
+ //        	})->filter(function($feed) {
+ //        		return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
+ //            });
+
     // $feeds->load(['context.subject.owner' => function($query)
     // {
     //     $query->where('type', 'CommentPosted');

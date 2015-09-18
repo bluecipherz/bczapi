@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Feed;
 use JWTAuth;
 
 class MeController extends Controller {
@@ -24,22 +25,23 @@ class MeController extends Controller {
 		$feeds = $user->feeds()
 			->with('subject.owner')
 			->with('origin.userable')
-			->with('context')
 			->with('comments')
-			->orderBy('updated_at')
+			->orderBy('updated_at')->get()
 			->map(function($feed) {
 				if($feed->context_type == 'App\Feed') {
-					$feed->context = App\Feed::whereId($feed->context_id)
+					$feed->context = Feed::whereId($feed->context_id)
 					->with('subject.owner')
 					->with('origin.userable')
 					->with('context')
 					->with('comments')->get();
-				}
+				} else {
+                    $feed->context = $feed->context;
+                }
 				return $feed;
 			})->filter(function($feed) {
-				return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
+				return !Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
 			});
-		return $feeds;
+		return $feeds->values();
 	}
 
 	public function notifications() {
