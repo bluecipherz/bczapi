@@ -25,7 +25,7 @@ class MeController extends Controller {
 		$feeds = $user->feeds()
 			->with('subject.owner')
 			->with('origin.userable')
-			->with('comments')
+			->with('comments.owner')
 			->orderBy('updated_at')->get()
 			->map(function($feed) {
 				if($feed->context_type == 'App\Feed') {
@@ -33,8 +33,8 @@ class MeController extends Controller {
 					->with('subject.owner')
 					->with('origin.userable')
 					->with('context')
-					->with('comments')->get();
-				} else {
+					->with('comments.owner')->first();
+				} else if(!$feed->context_type == '') {
                     $feed->context = $feed->context;
                 }
 				return $feed;
