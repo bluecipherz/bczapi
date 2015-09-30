@@ -14,7 +14,7 @@ class MeController extends Controller {
 	 */
 	public function projects() {
 		$user = JWTAuth::parseToken()->authenticate();
-		return $user;
+		return $user->projects()->with('tasks')->with('milestones')->get();
 	}
 
 	/**
@@ -23,17 +23,18 @@ class MeController extends Controller {
 	public function feeds() {
 		$user = JWTAuth::parseToken()->authenticate();
 		$feeds = $user->feeds()
-			->with('subject.owner')
-			->with('origin.userable')
-			->with('comments.owner')
+			// ->with('subject.owner')
+			// ->with('origin.userable')
+			// ->with('comments.owner')
 			->orderBy('updated_at')->get()
 			->map(function($feed) {
 				if($feed->context_type == 'App\Feed') {
 					$feed->context = Feed::whereId($feed->context_id)
-					->with('subject.owner')
-					->with('origin.userable')
-					->with('context')
-					->with('comments.owner')->first();
+					// ->with('subject.owner')
+					// ->with('origin.userable')
+					// ->with('comments.owner')
+					// ->with('context')
+					->first();
 				} else if(!$feed->context_type == '') {
                     $feed->context = $feed->context;
                 }

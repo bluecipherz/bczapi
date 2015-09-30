@@ -6,6 +6,8 @@ class Feed extends Model {
 
 	protected $hidden = ['origin_id', 'subject_id', 'subject_type', 'context_id', 'context_type', 'pivot'];
 
+	protected $with = ['subject.owner', 'origin.userable', 'comments.owner', 'context'];
+
 	protected $casts = [
 		'context_id' => 'int'
 	];

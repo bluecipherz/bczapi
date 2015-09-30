@@ -10,6 +10,7 @@ use App\Status;
 use App\Commands\PostStatus;
 use App\Commands\DeleteStatus;
 use JWTAuth;
+use App\Feed;
 
 class StatusController extends Controller {
 
@@ -33,7 +34,8 @@ class StatusController extends Controller {
 		$user = JWTAuth::parseToken()->authenticate();
        	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
 		$status = $this->dispatch(new PostStatus($user, null, $request->all(), $audience));
-		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status]);
+		$feed = Feed::whereType('StatusPosted')->whereSubjectId($status->id)->first();
+		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status, 'feed' => $feed]);
 		// return ['success' => true];
 	}
 

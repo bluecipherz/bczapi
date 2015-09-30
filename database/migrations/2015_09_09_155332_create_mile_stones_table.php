@@ -15,6 +15,7 @@ class CreateMileStonesTable extends Migration {
 		Schema::create('mile_stones', function(Blueprint $table)
 		{
 			$table->increments('id');
+			$table->unsignedInteger('project_id');
 			$table->timestamps();
 		});
 	}
