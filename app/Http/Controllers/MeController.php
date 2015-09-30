@@ -70,4 +70,9 @@ class MeController extends Controller {
 		return $user->checklists;
 	}
 
+	public function statuses() {
+		$user = JWTAuth::parseToken()->authenticate();
+		return $user->statuses;
+	}
+
 }

@@ -9,6 +9,10 @@ class Task extends Model {
 	
 	protected $fillable = ['name', 'description'];
 
+    protected $casts = [
+        'percentage_completed' => 'int'
+    ];
+
 	public function project() {
 		return $this->belongsTo('App\Project');
 	}

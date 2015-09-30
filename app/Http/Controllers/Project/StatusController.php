@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Project;
 use App\Status;
+use App\Feed;
 use JWTAuth;
 use App\Commands\PostStatus;
 
@@ -32,7 +33,8 @@ class StatusController extends Controller {
 		$user = JWTAuth::parseToken()->authenticate();
 		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
 		$status = $this->dispatch(new PostStatus($user, $project, $request->all(), $audience));
-		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status]);
+		$feed = Feed::whereType('StatusPosted')->whereSubjectId($status->id)->first();
+		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status, 'feed' => $feed]);
 	}
 
 	/**

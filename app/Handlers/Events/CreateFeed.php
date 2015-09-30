@@ -32,13 +32,13 @@ class CreateFeed {
 	 */
 	public function handle(FeedableEvent $event)
 	{
-		if($event instanceof \App\Events\CommentPosted) {
+		if($event->getType() == 'CommentPosted') {
 			/**
 			 * if context has a previous comment feed, dont create new feed,
 			 * instead associate its origin with the new one
 			 * eg : ProjectCreated, TaskCompleted etc.
 			 */
-			$lastFeed = Feed::whereType('App\Events\CommentPosted')->whereContextId($event->getContext()->id)->first();
+			$lastFeed = Feed::whereType('CommentPosted')->whereContextId($event->getContext()->id)->first();
 			if($lastFeed) {
 				// echo "\n{$event->getOrigin()->id}";
 				$lastFeed->origin()->associate($event->getOrigin());
@@ -48,13 +48,13 @@ class CreateFeed {
 			} else {
 				$this->_createFeed($event);
 			}
-		} else if($event instanceof \App\Events\TaskPercentChanged ||
-                  $event instanceof \App\Events\TaskCompleted ||
-                  $event instanceof \App\Events\TaskPriorityChanged ||
-                  $event instanceof \App\Events\TaskUsersChanged) {
+		} else if($event->getType() == 'TaskPercentChanged' ||
+                  $event->getType() == 'TaskCompleted' ||
+                  $event->getType() == 'TaskPriorityChanged' ||
+                  $event->getType() == 'TaskUsersChanged') {
 			$lastFeed = Feed::whereSubjectId($event->getSubject()->id)->first();
 			if($lastFeed) {
-				$lastFeed->type = get_class($event);
+				$lastFeed->type = $event->getType();
 				$lastFeed->origin()->associate($event->getOrigin());
 				$lastFeed->save();
 			}

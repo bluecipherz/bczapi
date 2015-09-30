@@ -4,8 +4,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class MileStone extends Model {
 
+    protected $fillable = ['name'];
+
+    // protected $casts = [
+    //     'completed' => 'boolean'
+    // ];
+
+    protected $with = ['tasks'];
+
 	public function tasklists() {
         return $this->hasMany('App\TaskList');
+    }
+
+    public function tasks() {
+        return $this->hasMany('App\Task');
     }
     
     public function project() {

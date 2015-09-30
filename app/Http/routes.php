@@ -42,6 +42,7 @@ Route::group(array('prefix' => 'api'), function() {
         Route::get('/me/tasklists', 'MeController@feeds');
         Route::get('/me/checklists', 'MeController@feeds');
         Route::get('/me/milestones', 'MeController@feeds');
+        Route::get('/me/statuses', 'MeController@statuses');
         
 		// FEEDS
         Route::resource('feeds', 'FeedController', ['only' => ['index']]);

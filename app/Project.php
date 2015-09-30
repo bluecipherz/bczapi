@@ -9,6 +9,28 @@ class Project extends Model {
 
 	protected $fillable = ['name', 'description'];
 
+	// protected $appends = ['task_completion', 'milestone_completion', 'project_completion'];
+
+	protected $with = ['tasks', 'milestones', 'tasklists'];
+
+	public function getTaskCompletionAttribute() {
+		return array(
+			'tasks' => $this->tasks->count(),
+			'completed' => $this->tasks()->wherePercentageCompleted(100)->count()
+		);
+	}
+
+	public function getMilestoneCompletionAttribute() {
+		return array(
+			'milestones' => $this->milestones->count(),
+			'completed' => $this->milestones()->whereCompleted(true)->count()
+		);
+	}
+
+	public function getProjectCompletionAttribute() {
+		return 100;
+	}
+
 	public function milestones() {
 		return $this->hasMany('App\MileStone');
 	}

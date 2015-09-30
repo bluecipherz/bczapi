@@ -4,6 +4,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class TaskList extends Model {
 
+    protected $fillable = ['name'];
+
+    protected $with = ['tasks'];
+
 	public function tasks() {
         return $this->hasMany('App\Task');
     }

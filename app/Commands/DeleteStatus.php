@@ -6,6 +6,8 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Status;
 use App\Events\StatusDeleted;
+use App\Events\UnFeedableEvent;
+use Illuminate\Database\Eloquent\Collection;
 
 class DeleteStatus extends Command implements SelfHandling {
 
@@ -32,7 +34,7 @@ class DeleteStatus extends Command implements SelfHandling {
 	{
 //		$this->status->feeds()->delete();
 		$this->status->delete();
-		event(new StatusDeleted($this->user, $this->status, $this->audience));
+		event(new UnFeedableEvent('StatusDeleted', $this->user, $this->status));
 	}
 
 }

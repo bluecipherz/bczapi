@@ -56,9 +56,9 @@ class ProjectsTasksTableSeeder extends Seeder {
 		Bus::dispatch(new AddUserToProject($user1, $project, $user2, 'developer'));
 		Bus::dispatch(new UpdateTask($user2, $task, ['percentage_completed' => 100]));
 		$task2 = Bus::dispatch(new CreateTask($user2, $project, $taskdetails2));
-		$feed = Feed::firstOrFail();
-		Bus::dispatch(new PostComment($user1, ['comment' => 'ookay'], $feed));
-		Bus::dispatch(new PostStatus($user1, null, $statusdetails));
+		// $feed = Feed::firstOrFail();
+		// Bus::dispatch(new PostComment($user1, ['comment' => 'ookay'], $feed));
+		// Bus::dispatch(new PostStatus($user1, null, $statusdetails));
 	}
 
 }
