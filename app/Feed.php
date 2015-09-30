@@ -6,6 +6,10 @@ class Feed extends Model {
 
 	protected $hidden = ['origin_id', 'subject_id', 'subject_type', 'context_id', 'context_type', 'pivot'];
 
+	protected $casts = [
+		'context_id' => 'int'
+	];
+
 	public function origin() {
 		return $this->belongsTo('App\User');
 	}
@@ -18,6 +22,10 @@ class Feed extends Model {
 		return $this->morphTo();
 	}
 	
+	public function project() {
+		return $this->belongsTo('App\Project');
+	}
+
 	public function users() {
 		return $this->belongsToMany('App\User', 'feeds_users')->withPivot('read');
 	}
@@ -30,11 +38,6 @@ class Feed extends Model {
 		return $this->hasMany('App\Comment');
 	}
 	
-	public function getTypeAttribute($value) {
-		$tokens =  explode('\\', $value);
-		return $tokens[sizeof($tokens)-1];
-	}
-    
     public function scopeCommon($query) {
         return $query->where('level', '=', 0);
     }

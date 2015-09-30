@@ -1,7 +1,7 @@
 <?php namespace App\Handlers\Events;
 
 use App\Events\Event;
-use App\Events\Contracts\FeedableEvent;
+use App\Events\FeedableEvent;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
@@ -67,23 +67,25 @@ class CreateFeed {
 	
 	private function _createFeed(FeedableEvent $event) {
 		$feed = new Feed;
-		$feed->type = get_class($event);
-		
-		$feed->origin()->associate($event->getOrigin());
-		$feed->subject()->associate($event->getSubject());
+		$feed->type = $event->getType();
+
+		$feed->origin()->associate($event->getOrigin()); // origin
+		$feed->subject()->associate($event->getSubject()); // subject
+		$project = $event->getProject();
+		if($project) $feed->project()->associate($project); // project
 		$context = $event->getContext();
-		if($context) { $feed->context()->associate($context); }
+		if($context) $feed->context()->associate($context); // context
 		$feed->save();
 		
-		if($event->getAudience() != null && $event->getAudience()->count() > 0) {
+		if($event->getAudience() != null && $event->getAudience()->count() > 0) { // specified
 			foreach($event->getAudience() as $audience) {
 				$feed->users()->save($audience);
 			}
-		} else if($event->getContext() instanceof \App\Project) {
-			foreach($event->getContext()->users as $user) {
+		} else if($event->getProject()) { // project specific
+			foreach($event->getProject()->users as $user) {
 				$feed->users()->save($user);
 			}
-		} else {
+		} else { // default(all)
 			$users = User::all();
 			$feed->users()->saveMany($users->all());
 		}

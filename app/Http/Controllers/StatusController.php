@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\User;
 use App\Project;
 use App\Status;
 use App\Commands\PostStatus;
@@ -33,6 +34,7 @@ class StatusController extends Controller {
        	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
 		$status = $this->dispatch(new PostStatus($user, null, $request->all(), $audience));
 		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status]);
+		// return ['success' => true];
 	}
 
 	/**

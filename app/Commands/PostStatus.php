@@ -7,6 +7,7 @@ use App\User;
 use App\Status;
 use App\Project;
 use App\Events\StatusPosted;
+use App\Events\FeedableEvent;
 use Illuminate\Database\Eloquent\Collection;
 
 class PostStatus extends Command implements SelfHandling {
@@ -36,7 +37,7 @@ class PostStatus extends Command implements SelfHandling {
 		$status = Status::create($this->data);
 		$this->user->statuses()->save($status);
 		if($this->project) $this->project->statuses()->save($status);
-		event(new StatusPosted($this->user, $status, $this->project, $this->audience));
+		event(new FeedableEvent('StatusPosted', $this->user, $status, null, $this->project, $this->audience));
 		return $status;
 	}
 

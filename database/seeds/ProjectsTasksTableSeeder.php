@@ -9,6 +9,7 @@ use App\Commands\CreateTask;
 use App\Commands\UpdateTask;
 use App\Commands\AddUserToProject;
 use App\Commands\PostComment;
+use App\Commands\PostStatus;
 
 class ProjectsTasksTableSeeder extends Seeder {
 
@@ -34,6 +35,10 @@ class ProjectsTasksTableSeeder extends Seeder {
 			'name' => 'ambroze',
 			'description' => 'shitzu prickzen la frickzen'
 		];
+
+		$statusdetails = [
+			'message' => 'hello wazzup?'
+		];
 		
 		DB::table('projects')->delete();
 		DB::table('users_projects')->delete();
@@ -42,6 +47,7 @@ class ProjectsTasksTableSeeder extends Seeder {
 		// optional
 		DB::table('feeds')->delete();
 		DB::table('comments')->delete();
+		DB::table('statuses')->delete();
 		
 		$user1 = User::firstOrFail();
 		$user2 = User::all()->last();
@@ -52,6 +58,7 @@ class ProjectsTasksTableSeeder extends Seeder {
 		$task2 = Bus::dispatch(new CreateTask($user2, $project, $taskdetails2));
 		$feed = Feed::firstOrFail();
 		Bus::dispatch(new PostComment($user1, ['comment' => 'ookay'], $feed));
+		Bus::dispatch(new PostStatus($user1, null, $statusdetails));
 	}
 
 }

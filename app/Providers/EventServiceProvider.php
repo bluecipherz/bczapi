@@ -11,6 +11,12 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
+		'App\Events\FeedableEvent' => [
+			'App\Handlers\Events\CreateFeed'
+		],
+		'App\Events\UnFeedableEvent' => [
+			'App\Handlers\Events\DeleteFeed'
+		],
 		'App\Events\ProjectCreated' => [
 			'App\Handlers\Events\CreateFeed',
 		],

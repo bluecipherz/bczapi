@@ -20,12 +20,13 @@ class CheckListDeleted extends Event implements FeedableContract {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, CheckList $checklist, Collection $audience)
+	public function __construct(User $user, CheckList $checklist, Collection $audience)
 	{
 		$this->origin = $user;
-		$this->context = $project;
-		$this->subejct = $checklist;
+		$this->context = $checklist->task;
+		$this->subject = $checklist;
 		$this->audience = $audience;
+		$this->project = $checklist->task->project;
 	}
 
 }

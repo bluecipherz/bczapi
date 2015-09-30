@@ -4,6 +4,7 @@ use App\Events\Event;
 use App\Events\Contracts\FeedableEvent as FeedableContract;
 use App\Events\Traits\FeedableEvent as FeedableTrait;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Queue\SerializesModels;
 use App\User;
@@ -20,12 +21,13 @@ class TaskCreated extends Event implements FeedableContract {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, Task $task, Collection $audience = null)
+	public function __construct(User $user, Project $project, Model $context = null, Task $task, Collection $audience = null)
 	{
 		$this->origin = $user;
-		$this->context = $project;
+		$this->context = $context; // can be Project, MileStone, TaskList
 		$this->subject = $task;
 		$this->audience = $audience;
+		$this->project = $project;
 	}
 	
 }

@@ -26,6 +26,7 @@ class ChatRoomCreated extends Event implements FeedableContract {
 		$this->subject = $chat;
 		$this->context = $project;
 		$this->audience = $audience;
+		$this->project = $project;
 	}
 	
 }

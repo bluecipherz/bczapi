@@ -32,7 +32,7 @@ class DeleteForum extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->forum->delete();
-        event(new ForumDeleted($this->user, $this->forum, $this->forum->project, $this->audience));
+        event(new ForumDeleted($this->user, $this->forum, $this->audience));
 	}
 
 }

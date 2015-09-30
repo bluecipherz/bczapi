@@ -24,7 +24,7 @@ class ProjectDeleted extends Event implements FeedableContract {
 		$this->origin = $user;
 		$this->subject = $project;
 		$this->audience = $audience;
-		$this->context = $project;
+		$this->project = $project;
 	}
 
 }

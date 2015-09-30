@@ -9,6 +9,7 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Task;
 use Illuminate\Database\Eloquent\Collection;
+use App\Events\FeedableEvent;
 use App\Events\TaskCompleted;
 use App\Events\TaskPercentChanged;
 use App\Events\TaskUsersChanged;
@@ -46,15 +47,15 @@ class UpdateTask extends Command implements SelfHandling
         $priority = $this->task->priority;
         $this->task->update($this->data);
         if($this->task->priority != $priority) {
-            event(new TaskPriorityChanged($this->user, $this->task, $this->audience));
+            event(new FeedableEvent('TaskPriorityChanged', $this->user, $this->task, null, $this->task->project, $this->audience));
         }
         if($this->task->percentage_completed != $percent && $this->task->percentage_completed != 100) {
-            event(new TaskPercentChanged($this->user, $this->task, $this->audience));
+            event(new FeedableEvent('TaskPercentChanged', $this->user, $this->task, null, $this->task->project, $this->audience));
         }
         if($this->task->percentage_completed == 100) {
             $this->task->completed_at = new DateTime;
             $this->task->save();
-            event(new TaskCompleted($this->user, $this->task, $this->audience));
+            event(new FeedableEvent('TaskCompleted', $this->user, $this->task, null, $this->task->project, $this->audience));
         }
 	}
 

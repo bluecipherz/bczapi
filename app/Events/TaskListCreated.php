@@ -9,6 +9,7 @@ use App\User;
 use App\Project;
 use App\TaskList;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class TaskListCreated extends Event implements FeedableContract {
 
@@ -20,12 +21,13 @@ class TaskListCreated extends Event implements FeedableContract {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, TaskList $tasklist, Collection $audience)
+	public function __construct(User $user, Project $project, Model $context = null, TaskList $tasklist, Collection $audience)
 	{
 		$this->origin = $user;
-		$this->context = $project;
+		$this->context = $context; // can be either Project or MileStone
 		$this->subject = $tasklist;
 		$this->audience = $audience;
+		$this->project = $project;
 	}
 
 }

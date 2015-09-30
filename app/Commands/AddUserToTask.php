@@ -6,7 +6,7 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Task;
 use Illuminate\Database\Eloquent\Collection;
-use App\Events\UserAddedToTask;
+use App\Events\FeedableEvent;
 
 class AddUserToTask extends Command implements SelfHandling {
 
@@ -33,7 +33,7 @@ class AddUserToTask extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->task->users()->save($this->user, ['type' => 'member']);
-        event(new UserAddedToTask($this->admin, $this->task, $this->user, $this->audience));
+        event(new FeedableEvent('UserAddedToTask', $this->admin, $this->user, $this->task, $this->task->project, $this->audience));
 	}
 
 }

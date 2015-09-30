@@ -34,7 +34,7 @@ class DeleteCheckList extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->checklist->delete();
-		event(new CheckListDeleted($this->user, $this->project, $this->checklist, $this->audience));
+		event(new CheckListDeleted($this->user, $this->checklist, $this->audience));
 	}
 
 }

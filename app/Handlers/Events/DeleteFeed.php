@@ -1,7 +1,7 @@
 <?php namespace App\Handlers\Events;
 
 use App\Events\Event;
-use App\Events\Contracts\FeedableEvent;
+use App\Events\UnFeedableEvent;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
@@ -25,13 +25,13 @@ class DeleteFeed {
 	 * @param  Events  $event
 	 * @return void
 	 */
-	public function handle(FeedableEvent $event)
+	public function handle(UnFeedableEvent $event)
 	{
 		// $event->getContext() : TaskCompleted Feed
 		// $lastFeed : Comment Feed
-		if($event instanceof \App\Events\CommentDeleted) {
+		if($event->getType() == 'CommentDeleted') {
 			// echo 'ok1';
-			$lastFeed = Feed::whereType('App\Events\CommentPosted')->whereContextId($event->getContext()->id)->first();
+			$lastFeed = Feed::whereType('CommentPosted')->whereContextId($event->getContext()->id)->first(); // context = target feed
 			if($lastFeed) {
 				// echo "ok2;{$event->getContext()->comments->count()}";
 				if($event->getContext()->comments->count() > 0) {
@@ -42,15 +42,15 @@ class DeleteFeed {
 					$lastFeed->updated_at = $lastComment->updated_at;
 					$lastFeed->save();
 					// echo "{$lastFeed} : {$lastComment}";
-				} else {
+				} else { // delete comment feed
 					// $event->getContext()->delete();
 					$lastFeed->delete();
-					echo 'feed deleted';
+					// echo 'comment feed deleted';
 				}
 			}
-		} else if($event instanceof \App\Events\ProjectDeleted) {
-            Feed::whereContextId($event->getSubject()->id)->whereContextType(get_class($event->getSubject()))->delete();
-            Feed::whereSubjectId($event->getSubject()->id)->whereSubjectType(get_class($event->getSubject()))->delete();
+		} else if($event->getType() == 'ProjectDeleted') {
+            Feed::whereProjectId($event->getSubject()->id)->delete(); // delete all project related feeds
+            Feed::whereSubjectId($event->getSubject()->id)->whereSubjectType(get_class($event->getSubject()))->delete(); // create 'project created' feed
 		} else {
             Feed::whereSubjectId($event->getSubject()->id)->delete();
         }

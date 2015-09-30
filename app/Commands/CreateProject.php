@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldBeQueued;
 use Illuminate\Contracts\Bus\SelfHandling;
 use App\Project;
 use App\Events\ProjectCreated;
+use App\Events\FeedableEvent;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use App\Http\Requests\StoreProjectRequest;
@@ -40,7 +41,8 @@ class CreateProject extends Command implements SelfHandling
 	{
 		$project = Project::create($this->data);
 		$this->user->projects()->save($project, ['type' => 'owner']);
-		event(new ProjectCreated($this->user, $project, $this->audience));
+		$_project = $project->private ? $project : null;
+		event(new FeedableEvent('ProjectCreated', $this->user, $project, null, $_project, $this->audience));
 		return $project;
 	}
 

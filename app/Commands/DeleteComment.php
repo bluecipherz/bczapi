@@ -6,6 +6,7 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Comment;
 use App\Events\CommentDeleted;
+use App\Events\UnFeedableEvent;
 
 class DeleteComment extends Command implements SelfHandling {
 
@@ -31,7 +32,7 @@ class DeleteComment extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->comment->delete();
-		event(new CommentDeleted($this->user, $this->comment, $this->commentable));
+		event(new UnFeedableEvent('CommentDeleted', $this->user, $this->comment, $this->commentable));
 	}
 
 }

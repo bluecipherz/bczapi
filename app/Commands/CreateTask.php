@@ -10,6 +10,7 @@ use App\User;
 use App\Project;
 use App\Task;
 use App\Events\TaskCreated;
+use App\Events\FeedableEvent;
 use Illuminate\Database\Eloquent\Collection;
 
 class CreateTask extends Command implements SelfHandling
@@ -42,7 +43,7 @@ class CreateTask extends Command implements SelfHandling
 		$task = Task::create($this->data);
 		$this->project->tasks()->save($task);
 		$this->user->tasks()->save($task, ['type' => 'owner']);
-		event(new TaskCreated($this->user, $this->project, $task, $this->audience));
+		event(new FeedableEvent('TaskCreated', $this->user, $task, null, $this->project, $this->audience));
 		return $task;
 	}
 

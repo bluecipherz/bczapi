@@ -8,6 +8,7 @@ use App\User;
 use App\Project;
 use App\MileStone;
 use App\Events\MileStoneCreated;
+use App\Events\FeedableEvent;
 
 class CreateMileStone extends Command implements SelfHandling {
 
@@ -36,7 +37,7 @@ class CreateMileStone extends Command implements SelfHandling {
 		$milestone = MileStone::create($this->data);
 		$this->user->milestones()->save($milestone);
 		$this->project->milestones()->save($milestone);
-		event(MileStoneCreated($this->user, $this->project, $milestone, $this->audience));
+		event(FeedableEvent('MileStoneCreated', $this->user, $milestone, null, $this->project, $this->audience));
 	}
 
 }

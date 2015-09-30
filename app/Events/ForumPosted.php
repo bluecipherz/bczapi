@@ -26,6 +26,7 @@ class ForumPosted extends Event implements FeedableContract {
 		$this->context = $project;
 		$this->subject = $forum;
 		$this->audience = $audience;
+		$this->project = $project;
 	}
 
 }

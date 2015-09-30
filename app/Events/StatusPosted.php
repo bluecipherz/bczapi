@@ -26,6 +26,7 @@ class StatusPosted extends Event implements FeedableContract {
 		$this->subject = $status;
 		$this->context = $project;
 		$this->audience = $audience;
+		$this->project = $project;
 	}
 	
 }

@@ -10,8 +10,9 @@ use App\Project;
 use App\MileStone;
 use Illuminate\Database\Eloquent\Collection;
 
-class MileStoneCreated extends Event {
+class MileStoneCreated extends Event implements FeedableContract {
 
+	use FeedableTrait;
 	use SerializesModels;
 
 	/**
@@ -19,12 +20,13 @@ class MileStoneCreated extends Event {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, MileStone $milestone, Collection $audience)
+	public function __construct(User $user, Project $project, MileStone $milestone, Collection $audience = null)
 	{
 		$this->origin = $user;
 		$this->context = $project;
 		$this->subject = $milestone;
 		$this->audience = $audience;
+		$project->project = $project;
 	}
 
 }

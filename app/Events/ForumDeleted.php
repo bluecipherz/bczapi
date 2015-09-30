@@ -20,12 +20,13 @@ class ForumDeleted extends Event implements FeedableContract {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Forum $forum, Project $project, Collection $audience = null)
+	public function __construct(User $user, Forum $forum, Collection $audience = null)
 	{
 		$this->origin = $user;
         $this->subject = $forum;
         $this->context = $project;
         $this->audience = $audience;
+        $this->project = $forum->project;
 	}
 
 }

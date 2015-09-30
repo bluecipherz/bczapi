@@ -10,5 +10,7 @@ interface FeedableEvent {
 	public function getContext();
 	
 	public function getAudience();
+
+	public function getProject();
 	
 }

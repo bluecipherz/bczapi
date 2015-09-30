@@ -7,6 +7,7 @@ use App\User;
 use App\Project;
 use App\Chat;
 use App\Events\ChatRoomCreated;
+use App\Events\FeedableEvent;
 use Illuminate\Database\Eloquent\Collection;
 
 class CreateChatRoom extends Command implements SelfHandling {
@@ -36,7 +37,7 @@ class CreateChatRoom extends Command implements SelfHandling {
 		$chat = Chat::create($this->data);
         $this->user->chats()->save($chat, ['type' => 'admin']);
 		if($this->project) $this->project->chats()->save($chat);
-		event(new ChatRoomCreated($this->user, $this->project, $chat, $this->audience));
+		event(new FeedableEvent('ChatRoomCreated', $this->user, $chat, null, $this->project, $this->audience));
 		return $chat;
 	}
 

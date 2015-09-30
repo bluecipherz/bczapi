@@ -21,6 +21,7 @@ class CreateFeedsTable extends Migration {
             $table->string('subject_type');
             $table->unsignedInteger('context_id'); // only for comment, status & project
             $table->string('context_type');
+			$table->unsignedInteger('project_id');
 			$table->timestamps();
 		});
 		Schema::create('feeds_users', function(Blueprint $table) {

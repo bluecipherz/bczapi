@@ -26,6 +26,7 @@ class ChatRoomDeleted extends Event implements FeedableContract {
         $this->subject = $chat;
         $this->context = $chat->project;
         $this->audience = $audience;
+        $this->project = $chat->project;
 	}
 
 }

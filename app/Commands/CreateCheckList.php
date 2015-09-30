@@ -8,6 +8,7 @@ use App\User;
 use App\Task;
 use App\CheckList;
 use App\Events\CheckListCreated;
+use App\Events\FeedableEvent;
 
 class CreateCheckList extends Command implements SelfHandling {
 
@@ -36,7 +37,7 @@ class CreateCheckList extends Command implements SelfHandling {
 		$checklist = CheckList::create($this->data);
 		$this->task->checklists()->save($checklist);
 		$this->user->checklists()->save($checklist);
-		event(new CheckListCreated($this->user, $this->task->project, $this->checklist, $this->audience));
+		event(new FeedableEvent('CheckListCreated', $this->user, $this->checklist, $this->task, $this->task->project, $this->audience));
 	}
 
 }

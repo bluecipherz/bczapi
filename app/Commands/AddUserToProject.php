@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldBeQueued;
 use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Project;
-use App\Events\UserAddedToProject;
+use App\Events\FeedableEvent;
 use App\Events\MemberAdded;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -42,7 +42,7 @@ class AddUserToProject extends Command implements SelfHandling
 	{
 		$this->project->users()->save($this->user, ['type' => $this->type]); // belongsToMany
 		$this->user->feeds()->saveMany($this->project->feeds->all()); // old project feeds
-		event(new UserAddedToProject($this->owner, $this->project, $this->user, $this->audience));
+		event(new FeedableEvent('UserAddedToProject', $this->owner, $this->user, null, $this->project, $this->audience));
 	}
 
 }

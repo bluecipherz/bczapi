@@ -183,9 +183,10 @@ Route::get('test', function() {
 		return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
 	});
 	
-	$feeds = App\Feed::with(['context' => function($query) {
-		$query->whereId(433);
+	$feeds = App\Feed::with(['context.origin' => function($query) {
+		$query->where('context_id', '!=', 0);
 	}])->get();
+
 	
 	// $feeds = App\Feed::all()->map(function($feed) {
 	// 	if($feed->context_type == 'App\Feed') {
@@ -242,7 +243,10 @@ Route::get('test', function() {
 });
 
 Route::post('test', function() {
-	return array_merge(['method' => 'post'], \Input::all());
+	// return array_merge(['method' => 'post'], \Input::all());
+    return Feed::all()->map(function($feed) {
+        return $feed;
+    });
 });
 
 Route::get('arr_test', function() {

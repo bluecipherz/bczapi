@@ -26,6 +26,7 @@ class CommentPosted extends Event implements FeedableContract {
 		$this->subject = $comment;
 		$this->context = $feed;
 		$this->audience = $audience;
+		$this->project = $feed->project;
 	}
 	
 }

@@ -26,6 +26,7 @@ class StatusDeleted extends Event implements FeedableContract {
         $this->subject = $status;
         $this->context = $status->project;
         $this->audience = $audience;
+        $this->project = $status->project;
 	}
 
 }

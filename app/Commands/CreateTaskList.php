@@ -9,6 +9,7 @@ use App\Project;
 use App\MileStone;
 use App\TaskList;
 use App\Events\TaskListCreated;
+use App\Events\FeedableEvent;
 
 class CreateTaskList extends Command implements SelfHandling {
 
@@ -37,7 +38,7 @@ class CreateTaskList extends Command implements SelfHandling {
 	{
 		$tasklist = TaskList::create($this->data);
 		if($this->milestone) $this->milestone->tasklists()->save($tasklist);
-		event(new TaskListCreated($this->user, $this->project, $tasklist, $this->audience));
+		event(new FeedableEvent('TaskListCreated', $this->user, $tasklist, $this->milestone, $this->project, $this->audience));
 	}
 
 }

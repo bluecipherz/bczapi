@@ -7,6 +7,10 @@ use App\User;
 
 class ControllersTest extends TestCase {
 
+	public function testSample() {
+		$this->assertTrue(true);
+	}
+
     public function stestHomeroute() {
         $response = $this->call('GET', '/api/home'); // home
         $this->assertResponseStatus(400);
@@ -37,17 +41,36 @@ class ControllersTest extends TestCase {
     }
     
     public function stestComment() {
-		$cd = [
-			'comment' => 'lets bring the pain'
-		];
-		$count = Feed::count();
+		$cd = array('comment' => 'lets bring the pain');
 		$feed = Feed::firstOrFail();
+		$commentCount = $feed->comments->count();
+		echo "comment count {$commentCount}";
 		$user = User::firstOrFail();
 		$comment = Bus::dispatch(new PostComment($user, $cd, $feed));
-		$ncount = Feed::count();
-		$this->assertEquals($count, $ncount);
-		$this->assertEquals($user->id, Feed::all()->last()->origin->id);
+		$commentCount2 = $feed->comments->count();
+		// $this->assertEquals($comment->feed->id, $feed->id); // just test
+		$this->assertEquals($comment->owner->id, $user->id); // just test
+		// $this->assertNotEquals($commentCount, $commentCount2);
+		$this->assertEquals($user->id, Feed::whereType('CommentPosted')->whereContextId($feed->id)->first()->origin->id);
+		while($feed->comments->count() > 0) {
+			$comment = $feed->comments->first();
+			Bus::dispatch(new DeleteComment($user, $comment));
+		}
+		$this->assertFalse(Feed::whereType('CommentPosted')->whereContextId($feed->id)->exists());
 		//~ echo "old count : {$count}, new count : {$ncount}";
+	}
+
+	/*
+	 * Delete the only one seeded comment
+	 */
+	public function testDeleteComment() {
+		$user = User::firstOrFail();
+		$comment = App\Comment::firstOrFail();
+		$feed = $comment->feed;
+		// echo "deleting comment on {$feed->context->type}. total comments = {$feed->context->comments->count()}";
+		Bus::dispatch(new DeleteComment($user, $comment));
+		$this->assertEquals(0, $feed->comments->count());
+		$this->assertFalse(Feed::whereType('CommentPosted')->whereContextId($feed->id)->exists());
 	}
 
 	public function stestMakeModel() {
@@ -73,8 +96,12 @@ class ControllersTest extends TestCase {
 		$this->assertEquals($user1->id, $commentFeed->origin->id);
 		$this->assertEquals($comment1->id, $commentFeed->subject->id);
 	}
-	public function testSample() {
-		$this->assertTrue(true);
+
+	public function testPostStatus() {
+		$status = App\Status::firstOrFail();
+		$this->assertNull($status->project);
+		$this->assertNotNull($status->owner);
+		
 	}
 
 }
