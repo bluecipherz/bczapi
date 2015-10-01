@@ -37,9 +37,10 @@ class ProjectController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(StoreProjectRequest $request)
+	public function store(Request $request)
 	{
         $user = JWTAuth::parseToken()->authenticate();
+        $this->validate($request, ['name' => 'required', 'description' => 'required']);
        	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
         $project = $this->dispatch(new CreateProject($user, $request->all(), $audience));
         return response()->json(['success' => true, 'message' => 'Project Created.', 'project' => $project]);

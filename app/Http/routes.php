@@ -166,6 +166,7 @@ Route::group(['domain' => 'api.bluecipherz.com'], function() {
 });
 
 Route::get('test', function() {
+    // return substr('App\Feed', strrpos('App\Feed', '\\'));
     $user = \App\User::firstOrFail();
     $feeds = $user->feeds()
         ->with('subject.owner')
@@ -245,9 +246,9 @@ Route::get('test', function() {
 
 Route::post('test', function() {
 	// return array_merge(['method' => 'post'], \Input::all());
-    return Feed::all()->map(function($feed) {
-        return $feed;
-    });
+    // return Feed::all()->map(function($feed) {
+    //     return $feed;
+    // });
 });
 
 Route::get('arr_test', function() {
