@@ -29,7 +29,11 @@ class AuthController extends Controller {
 			return response()->json(['error' => 'could_not_create_token'], 500);
 		}
 		$user = User::whereEmail($credentials['email'])->first();
-		return response()->json(array('token' => $token, 'user' => $user));
+		return response()->json(array(
+			'token' => $token,
+			'user' => $user,
+			'projects' => $user->projects
+		));
 	}
 
 	/**

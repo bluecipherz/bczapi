@@ -11,7 +11,7 @@ class Project extends Model {
 
 	// protected $appends = ['task_completion', 'milestone_completion', 'project_completion'];
 
-	protected $with = ['tasks', 'milestones', 'tasklists'];
+	protected $with = ['tasks', 'milestones', 'tasklists', 'users'];
 
 	public function getTaskCompletionAttribute() {
 		return array(

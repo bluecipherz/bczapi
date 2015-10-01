@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Project;
 use App\User;
 use JWTAuth;
+use App\Feed;
 use App\Commands\AddUserToProject;
 use App\Commands\RemoveUserFromProject;
 use App\Http\Requests\JoinProjectRequest;
@@ -36,7 +37,8 @@ class UserController extends Controller {
 		$type = $request->get('type');
 		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
 		$this->dispatch(new AddUserToProject($admin, $project, $user, $type, $audience));
-		return response()->json(['success' => true, 'message' => 'User Joined Project.']);
+		$feed = Feed::whereType('UserAddedToProject')->whereSubjectId($user->id)->whereProjectId($project->id)->first();
+		return response()->json(['success' => true, 'message' => 'User Joined Project.', 'feed' => $feed]);
 	}
 
 	/**
