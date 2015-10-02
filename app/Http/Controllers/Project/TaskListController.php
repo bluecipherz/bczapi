@@ -5,6 +5,12 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Project;
+use App\User;
+use App\TaskList;
+use App\Feed;
+use App\Commands\CreateTaskList;
+use App\Commands\DeleteTaskList;
+use JWTAuth;
 
 class TaskListController extends Controller {
 
@@ -30,9 +36,11 @@ class TaskListController extends Controller {
 	 */
 	public function store(Project $project, Request $request)
 	{
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$tasklist = $this->dispatch(new CreateTaskList($this->user, $project, $request->all(), $audience));
-		return response()->json(['success' => true, 'message' => 'TaskList created.', 'tasklist' => $tasklist]);
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$user = JWTAuth::parseToken()->authenticate();
+		$tasklist = $this->dispatch(new CreateTaskList($user, $project, null, $request->all()));
+		// $feed = Feed::whereSubjectType('App\TaskList')->whereSubjectId($tasklist->id)->first();
+		return response()->json(['success' => true, 'message' => 'TaskList created.', 'tasklist' => $tasklist, 'feed' => $tasklist->feed]);
 	}
 
 	/**
@@ -55,8 +63,9 @@ class TaskListController extends Controller {
 	 */
 	public function destroy(Project $project, TaskList $tasklist, Request $request)
 	{
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$this->dispatch(new DeleteTaskList($this->user, $tasklist, $audience));
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$user = JWTAuth::parseToken()->authenticate();
+		$this->dispatch(new DeleteTaskList($user, $tasklist));
 		return response()->json(['success' => true, 'message' => 'TaskList deleted.']);
 	}
 

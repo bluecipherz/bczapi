@@ -16,9 +16,12 @@ class CreateFeedsTable extends Migration {
 		{
 			$table->increments('id');
             $table->string('type');
+            $table->string('additional_type');
             $table->unsignedInteger('origin_id');
             $table->unsignedInteger('subject_id');
             $table->string('subject_type');
+            $table->unsignedInteger('additional_subject_id');
+            $table->string('additional_subject_type');
             $table->unsignedInteger('context_id'); // only for comment, status & project
             $table->string('context_type');
 			$table->unsignedInteger('project_id');

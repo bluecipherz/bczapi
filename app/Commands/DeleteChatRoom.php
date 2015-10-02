@@ -7,6 +7,7 @@ use App\User;
 use App\Chat;
 use Illuminate\Database\Eloquent\Collection;
 use App\Events\ChatRoomDeleted;
+use App\Events\UnFeedableEvent;
 
 class DeleteChatRoom extends Command implements SelfHandling {
 
@@ -32,7 +33,7 @@ class DeleteChatRoom extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->chat->delete();
-        event(new ChatRoomDeleted($this->user, $this->chat, $this->audience));
+        event(new UnFeedableEvent('ChatRoomDeleted', $this->user, $this->chat, null, $this->chat->project, $this->audience));
 	}
 
 }

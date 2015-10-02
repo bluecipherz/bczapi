@@ -8,6 +8,7 @@ use JWTAuth;
 use App\Project;
 use App\Chat;
 use App\Message;
+use App\Commands\SendChatMessage;
 
 class MessageController extends Controller {
 

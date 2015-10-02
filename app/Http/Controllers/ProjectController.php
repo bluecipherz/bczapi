@@ -41,8 +41,8 @@ class ProjectController extends Controller {
 	{
         $user = JWTAuth::parseToken()->authenticate();
         $this->validate($request, ['name' => 'required', 'description' => 'required']);
-       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-        $project = $this->dispatch(new CreateProject($user, $request->all(), $audience));
+       	// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $project = $this->dispatch(new CreateProject($user, $request->all()));
         return response()->json(['success' => true, 'message' => 'Project Created.', 'project' => $project]);
 	}
 
@@ -55,8 +55,8 @@ class ProjectController extends Controller {
 	public function update(Project $project, Request $request)
 	{
         $user = JWTAuth::parseToken()->authenticate();
-       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$this->dispatch(new UpdateProject($user, $project, $request->all(), $audience));
+       	// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new UpdateProject($user, $project, $request->all()));
         return response()->json(['success' => true, 'message' => 'Project Updated.']);
 	}
 
@@ -69,8 +69,8 @@ class ProjectController extends Controller {
 	public function destroy(Project $project, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$this->dispatch(new DeleteProject($user, $project, $audience));
+       	// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteProject($user, $project));
 		return response()->json(['success' => true, 'message' => 'Project deleted.']);
 	}
 

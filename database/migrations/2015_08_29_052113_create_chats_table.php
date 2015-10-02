@@ -16,7 +16,8 @@ class CreateChatsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name');
-			$table->unsignedInteger('project_id')->default(0);
+			$table->unsignedInteger('project_id');
+			$table->boolean('private')->default(false);
 			$table->timestamps();
 			$table->softDeletes();
 		});
@@ -24,7 +25,7 @@ class CreateChatsTable extends Migration {
 		{
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('chat_id');
-			$table->string('type');
+			$table->string('type'); // admin, member
             $table->timestamps();
 		});
 	}

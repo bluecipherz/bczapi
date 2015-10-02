@@ -18,6 +18,7 @@ class CreateMileStonesTable extends Migration {
 			$table->unsignedInteger('project_id');
 			// $table->boolean('completed')->default(false);
 			$table->string('name');
+			$table->tinyInteger('flag')->default(0);
 			$table->timestamps();
 		});
 	}

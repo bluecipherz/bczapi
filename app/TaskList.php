@@ -23,5 +23,9 @@ class TaskList extends Model {
     public function user() {
         return $this->belongsTo('App\User');
     }
+
+    public function feed() {
+        return $this->morphOne('App\Feed', 'subject');
+    }
     
 }

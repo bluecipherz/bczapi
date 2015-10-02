@@ -132,7 +132,7 @@ Route::group(array('prefix' => 'api'), function() {
         Route::resource('statuses', 'StatusController', ['except' => ['create', 'show', 'edit']]);
 
         // CHATS
-        Route::resource('chats', 'ChatController', ['except' => ['create', 'show', 'edit']]);
+        Route::resource('chats', 'ChatController', ['only' => ['index', 'store', 'update']]); // zoho synced
 		
 		// CHAT MESSAGES
         Route::resource('chats.messages', 'Chat\MessageController', ['except' => ['create', 'show', 'edit']]);
