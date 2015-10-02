@@ -158,6 +158,7 @@ Route::group(array('prefix' => 'api'), function() {
         });
 
         // ATTACHMENTS
+		Route::resource('attachments', 'AttachmentController', ['only' => 'store']);
     });
 });
 

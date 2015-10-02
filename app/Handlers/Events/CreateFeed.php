@@ -38,16 +38,23 @@ class CreateFeed {
 			 * instead associate its origin with the new one
 			 * eg : ProjectCreated, TaskCompleted etc.
 			 */
-			$lastFeed = Feed::whereType('CommentPosted')->whereContextId($event->getContext()->id)->first();
-			if($lastFeed) {
-				// echo "\n{$event->getOrigin()->id}";
-				$lastFeed->origin()->associate($event->getOrigin());
-				// echo "\n{$lastFeed->origin->id}";
-				$lastFeed->subject()->associate($event->getSubject());
-				$lastFeed->save();
-			} else {
-				$this->_createFeed($event);
+			$feed = $event->getContext();
+			if($feed->additional_type != 'CommentPosted') {				
+				$feed->additional_type = 'CommentPosted';
+				$feed->additional_subject_type = get_class($event->getSubject());
 			}
+			$feed->additional_subject_id = $event->getSubject()->id;
+			$feed->save();
+			// $lastFeed = Feed::whereType('CommentPosted')->whereContextId($event->getContext()->id)->first();
+			// if($lastFeed) {
+				// echo "\n{$event->getOrigin()->id}";
+				// $lastFeed->origin()->associate($event->getOrigin());
+				// echo "\n{$lastFeed->origin->id}";
+				// $lastFeed->subject()->associate($event->getSubject());
+				// $lastFeed->save();
+			// } else {
+				// $this->_createFeed($event);
+			// }
 		} else if($event->getType() == 'TaskPercentChanged' ||
                   $event->getType() == 'TaskCompleted' ||
                   $event->getType() == 'TaskPriorityChanged' ||
