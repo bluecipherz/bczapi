@@ -11,7 +11,7 @@ class Project extends Model {
 
 	// protected $appends = ['task_completion', 'milestone_completion', 'project_completion'];
 
-	protected $with = ['tasks', 'milestones', 'tasklists', 'users'];
+	protected $with = ['users', 'tasks', 'milestones', 'tasklists'];
 
 	public function getTaskCompletionAttribute() {
 		return array(
@@ -75,7 +75,7 @@ class Project extends Model {
     }
     
     public function feeds() {
-        return $this->morphMany('App\Feed', 'context');
+        return $this->hasMany('App\Feed');
     }
     
     public function memberActions() {

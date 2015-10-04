@@ -43,7 +43,7 @@ class ProjectController extends Controller {
         $this->validate($request, ['name' => 'required', 'description' => 'required']);
        	// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
         $project = $this->dispatch(new CreateProject($user, $request->all()));
-        return response()->json(['success' => true, 'message' => 'Project Created.', 'project' => $project]);
+        return response()->json(['success' => true, 'message' => 'Project Created.', 'project' => $project->load('users')]);
 	}
 
 	/**

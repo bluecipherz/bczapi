@@ -14,9 +14,9 @@ class UserTableSeeder extends Seeder {
 		DB::table('users')->delete();
 		DB::table('portal_users')->delete();
 		
-		$user1 = App\User::create(['email' => 'asd@g.com', 'password' => Hash::make('asdasd'), 'privilege_level' => 1]);
-		$user2 = App\User::create(['email' => 'qwe@g.com', 'password' => Hash::make('asdasd')]);
-		$user3 = App\User::create(['email' => 'zxc@g.com', 'password' => Hash::make('asdasd')]);
+		$user1 = App\User::create(['email' => 'asd@g.com', 'password' => Hash::make('asdasd'), 'first_name' => 'Shaji', 'last_name' => 'Periya', 'privilege_level' => 1]);
+		$user2 = App\User::create(['email' => 'qwe@g.com', 'password' => Hash::make('asdasd'), 'first_name' => 'Koyi', 'last_name' => 'Moideen']);
+		$user3 = App\User::create(['email' => 'zxc@g.com', 'password' => Hash::make('asdasd'), 'first_name' => 'Ambrose', 'last_name' => 'Warma',]);
 		
 		$portal1 = App\PortalUser::create([]);
 		$portal2 = App\PortalUser::create([]);

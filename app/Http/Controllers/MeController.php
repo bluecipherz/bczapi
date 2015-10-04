@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Feed;
+use App\Project;
 use JWTAuth;
 
 class MeController extends Controller {
@@ -20,8 +21,12 @@ class MeController extends Controller {
 	/**
 	 * 
 	 */
-	public function feeds() {
+	public function feeds(Request $request, $project = null) {
 		$user = JWTAuth::parseToken()->authenticate();
+		if($project) {
+			$_project = Project::findOrFail($project);
+			return $_project->feeds;
+		}
 		$feeds = $user->feeds()
 			// ->with('subject.owner') //
 			// ->with('origin.userable') //

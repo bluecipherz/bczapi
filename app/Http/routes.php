@@ -37,7 +37,7 @@ Route::group(array('prefix' => 'api'), function() {
 
         // ME
         Route::get('/me/projects', 'MeController@projects');
-        Route::get('/me/feeds', 'MeController@feeds');
+        Route::get('/me/feeds/{project?}', 'MeController@feeds');
         Route::get('/me/notifications', 'MeController@feeds');
         Route::get('/me/tasks', 'MeController@feeds');
         Route::get('/me/tasklists', 'MeController@feeds');
