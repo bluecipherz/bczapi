@@ -32,7 +32,7 @@ class AuthController extends Controller {
 		return response()->json(array(
 			'token' => $token,
 			'user' => $user,
-			'projects' => $user->projects
+			// 'projects' => $user->projects
 		));
 	}
 

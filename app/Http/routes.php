@@ -29,6 +29,7 @@ Route::group(array('prefix' => 'api'), function() {
     Route::get('authenticate/user', 'AuthController@getAuthenticatedUser');
     Route::post('register', 'AuthController@register'); // TODO changeto something else
     Route::get('authenticate/{user?}', 'AuthController@index');
+
     Route::group(['middleware' => 'jwt.auth'], function() {
 	
 		// HOME
@@ -51,6 +52,9 @@ Route::group(array('prefix' => 'api'), function() {
         // COMMENTS
         Route::resource('feeds.comments', 'Feed\CommentController', ['only' => ['store', 'destroy']]);
         Route::resource('projects.feeds.comments', 'Project\Feed\CommentController', ['only' => ['store', 'destroy']]);
+
+        // ATTACHMENT
+        Route::resource('feeds.comments.attachments', 'Feed\Comment\AttachmentController', ['only' => ['store']]);
 		
         // PROJECTS GROUP =============================================================
 
@@ -67,6 +71,8 @@ Route::group(array('prefix' => 'api'), function() {
             Route::resource('projects.milestones.tasklists', 'TaskListController', ['except' => ['create', 'show', 'edit']]);
             // TASKS
             Route::resource('projects.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
+            // DOCUMENTS
+            Route::resource('projects.documents', 'DocumentController', ['only' => ['index', 'store', 'destroy']]);
             // Project/Milestone namespace
             Route::group(['namespace' => 'MileStone'], function() {
                 // TASKLISTS
@@ -158,7 +164,7 @@ Route::group(array('prefix' => 'api'), function() {
         });
 
         // ATTACHMENTS
-		Route::resource('attachments', 'AttachmentController', ['only' => 'store']);
+        Route::resource('tempupload', 'TempUploadController', ['only' => ['store']]);
     });
 });
 
@@ -250,6 +256,7 @@ Route::post('test', function() {
     // return Feed::all()->map(function($feed) {
     //     return $feed;
     // });
+    return Input::get('token');
 });
 
 Route::get('arr_test', function() {
