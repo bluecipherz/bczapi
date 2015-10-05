@@ -31,7 +31,7 @@ class MeController extends Controller {
 			// ->with('subject.owner') //
 			// ->with('origin.userable') //
 			// ->with('comments.owner') //
-			->orderBy('updated_at')->get();
+			->orderBy('updated_at', 'desc')->get();
 			// ->map(function($feed) {
 				// if($feed->context_type == 'App\Feed') {
 					// $feed->context = Feed::whereId($feed->context_id)

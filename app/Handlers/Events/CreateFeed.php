@@ -77,7 +77,8 @@ class CreateFeed {
 		$feed->type = $event->getType();
 
 		$feed->origin()->associate($event->getOrigin()); // origin
-		$feed->subject()->associate($event->getSubject()); // subject
+		if($event->getSubject() instanceof \Illuminate\Database\Eloquent\Collection) $feed->subjects()->saveMany($event->getSubject()->all());
+		else $feed->subject()->associate($event->getSubject()); // subject
 		$project = $event->getProject();
 		if($project) $feed->project()->associate($project); // project
 		$context = $event->getContext();

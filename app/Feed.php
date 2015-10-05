@@ -26,6 +26,10 @@ class Feed extends Model {
 	public function subject() {
         return $this->morphTo();
     }
+
+    public function subjects() {
+    	return $this->belongsToMany('App\User', 'feeds_subjects');
+    }
     
     public function context() {
 		return $this->morphTo();

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use JWTAuth;
 use App\Commands\CreateChatRoom;
 use App\Chat;
+use App\User;
 use App\Project;
 use App\Commands\DeleteChatRoom;
 class ChatController extends Controller {
@@ -38,9 +39,9 @@ class ChatController extends Controller {
 	{
 		$user = JWTAuth::parseToken()->authenticate();
 		$this->validate($request, ['name' => 'required']);
-       	$audience = User::whereIn('id', explode(',', $request->get('members')))->get();
-        $chat = $this->dispatch(new CreateChatRoom($user, null, $request->all(), $audience));
-        return response()->json(['status' => 'success', 'message' => 'Chat Created.', 'chat' => $chat]);
+       	// $audience = User::whereIn('id', explode(',', $request->get('members')))->get();
+        $chat = $this->dispatch(new CreateChatRoom($user, null, $request->all()));
+        return response()->json(['status' => 'success', 'message' => 'Chat Created.', 'chat' => $chat, 'feed' => $chat->feed]);
 	}
 
 	/**

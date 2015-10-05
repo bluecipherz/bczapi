@@ -26,9 +26,9 @@ class TaskListController extends Controller {
 	 */
 	public function store(Project $project, Request $request)
 	{
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$tasklist = $this->dispatch(new CreateTaskList($this->user, $project, $request->all(), $audience));
-		return response()->json(['success' => true, 'message' => 'TaskList created.', 'tasklist' => $tasklist]);
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$tasklist = $this->dispatch(new CreateTaskList($this->user, $project, $request->all()));
+		return response()->json(['success' => true, 'message' => 'TaskList created.', 'tasklist' => $tasklist, 'feed' => $feed]);
 	}
 
 	/**

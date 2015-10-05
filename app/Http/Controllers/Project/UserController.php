@@ -30,13 +30,14 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(Project $project, JoinProjectRequest $request)
+	public function store(Project $project, Request $request)
 	{
+		$this->validate($request, ['type' => 'required|in:owner,developer,client']);
 		$admin = JWTAuth::parseToken()->authenticate();
         $user = User::findOrFail($request->get('user_id'));
 		$type = $request->get('type');
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$this->dispatch(new AddUserToProject($admin, $project, $user, $type, $audience));
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new AddUserToProject($admin, $project, $user, $type));
 		$feed = Feed::whereType('UserAddedToProject')->whereSubjectId($user->id)->whereProjectId($project->id)->first();
 		return response()->json(['success' => true, 'message' => 'User Joined Project.', 'feed' => $feed]);
 	}
@@ -47,8 +48,12 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(Project $project, User $user, UpdateProjectUserRequest $request)
+	public function update(Project $project, User $user, Request $request)
 	{
+		$this->validate($request, [
+			'type' => 'in:owner,developer,client',
+			'user_id' => 'exists:users_projects'
+		]);
         $data = ['type' => $request->get('type')];
         $project->users()->updateExistingPivot($user->id, $data);
         return response()->json(['success' => true, 'message' => 'Project Member updated.']);

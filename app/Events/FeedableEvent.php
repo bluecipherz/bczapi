@@ -19,7 +19,7 @@ class FeedableEvent extends Event {
 	 *
 	 * @return void
 	 */
-	public function __construct($type, User $origin, Model $subject, Model $context = null, Project $project = null, Collection $audience = null)
+	public function __construct($type, User $origin, $subject, Model $context = null, Project $project = null, Collection $audience = null)
 	{
 		$this->type = $type;
 		$this->origin = $origin;
