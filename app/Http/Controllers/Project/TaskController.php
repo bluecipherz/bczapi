@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Project;
 use App\Task;
+use App\User;
 use App\Commands\CreateTask;
 use App\Commands\CompleteTask;
 use App\Commands\DeleteTask;
@@ -36,9 +37,9 @@ class TaskController extends Controller {
 	public function store(Request $request, Project $project)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$task = $this->dispatch(new CreateTask($user, $project, $request->all(), $audience));
-		return response()->json(['success' => true, 'message' => 'Task Created.', 'task' => $task]);
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$task = $this->dispatch(new CreateTask($user, $project, $request->all()));
+		return response()->json(['success' => true, 'message' => 'Task Created.', 'task' => $task, 'feed' => $task->feed]);
 	}
 
 	/**
