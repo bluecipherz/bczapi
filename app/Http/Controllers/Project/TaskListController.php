@@ -51,7 +51,7 @@ class TaskListController extends Controller {
 	 */
 	public function update(Project $project, TaskList $tasklist, Request $request)
 	{
-		$tasklist->update($request->all());
+		$tasklist->update($request->except('token'));
 		return response()->json(['success' => true, 'message' => 'TaskList updated.']);
 	}
 

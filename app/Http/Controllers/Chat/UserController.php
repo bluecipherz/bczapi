@@ -30,9 +30,9 @@ class UserController extends Controller {
 	public function store(Chat $chat, Request $request)
 	{
 		$admin = JWTAuth::parseToken()->authenticate();
-		// $user = User::findOrFail($request->get('user_id'));
-		$users = User::whereIn('id', explode(',', $request->get('users')))->get();
-		$this->dispatch(new JoinChat($users, $chat, $admin));
+		$user = User::findOrFail($request->get('user_id'));
+		// $users = User::whereIn('id', explode(',', $request->get('users')))->get();
+		$this->dispatch(new JoinChat($user, $chat, $admin));
 		return response()->json(['success' => true, 'message' => 'User Joined Chat.']);
 	}
 
@@ -44,7 +44,7 @@ class UserController extends Controller {
 	 */
 	public function update(Chat $chat, User $user, Request $request)
 	{
-		$chat->users()->updateExistingPivot($user->id, $request->get('type'));
+		$chat->users()->updateExistingPivot($user->id, ['type' => $request->get('type')]);
 		return response()->json(['success' => true, 'message' => 'Chat User Updated.']);
 	}
 

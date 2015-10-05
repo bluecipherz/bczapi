@@ -9,6 +9,8 @@ class Chat extends Model {
 	
 	protected $fillable = ['name'];
 
+	protected $with = ['users'];
+
 	public function messages() {
 		return $this->hasMany('App\Message');
 	}

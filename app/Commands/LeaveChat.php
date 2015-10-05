@@ -33,7 +33,6 @@ class LeaveChat extends Command implements SelfHandling {
 	{
 		$this->chat->users()->detach($this->user->id);
 		event(new ChatUserLeft($this->user, $this->chat, $this->admin));
-        return $action;
 	}
 
 }

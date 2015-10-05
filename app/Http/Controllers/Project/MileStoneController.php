@@ -46,8 +46,8 @@ class MileStoneController extends Controller {
 	public function update(Project $project, MileStone $milestone, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$this->dispatch(new UpdateMileStone($user, $milestone, $request->all(), $audience));
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new UpdateMileStone($user, $milestone, $request->except('token')));
 		return response()->json(['success' => true, 'message' => 'Project Milestone Updated']);
 	}
 
@@ -57,7 +57,7 @@ class MileStoneController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Project $project, MileStone $milestone)
+	public function destroy(Project $project, MileStone $milestone, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
 		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();

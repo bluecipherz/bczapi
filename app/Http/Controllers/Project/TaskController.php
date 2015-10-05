@@ -9,6 +9,7 @@ use App\Task;
 use App\User;
 use App\Commands\CreateTask;
 use App\Commands\CompleteTask;
+use App\Commands\UpdateTask;
 use App\Commands\DeleteTask;
 use JWTAuth;
 

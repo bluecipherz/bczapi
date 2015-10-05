@@ -4,6 +4,12 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Project;
+use App\Task;
+use App\User;
+use JWTAuth;
+use App\Commands\AddUserToTask;
+use App\Commands\RemoveUserFromTask;
 
 class UserController extends Controller {
 
@@ -49,7 +55,7 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Project $project, Task $task, User $user)
+	public function destroy(Project $project, Task $task, User $user, Request $request)
 	{
 		$admin = JWTAuth::parseToken()->authenticate();
 		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();

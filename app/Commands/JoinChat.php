@@ -12,16 +12,16 @@ use Illuminate\Database\Eloquent\Collection;
 
 class JoinChat extends Command implements SelfHandling {
 
-	protected $users, $chat, $admin;
+	protected $user, $chat, $admin;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(Collection $users, Chat $chat, User $admin = null)
+	public function __construct(User $user, Chat $chat, User $admin = null)
 	{
-		$this->users = $users;
+		$this->user = $user;
 		$this->chat = $chat;
 		$this->admin = $admin;
 	}
@@ -33,9 +33,10 @@ class JoinChat extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		// $this->chat->users()->attach($this->user->id, ['type' => 'member']); // belongsToMany
-		$this->chat->users()->attach($this->users->lists('id'), ['type' => 'member']); // belongsToMany
-		event(new FeedableEvent('JoinedChat', $this->admin, $this->users, $this->chat));
+		$this->chat->users()->attach($this->user->id, ['type' => 'member']); // belongsToMany
+		// $this->chat->users()->attach($this->users->lists('id'), ['type' => 'member']); // belongsToMany
+		// event(new FeedableEvent('JoinedChat', $this->admin, $this->users, $this->chat));
+		event(new ChatUserJoined($this->user, $this->chat, $this->admin));
 	}
 
 }

@@ -141,7 +141,7 @@ Route::group(array('prefix' => 'api'), function() {
         Route::resource('chats', 'ChatController', ['only' => ['index', 'store', 'update']]); // zoho synced
 		
 		// CHAT MESSAGES
-        Route::resource('chats.messages', 'Chat\MessageController', ['except' => ['create', 'show', 'edit']]);
+        Route::resource('chats.messages', 'Chat\MessageController', ['only' => ['index', 'store']]);
 
         // EXPENSES
         Route::resource('expenses', 'ExpenseController', ['except' => ['create', 'show', 'edit']]);
