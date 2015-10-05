@@ -4,7 +4,9 @@ use App\Commands\Command;
 
 use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
+use App\Message;
 use App\Chat;
+use App\Events\FeedableEvent;
 
 class SendChatMessage extends Command implements SelfHandling {
 
@@ -31,8 +33,8 @@ class SendChatMessage extends Command implements SelfHandling {
 	{
 		$message = Message::create($this->data);
 		$this->user->messages()->save($message);
-		$this->chat->messsages()->save($message);
-		event(new MessagePosted($this->chat, $message, $this->user));
+		$this->chat->messages()->save($message);
+		event(new FeedableEvent('MessagePosted', $this->user, $message, $this->chat, $this->chat->project));
 		return $message;
 	}
 

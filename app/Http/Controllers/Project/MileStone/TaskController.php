@@ -4,6 +4,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use JWTAuth;
+use App\User;
+use App\Project;
+use App\MileStone;
+use App\Commands\CreateTask;
+use App\Commads\UpdateTask;
+use App\Commands\DeleteTask;
 
 class TaskController extends Controller {
 
@@ -28,7 +35,7 @@ class TaskController extends Controller {
 		$user = JWTAuth::parseToken()->authenticate();
 		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
 		$task = $this->dispatch(new CreateTask($user, $project, $request->all(), $audience));
-		return response()->json(['success' => true, 'message' => 'Task Created.', 'task' => $task]);
+		return response()->json(['success' => true, 'message' => 'Task Created.', 'task' => $task, 'feed' => $task->feed]);
 	}
 
 	/**

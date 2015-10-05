@@ -37,7 +37,8 @@ class CreateMileStone extends Command implements SelfHandling {
 		$milestone = MileStone::create($this->data);
 		$this->user->milestones()->save($milestone);
 		$this->project->milestones()->save($milestone);
-		event(FeedableEvent('MileStoneCreated', $this->user, $milestone, null, $this->project, $this->audience));
+		event(new FeedableEvent('MileStoneCreated', $this->user, $milestone, null, $this->project, $this->audience));
+		return $milestone;
 	}
 
 }

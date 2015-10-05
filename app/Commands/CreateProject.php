@@ -18,18 +18,17 @@ class CreateProject extends Command implements SelfHandling
 {
 
 	// use InteractsWithQueue, SerializesModels; // queued
-	protected $user, $data, $audience;
+	protected $user, $data;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, array $data, Collection $audience = null)
+	public function __construct(User $user, array $data)
 	{
 		$this->user = $user;
 		$this->data = $data;
-		$this->audience = $audience;
 	}
 
 	/**
@@ -40,9 +39,14 @@ class CreateProject extends Command implements SelfHandling
 	public function handle()
 	{
 		$project = Project::create($this->data);
-		$this->user->projects()->save($project, ['type' => 'owner']);
+		if(isset($this->data['owner'])) {
+			$user = User::findOrFail($this->data['owner']);
+			$user->projects()->save($project, ['type' => 'owner']);
+		} else {
+			$this->user->projects()->save($project, ['type' => 'owner']);
+		}
 		$_project = $project->private ? $project : null;
-		event(new FeedableEvent('ProjectCreated', $this->user, $project, null, $_project, $this->audience));
+		event(new FeedableEvent('ProjectCreated', $this->user, $project, null, $_project));
 		return $project;
 	}
 

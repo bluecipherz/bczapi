@@ -30,8 +30,9 @@ class UserController extends Controller {
 	public function store(Chat $chat, Request $request)
 	{
 		$admin = JWTAuth::parseToken()->authenticate();
-		$user = User::findOrFail($request->get('user_id'));
-		$this->dispatch(JoinChat($user, $chat, $admin));
+		// $user = User::findOrFail($request->get('user_id'));
+		$users = User::whereIn('id', explode(',', $request->get('users')))->get();
+		$this->dispatch(new JoinChat($users, $chat, $admin));
 		return response()->json(['success' => true, 'message' => 'User Joined Chat.']);
 	}
 
@@ -56,7 +57,7 @@ class UserController extends Controller {
 	public function destroy(Chat $chat, User $user)
 	{
 		$admin = JWTAuth::parseToken()->authenticate();
-		$this->dispatch(LeaveChat($user, $chat, $admin));
+		$this->dispatch(new LeaveChat($user, $chat, $admin));
 		return response()->json(['success' => true, 'message' => 'User Left Chat.']);
 	}
 

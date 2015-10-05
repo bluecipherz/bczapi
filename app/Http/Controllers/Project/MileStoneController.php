@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\User;
 use App\Project;
 use App\Milestone;
 use JWTAuth;
@@ -31,9 +32,9 @@ class MileStoneController extends Controller {
 	public function store(Project $project, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$milestone = $this->dispatch(new CreateMileStone($user, $project, $request->all(), $audience));
-		return response()->json(['success' => true, 'message' => 'Project Milestone Created.', 'milestone' => $milestone]);
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$milestone = $this->dispatch(new CreateMileStone($user, $project, $request->all()));
+		return response()->json(['success' => true, 'message' => 'Project Milestone Created.', 'milestone' => $milestone, 'feed' => $milestone->feed]);
 	}
 
 	/**
