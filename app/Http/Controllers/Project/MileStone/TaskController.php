@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use JWTAuth;
+use App\Task;
 use App\User;
 use App\Project;
 use App\MileStone;
@@ -32,10 +33,11 @@ class TaskController extends Controller {
 	 */
 	public function store(Request $request, Project $project, MileStone $milestone)
 	{
+		$this->validate($request, ['name' => 'required', 'description' => 'required']);
 		$user = JWTAuth::parseToken()->authenticate();
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$task = $this->dispatch(new CreateTask($user, $project, $request->all(), $audience));
-		return response()->json(['success' => true, 'message' => 'Task Created.', 'task' => $task, 'feed' => $task->feed]);
+		$audience = User::whereIn('id', explode(',', $request->get('users')))->get();
+		$task = $this->dispatch(new CreateTask($user, $request->all(), $project, null, $audience));
+		return response()->json(['status' => 'success', 'message' => 'Task Created.', 'task' => $task]);
 	}
 
 	/**
@@ -47,9 +49,9 @@ class TaskController extends Controller {
 	public function update(Project $project, MileStone $milestone, Task $task, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-        $this->dispatch(new UpdateTask($user, $task, $request->all(), $audience));
-        return response()->json(['success' => true, 'message' => 'Task Updated.']);
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $this->dispatch(new UpdateTask($user, $task, $request->all()));
+        return response()->json(['status' => 'success', 'message' => 'Task Updated.']);
 	}
 
 	/**
@@ -61,9 +63,9 @@ class TaskController extends Controller {
 	public function destroy(Project $project, MileStone $milestone, Task $task)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$this->dispatch(new DeleteTask($user, $project, $task, $audience));
-        return response()->json(['success' => true, 'message' => 'Task Deleted.']);
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteTask($user, $task));
+        return response()->json(['status' => 'success', 'message' => 'Task Deleted.']);
 	}
 
 }

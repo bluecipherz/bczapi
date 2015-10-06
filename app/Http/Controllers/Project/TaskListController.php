@@ -40,7 +40,7 @@ class TaskListController extends Controller {
 		$user = JWTAuth::parseToken()->authenticate();
 		$tasklist = $this->dispatch(new CreateTaskList($user, $project, null, $request->all()));
 		// $feed = Feed::whereSubjectType('App\TaskList')->whereSubjectId($tasklist->id)->first();
-		return response()->json(['success' => true, 'message' => 'TaskList created.', 'tasklist' => $tasklist, 'feed' => $tasklist->feed]);
+		return response()->json(['success' => true, 'message' => 'TaskList created.', 'tasklist' => $tasklist]);
 	}
 
 	/**

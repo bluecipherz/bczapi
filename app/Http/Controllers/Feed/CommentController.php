@@ -27,7 +27,7 @@ class CommentController extends Controller {
 		$this->validate($request, ['comment' => 'required']);
 		$user = JWTAuth::parseToken()->authenticate();
 		$comment = $this->dispatch(new PostComment($user, $request->all(), $feed));
-		return response()->json(['success' => true, 'message' => 'Comment Posted.', 'comment' => $comment]);
+		return response()->json(['status' => 'success', 'message' => 'Comment Posted.', 'comment' => $comment]);
 	}
 
 	/**
@@ -39,9 +39,9 @@ class CommentController extends Controller {
 	public function destroy(Feed $feed, Comment $comment, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		if($comment->owner->id != $user->id) return response()->json(['fail' => true, 'message' => 'Not authorized to delete comment.']);
+		if($comment->owner->id != $user->id) return response()->json(['status' => 'fail', 'message' => 'Not authorized to delete comment.'], 403);
 		$this->dispatch(new DeleteComment($user, $comment));
-		return response()->json(['success' => true, 'message' => 'Comment Deleted.']);
+		return response()->json(['status' => 'success', 'message' => 'Comment Deleted.']);
 	}
 
 }

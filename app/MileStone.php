@@ -10,7 +10,7 @@ class MileStone extends Model {
     //     'completed' => 'boolean'
     // ];
 
-    protected $with = ['tasks'];
+    protected $with = ['tasklists'];
 
 	public function tasklists() {
         return $this->hasMany('App\TaskList');

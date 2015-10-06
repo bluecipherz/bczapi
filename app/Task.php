@@ -13,6 +13,8 @@ class Task extends Model {
         'percentage_completed' => 'int'
     ];
 
+    protected $with = ['users'];
+
 	public function project() {
 		return $this->belongsTo('App\Project');
 	}

@@ -47,6 +47,7 @@ class CreateFeedsTable extends Migration {
 	public function down()
 	{
 		Schema::dropIfExists('feeds_users');
+		Schema::dropIfExists('feeds_subjects');
 		Schema::dropIfExists('feeds');
 	}
 

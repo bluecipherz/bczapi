@@ -9,27 +9,31 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Project;
 use App\Task;
+use App\MileStone;
+use App\TaskList;
 use App\Events\TaskCreated;
 use App\Events\FeedableEvent;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class CreateTask extends Command implements SelfHandling
 // , ShouldBeQueued // queued
 {
 
 	// use InteractsWithQueue, SerializesModels; // queued
-	protected $user, $project, $data, $audience;
+	protected $user, $project, $tasklist, $data, $audience;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, array $data, Collection $audience = null)
+	public function __construct(User $user, array $data, Project $project, TaskList $tasklist = null, Collection $audience = null)
 	{
 		$this->user = $user;
-		$this->project = $project;
 		$this->data = $data;
+		$this->project = $project;
+		$this->tasklist = $tasklist;
 		$this->audience = $audience;
 	}
 
@@ -42,8 +46,9 @@ class CreateTask extends Command implements SelfHandling
 	{
 		$task = Task::create($this->data);
 		$this->project->tasks()->save($task);
+		if($this->tasklist) $this->tasklist->tasks()->save($task);
 		$this->user->tasks()->save($task, ['type' => 'owner']);
-		event(new FeedableEvent('TaskCreated', $this->user, $task, null, $this->project, $this->audience));
+		event(new FeedableEvent('TaskCreated', $this->user, $task, $this->tasklist, $this->project, $this->audience));
 		return $task;
 	}
 

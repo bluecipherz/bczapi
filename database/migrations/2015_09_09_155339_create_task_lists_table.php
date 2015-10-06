@@ -18,7 +18,7 @@ class CreateTaskListsTable extends Migration {
             $table->string('name');
             $table->unsignedInteger('project_id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('milestone_id');
+            $table->unsignedInteger('mile_stone_id');
 			$table->timestamps();
 		});
 	}

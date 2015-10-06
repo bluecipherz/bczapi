@@ -4,6 +4,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\TaskList;
+use App\Task;
+use App\User;
+use JWTAuth;
+use App\Commands\CreateTask;
+use App\Commands\UpdateTask;
+use App\Commands\DeleteTask;
 
 class TaskController extends Controller {
 
@@ -12,51 +19,24 @@ class TaskController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(TaskList $tasklist)
 	{
-		//
+		return $tasklist->tasks;
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
 
 	/**
 	 * Store a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Request $request, TaskList $tasklist)
 	{
-		//
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
+		$this->validate($request, ['name' => 'required', 'description' => 'required']);
+		$user = JWTAuth::parseToken()->authenticate();
+		$audience = User::whereIn('id', explode(',', $request->get('users')))->get();
+		$task = $this->dispatch(new CreateTask($user, $request->all(), $tasklist->project, $tasklist, $audience));
+		return response()->json(['status' => 'success', 'message' => 'Task Created.', 'task' => $task]);
 	}
 
 	/**
@@ -65,9 +45,12 @@ class TaskController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(TaskList $tasklist, Task $task, Request $request)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $this->dispatch(new UpdateTask($user, $task, $request->all()));
+        return response()->json(['status' => 'success', 'message' => 'Task Updated.']);
 	}
 
 	/**
@@ -76,9 +59,12 @@ class TaskController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(TaskLit $tasklist, Task $task)
 	{
-		//
+		$user = JWTAuth::parseToken()->authenticate();
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteTask($user, $task));
+        return response()->json(['status' => 'success', 'message' => 'Task Deleted.']);
 	}
 
 }

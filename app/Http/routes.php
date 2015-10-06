@@ -62,6 +62,9 @@ Route::group(array('prefix' => 'api'), function() {
         Route::get('projects/all', 'ProjectController@all');
         Route::resource('projects', 'ProjectController', ['except' => ['create', 'show', 'edit']]);
         
+        // TASKS
+        Route::resource('tasklists.tasks', 'TaskList\TaskController', ['except' => ['create', 'show', 'edit']]);
+
 		// Project namespace
         Route::group(['namespace' => 'Project', 'middleware' => 'project.access'], function() {
             // MILESTONES
@@ -76,6 +79,8 @@ Route::group(array('prefix' => 'api'), function() {
             // Project/Milestone namespace
             Route::group(['namespace' => 'MileStone'], function() {
                 // TASKLISTS
+                Route::resource('projects.milestones.tasklists', 'TaskListController', ['except' => ['create', 'show', 'edit']]);
+                // TASK
                 Route::resource('projects.milestones.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
                 // Project/MileStone/TaskList namespace
                 Route::group(['namespace' => 'TaskList'], function() {

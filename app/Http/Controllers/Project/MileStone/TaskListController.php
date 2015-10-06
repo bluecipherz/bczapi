@@ -4,6 +4,12 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Project;
+use App\MileStone;
+use App\TaskList;
+use JWTAuth;
+use App\Commands\CreateTaskList;
+use App\Commands\DeleteTaskList;
 
 class TaskListController extends Controller {
 
@@ -14,9 +20,9 @@ class TaskListController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index(Project $project)
+	public function index(Project $project, MileStone $milestone)
 	{
-		return $project->tasklists;
+		return $milestone->tasklists;
 	}
 
 	/**
@@ -24,7 +30,7 @@ class TaskListController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(Project $project, Request $request)
+	public function store(Project $project, MileStone $milestone, Request $request)
 	{
 		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
 		$tasklist = $this->dispatch(new CreateTaskList($this->user, $project, $request->all()));
@@ -37,7 +43,7 @@ class TaskListController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(Project $project, TaskList $tasklist, Request $request)
+	public function update(Project $project, MileStone $milestone, TaskList $tasklist, Request $request)
 	{
 		$tasklist->update($request->all());
 		return response()->json(['success' => true, 'message' => 'TaskList updated.']);
@@ -49,7 +55,7 @@ class TaskListController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Project $project, TaskList $tasklist, Request $request)
+	public function destroy(Project $project, MileStone $milestone, TaskList $tasklist, Request $request)
 	{
 		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
 		$this->dispatch(new DeleteTaskList($this->user, $tasklist, $audience));
