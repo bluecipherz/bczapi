@@ -9,6 +9,8 @@ class Comment extends Model {
 
 	protected $fillable = ['comment'];
 
+	// protected $with = ['owner'];
+
 	public function commentable() {
         return $this->belongsTo('App\Feed', 'feed_id');
     }

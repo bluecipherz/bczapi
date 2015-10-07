@@ -43,6 +43,7 @@ class CreateFeed {
 				$feed->additional_type = 'CommentPosted';
 				$feed->additional_subject_type = get_class($event->getSubject());
 			}
+			$feed->additional_origin_id = $event->getOrigin()->id;
 			$feed->additional_subject_id = $event->getSubject()->id;
 			$feed->save();
 			// $lastFeed = Feed::whereType('CommentPosted')->whereContextId($event->getContext()->id)->first();

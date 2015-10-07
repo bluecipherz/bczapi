@@ -34,6 +34,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	
 	protected $appends = ['user_type'];
 
+	protected $with = ['profile'];
+
 	public function getUserTypeAttribute() {
 		$tokens = explode('\\', $this->userable_type);
 		return $tokens[sizeof($tokens)-1];
@@ -42,6 +44,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	public function userable() {
 		return $this->morphTo();
 	}
+
+	public function profile() {
+		return $this->hasOne(\App\Profile::class);
+	}
+
 	public function messages() {
 		return $this->hasMany('App\Message');
 	}

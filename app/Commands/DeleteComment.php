@@ -31,6 +31,7 @@ class DeleteComment extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
+		$this->commentable->comments()->delete($this->comment);
 		$this->comment->delete();
 		event(new UnFeedableEvent('CommentDeleted', $this->user, $this->comment, $this->commentable));
 	}

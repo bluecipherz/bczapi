@@ -13,7 +13,7 @@ class Feed extends Model {
 		'pivot'
 	];
 
-	protected $with = ['subject.owner', 'origin.userable', 'comments.owner', 'context', 'project'];
+	protected $with = ['subject.owner', 'origin.userable', 'comments.owner', 'context', 'project', 'additionalOrigin', 'additionalSubject'];
 
 	protected $casts = [
 		'context_id' => 'int'
@@ -21,6 +21,14 @@ class Feed extends Model {
 
 	public function origin() {
 		return $this->belongsTo('App\User');
+	}
+
+	public function additionalOrigin() {
+		return $this->belongsTo('App\User');
+	}
+
+	public function additionalSubject() {
+		return $this->morphTo();
 	}
 
 	public function subject() {

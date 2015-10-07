@@ -30,11 +30,10 @@ class DeleteFeed {
 		// $event->getContext() : TaskCompleted Feed
 		// $lastFeed : Comment Feed
 		if($event->getType() == 'CommentDeleted') {
-			// echo 'ok1';
-			// $lastFeed = Feed::whereType('CommentPosted')->whereContextId($event->getContext()->id)->first(); // context = target feed
 			$feed = $event->getContext();
 			if($feed->additional_type == 'CommentPosted') {
-				if($feed->comments->count() > 0) {
+				// echo "comment count : {$feed->comments->count()}";
+				if($feed->comments->count() > 1) { // samshayamaaanu
 					$lastComment = $feed->comments->last();
 					// $feed->additional_subject_type = 'App\Comment';
 					$feed->additional_subject_id = $event->getSubject()->id;
@@ -47,22 +46,6 @@ class DeleteFeed {
 					$feed->save();
 				}
 			}
-			// if($lastFeed) {
-				// echo "ok2;{$event->getContext()->comments->count()}";
-				// if($event->getContext()->comments->count() > 0) {
-					// $lastComment = $event->getContext()->comments->last();
-					// echo "count:{$event->getContext()->comments->count()};last:{$lastComment->owner}";
-					// $lastFeed->subject()->associate($lastComment);
-					// $lastFeed->origin()->associate($lastComment->owner);
-					// $lastFeed->updated_at = $lastComment->updated_at;
-					// $lastFeed->save();
-					// echo "{$lastFeed} : {$lastComment}";
-				// } else { // delete comment feed
-					// $event->getContext()->delete();
-					// $lastFeed->delete();
-					// echo 'comment feed deleted';
-				// }
-			// }
 		} else if($event->getType() == 'ProjectDeleted') {
             Feed::whereProjectId($event->getSubject()->id)->delete(); // delete all project related feeds
             Feed::whereSubjectId($event->getSubject()->id)->whereSubjectType('App\Project')->delete(); // create 'project created' feed
