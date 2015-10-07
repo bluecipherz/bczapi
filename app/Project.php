@@ -13,6 +13,10 @@ class Project extends Model {
 
 	protected $with = ['users', 'tasks', 'milestones', 'tasklists'];
 
+	protected $casts = [
+		'private' => 'boolean'
+	];
+
 	public function getTaskCompletionAttribute() {
 		return array(
 			'tasks' => $this->tasks->count(),

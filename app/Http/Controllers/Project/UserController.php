@@ -34,10 +34,10 @@ class UserController extends Controller {
 	{
 		$this->validate($request, ['type' => 'required|in:owner,developer,client']);
 		$admin = JWTAuth::parseToken()->authenticate();
-        $user = User::findOrFail($request->get('user_id'));
+        // $user = User::findOrFail($request->get('user_id'));
 		$type = $request->get('type');
-		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$this->dispatch(new AddUserToProject($admin, $project, $user, $type));
+		$audience = User::whereIn('id', explode(',', $request->get('users')))->get();
+		$this->dispatch(new AddUserToProject($admin, $project, $audience, $type));
 		$feed = Feed::whereType('UserAddedToProject')->whereSubjectId($user->id)->whereProjectId($project->id)->first();
 		return response()->json(['success' => true, 'message' => 'User Joined Project.', 'feed' => $feed]);
 	}

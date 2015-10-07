@@ -3,6 +3,10 @@
 use App\Commands\Command;
 
 use Illuminate\Contracts\Bus\SelfHandling;
+use App\User;
+use App\Project;
+use Illuminate\Database\Eloquent\Collection;
+use App\Events\FeedableEvent;
 
 class UpdateProject extends Command implements SelfHandling {
 
@@ -29,7 +33,7 @@ class UpdateProject extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->project->update($this->data);
-		event(new ProjectUpdated($this->user, $this->project, $this->audience));
+		event(new FeedableEvent('ProjectUpdated', $this->user, $this->project, null, $this->project, $this->audience));
 	}
 
 }
