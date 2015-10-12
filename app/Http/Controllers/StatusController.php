@@ -31,9 +31,10 @@ class StatusController extends Controller {
 	 */
 	public function store(Request $request)
 	{
+		$this->validate($request, ['message' => 'required']);
 		$user = JWTAuth::parseToken()->authenticate();
-       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$status = $this->dispatch(new PostStatus($user, null, $request->all(), $audience));
+       	// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$status = $this->dispatch(new PostStatus($user, null, $request->all()));
 		$feed = Feed::whereType('StatusPosted')->whereSubjectId($status->id)->first();
 		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status, 'feed' => $feed]);
 		// return ['success' => true];
@@ -60,8 +61,8 @@ class StatusController extends Controller {
 	public function destroy(Status $status, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-       	$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-        $this->dispatch(new DeleteStatus($user, $status, $audience));
+       	// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+        $this->dispatch(new DeleteStatus($user, $status));
         return response()->json(['success' => true, 'message' => 'Status Deleted.']);
 	}
 

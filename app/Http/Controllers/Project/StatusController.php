@@ -30,6 +30,7 @@ class StatusController extends Controller {
 	 */
 	public function store(Project $project, Request $request)
 	{
+		$this->validate($request, ['message' => 'required']);
 		$user = JWTAuth::parseToken()->authenticate();
 		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
 		$status = $this->dispatch(new PostStatus($user, $project, $request->all()));
