@@ -19,6 +19,8 @@ class CreateProjectsTable extends Migration {
 			$table->text('description');
 			$table->boolean('private')->default(false);
 			$table->text('git_rep');
+			$table->boolean('show_overview')->default(false);
+			$table->unsignedInteger('created_by_id');
 			$table->timestamps();
 			$table->softDeletes();
 		});

@@ -137,6 +137,7 @@ return [
 		'Illuminate\View\ViewServiceProvider',
 		// 'Illuminate\Html\HtmlServiceProvider',
 		'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
+		'Baum\Providers\BaumServiceProvider',
 
 		/*
 		 * Application Service Providers...

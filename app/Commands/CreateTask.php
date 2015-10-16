@@ -47,7 +47,14 @@ class CreateTask extends Command implements SelfHandling
 		$task = Task::create($this->data);
 		$this->project->tasks()->save($task);
 		if($this->tasklist) $this->tasklist->tasks()->save($task);
-		$this->user->tasks()->save($task, ['type' => 'owner']);
+		$task->createdBy()->associate($this->user);
+		$task->save();
+		if(isset($this->data['owner'])) {
+			$user = User::findOrFail($this->data['owner']);
+			$user->tasks()->save($task, ['type' => 'owner']);
+		} else {
+			$this->user->tasks()->save($task, ['type' => 'owner']);
+		}
 		event(new FeedableEvent('TaskCreated', $this->user, $task, $this->tasklist, $this->project, $this->audience));
 		return $task;
 	}

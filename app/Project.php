@@ -11,10 +11,11 @@ class Project extends Model {
 
 	// protected $appends = ['task_completion', 'milestone_completion', 'project_completion'];
 
-	protected $with = ['users', 'tasks', 'milestones', 'tasklists'];
+	protected $with = ['users', 'tasks', 'milestones', 'tasklists', 'createdBy'];
 
 	protected $casts = [
-		'private' => 'boolean'
+		'private' => 'boolean',
+		'show_overview' => 'boolean'
 	];
 
 	public function getTaskCompletionAttribute() {
@@ -87,18 +88,22 @@ class Project extends Model {
 	}
     
     public function clients($query) {
-		return $this->users()->whereType('client');
+		return $this->users()->whereType('client')->get();
 	}
 	
 	public function developers($query) {
-		return $this->users()->whereType('developer');
+		return $this->users()->whereType('developer')->get();
 	}
 	
 	/**
 	 * Creator of the project. Stored in same table.
 	 */
 	public function owner() {
-		return $this->users()->whereType('owner');
+		return $this->users()->whereType('owner')->get();
+	}
+
+	public function createdBy() {
+		return $this->belongsTo('App\User');
 	}
     
     public function attachments() {

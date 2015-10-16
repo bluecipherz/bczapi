@@ -38,11 +38,11 @@ Route::group(array('prefix' => 'api'), function() {
         // ME
         Route::get('/me/projects', 'MeController@projects');
         Route::get('/me/feeds/{project?}', 'MeController@feeds');
-        Route::get('/me/notifications', 'MeController@feeds');
-        Route::get('/me/tasks', 'MeController@feeds');
-        Route::get('/me/tasklists', 'MeController@feeds');
-        Route::get('/me/checklists', 'MeController@feeds');
-        Route::get('/me/milestones', 'MeController@feeds');
+        Route::get('/me/notifications', 'MeController@notifications');
+        Route::get('/me/tasks', 'MeController@tasks');
+        Route::get('/me/tasklists', 'MeController@tasklists');
+        Route::get('/me/checklists', 'MeController@checklists');
+        Route::get('/me/milestones', 'MeController@milestones');
         Route::get('/me/statuses', 'MeController@statuses');
         
 		// FEEDS
@@ -271,4 +271,50 @@ Route::get('arr_test', function() {
     } else {
         return 'no audience';
     }
+});
+
+Route::get('baum', function() {
+    $cats = [
+      ["name"=>"1 What to do after 10th","parent_id"=>null,"children"=>[
+            ["name"=>"Diploma"],
+            ["name"=>"higher secondary"],
+            ["name"=>"Indian army"],
+            ["name"=>"Police force"],
+            ["name"=>"Vecational course"],
+
+            ["name"=>"1 What to do after 10th","children"=>[
+                  ["name"=>"Diploma"],
+                  ["name"=>"higher secondary"],
+                  ["name"=>"Indian army"],
+                  ["name"=>"Police force"],
+                  ["name"=>"Vecational course"],
+
+                  ["name"=>"1 What to do after 10th","children"=>[
+                        ["name"=>"Diploma"],
+                        ["name"=>"higher secondary"],
+                        ["name"=>"Indian army"],
+                        ["name"=>"Police force"],
+                        ["name"=>"Vecational course"],
+
+                        ["name"=>"1 What to do after 10th","children"=>[
+                              ["name"=>"Diploma"],
+                              ["name"=>"higher secondary"],
+                              ["name"=>"Indian army"],
+                              ["name"=>"Police force"],
+                              ["name"=>"Vecational course"],
+
+                              ["name"=>"1 What to do after 10th","children"=>[
+                                    ["name"=>"Diploma"],
+                                    ["name"=>"higher secondary"],
+                                    ["name"=>"Indian army"],
+                                    ["name"=>"Police force"],
+                                    ["name"=>"Vecational course"],
+                              ]]
+                        ]]
+                  ]]
+            ]]
+        ]]
+    ];
+    // App\Category::buildTree($cats);
+    return App\Category::all()->toHierarchy()->values();
 });

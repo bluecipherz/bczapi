@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Feed;
 use App\Project;
+use App\TaskList;
 use JWTAuth;
+use Illuminate\Database\Eloquent\Collection;
 
 class MeController extends Controller {
 
@@ -57,12 +59,16 @@ class MeController extends Controller {
 
 	public function tasks() {
 		$user = JWTAuth::parseToken()->authenticate();
-		return $user->tasks;
+		$tasks = $user->tasks;
+		$tasklists = TaskList::whereIn('id', $tasks->lists('task_list_id'))->get();
+		return ['tasks' => $tasks, 'tasklists' => $tasklists];
 	}
 
 	public function tasklists() {
 		$user = JWTAuth::parseToken()->authenticate();
-		return $user->tasklists;
+		$tasklist_ids = $user->tasks->lists('task_list_id');
+		$tasklists = TaskList::whereIn('id', $tasklist_ids)->get();
+		return $tasklists;
 	}
 
 	public function milestones() {

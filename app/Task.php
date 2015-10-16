@@ -10,7 +10,8 @@ class Task extends Model {
 	protected $fillable = ['name', 'description'];
 
     protected $casts = [
-        'percentage_completed' => 'int'
+        'percentage_completed' => 'int',
+        'task_list_id' => 'int'
     ];
 
     protected $with = ['users'];
@@ -49,6 +50,10 @@ class Task extends Model {
 
     public function milestone() {
         return $this->belongsTo('App\MileStone');
+    }
+    
+    public function createdBy() {
+        return $this->belongsTo('App\User');
     }
     
 }
