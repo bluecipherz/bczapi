@@ -37,10 +37,11 @@ class TaskListController extends Controller {
 	public function store(Project $project, Request $request)
 	{
 		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->validate($request, ['name' => 'required']);
 		$user = JWTAuth::parseToken()->authenticate();
 		$tasklist = $this->dispatch(new CreateTaskList($user, $project, null, $request->all()));
 		// $feed = Feed::whereSubjectType('App\TaskList')->whereSubjectId($tasklist->id)->first();
-		return response()->json(['success' => true, 'message' => 'TaskList created.', 'tasklist' => $tasklist]);
+		return response()->json(['success' => true, 'message' => 'TaskList created.', 'tasklist' => $tasklist, 'feed' => $tasklist->feed]);
 	}
 
 	/**

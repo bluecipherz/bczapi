@@ -43,16 +43,16 @@ class UpdateTask extends Command implements SelfHandling
 	 */
 	public function handle()
 	{
-		$percent = $this->task->percentage_completed;
+		$progress = $this->task->progress;
         $priority = $this->task->priority;
         $this->task->update($this->data);
         if($this->task->priority != $priority) {
             event(new FeedableEvent('TaskPriorityChanged', $this->user, $this->task, null, $this->task->project, $this->audience));
         }
-        if($this->task->percentage_completed != $percent && $this->task->percentage_completed != 100) {
+        if($this->task->progress != $progress && $this->task->progress != 100) {
             event(new FeedableEvent('TaskPercentChanged', $this->user, $this->task, null, $this->task->project, $this->audience));
         }
-        if($this->task->percentage_completed == 100) {
+        if($this->task->progress == 100) {
             $this->task->completed_at = new DateTime;
             $this->task->save();
             event(new FeedableEvent('TaskCompleted', $this->user, $this->task, null, $this->task->project, $this->audience));

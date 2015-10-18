@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Project;
 use App\Task;
+use App\TaskList;
 use App\User;
 use App\Commands\CreateTask;
 use App\Commands\CompleteTask;
@@ -37,11 +38,12 @@ class TaskController extends Controller {
 	 */
 	public function store(Request $request, Project $project)
 	{
-		$this->validate($request, ['name' => 'required', 'description' => 'required']);
+		$this->validate($request, ['name' => 'required']);
 		$user = JWTAuth::parseToken()->authenticate();
 		$audience = User::whereIn('id', explode(',', $request->get('users')))->get();
+		$tasklist = TaskList::find($request->get('task_list_id'));
 		$task = $this->dispatch(new CreateTask($user, $request->all(), $project, null, $audience));
-		return response()->json(['status' => 'success', 'message' => 'Task Created.', 'task' => $task]);
+		return response()->json(['status' => 'success', 'message' => 'Task Created.', 'task' => $task, 'feed' => $task->feed]);
 	}
 
 	/**

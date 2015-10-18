@@ -113,12 +113,20 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 		return $this->hasMany('App\Chat', 'user_id');
 	}
 	
-	public function ownProjects() {
-		return $this->projects()->whereType('owner');
+	public function createdProjects() {
+		return $this->hasMany('App\Project', 'created_by_id');
 	}
-	
-	public function completedTasks() {
-		return $this->hasMany('App\Task', 'completed_by');
+
+	public function ownProjects() {
+		return $this->projects()->whereType('owner')->get();
+	}
+
+	public function ownTasks() {
+		return $this->tasks()->whereType('owner')->get();
+	}
+
+	public function createdTasks() {
+		return $this->hasMany('App\Task', 'created_by_id');
 	}
 	
     public function relatedFeeds() {

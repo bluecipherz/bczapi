@@ -37,7 +37,8 @@ class CreateTaskList extends Command implements SelfHandling {
 	public function handle()
 	{
 		$tasklist = TaskList::create($this->data);
-		$tasklist->user()->save($this->user);
+		// $tasklist->user()->associate($this->user); // belongsTo
+		$this->user->tasklists()->save($tasklist);
 		$this->project->tasklists()->save($tasklist);
 		if($this->milestone) $this->milestone->tasklists()->save($tasklist);
 		event(new FeedableEvent('TaskListCreated', $this->user, $tasklist, $this->milestone, $this->project, $this->audience));

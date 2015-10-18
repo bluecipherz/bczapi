@@ -25,7 +25,7 @@ class CreateTasksTable extends Migration {
 			$table->integer('duration');
             $table->integer('priority')->default(0);
 			$table->timestamp('completed_at');
-            $table->integer('percentage_completed');
+            $table->integer('progress');
             $table->integer('whpd');
 			$table->timestamps();
 			$table->softDeletes();
