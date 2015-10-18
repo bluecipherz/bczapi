@@ -55,9 +55,8 @@ class TaskController extends Controller {
 	public function update(Project $project, Task $task, Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
         $this->dispatch(new UpdateTask($user, $task, $request->all()));
-        return response()->json(['status' => 'success', 'message' => 'Task Updated.']);
+        return response()->json(['status' => 'success', 'message' => 'Task Updated.', 'feed' => $task->feed]);
 	}
 
 	/**
