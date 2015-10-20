@@ -22,7 +22,7 @@ class CreateTasksTable extends Migration {
 			$table->unsignedInteger('mile_stone_id');
 			$table->unsignedInteger('task_list_id');
 			$table->timestamp('start_date');
-			$table->integer('duration');
+			$table->timestamp('end_date');
             $table->integer('priority')->default(0);
 			$table->timestamp('completed_at');
             $table->integer('progress');

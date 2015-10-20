@@ -28,7 +28,7 @@ class CreateTask extends Command implements SelfHandling
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, array $data, Project $project, TaskList $tasklist = null, Collection $audience = null)
+	public function __construct(User $user, array $data, Project $project, TaskList $tasklist = null, Collection $audience)
 	{
 		$this->user = $user;
 		$this->data = $data;
@@ -55,6 +55,9 @@ class CreateTask extends Command implements SelfHandling
 		} else {
 			$this->user->tasks()->save($task, ['type' => 'owner']);
 		}
+		$this->audience->each(function($user) use ($task) {
+			$user->tasks()->save($task, ['type' => 'member']);
+		});
 		event(new FeedableEvent('TaskCreated', $this->user, $task, $this->tasklist, $this->project, $this->audience));
 		return $task;
 	}
