@@ -28,7 +28,7 @@ class CreateTask extends Command implements SelfHandling
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, array $data, Project $project, TaskList $tasklist = null, Collection $audience = null)
+	public function __construct(User $user, array $data, Project $project, TaskList $tasklist = null, Collection $audience)
 	{
 		$this->user = $user;
 		$this->data = $data;
@@ -51,7 +51,7 @@ class CreateTask extends Command implements SelfHandling
 		$task->createdBy()->associate($this->user);
 		$task->save();
 		// the task owners
-		if($this->audience != null) {
+		if($this->audience->count()) {
 			$task->users()->saveMany($this->audience->all());
 		} else {
 			$task->users()->save($this->user);

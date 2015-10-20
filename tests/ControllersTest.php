@@ -3,6 +3,7 @@
 use App\Commands\PostComment;
 use App\Commands\PostStatus;
 use App\Commands\DeleteComment;
+use App\Commands\CreateTask;
 use App\Feed;
 use App\User;
 use App\Project;
@@ -108,11 +109,16 @@ class ControllersTest extends TestCase {
 	}
 
 	public function testTaskOwnership() {
-		$project = Project::where('users.count', '>', 1)->first();
+		$project = Project::has('users', '>', 1)->first();
 		$user1 = $project->users()->wherePrivilegeLevel('1')->first();
 		$user2 = $project->users()->where('id', '!=', $user1->id)->first();
+		// echo "users {$user1->id} {$user2->id}";
 		$users = User::whereIn('id', [$user1->id, $user2->id])->get();
+		$this->assertNotNull($users);
+		$this->assertEquals(2, $users->count());
 		$task = Bus::dispatch(new CreateTask($user1, ['name' => 'poopech'], $project, null, $users));
+		$this->assertTrue($task->users->contains($user1->id));
+		$this->assertTrue($task->users->contains($user2->id));
 	}
 
 }

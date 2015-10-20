@@ -56,7 +56,7 @@ class ProjectsTasksTableSeeder extends Seeder {
 		$users = User::whereIn('id', [$user1->id, $user2->id])->get();
 		$task = Bus::dispatch(new CreateTask($user1, $taskdetails, $project, null, $users));
 		Bus::dispatch(new UpdateTask($user2, $task, ['progress' => 100]));
-		$task2 = Bus::dispatch(new CreateTask($user2, $taskdetails2, $project));
+		// $task2 = Bus::dispatch(new CreateTask($user2, $taskdetails2, $project));
 		// $feed = Feed::firstOrFail();
 		// Bus::dispatch(new PostComment($user1, ['comment' => 'ookay'], $feed));
 		// Bus::dispatch(new PostStatus($user1, null, $statusdetails));
