@@ -34,7 +34,8 @@ class StatusController extends Controller {
 		$this->validate($request, ['message' => 'required']);
 		$user = JWTAuth::parseToken()->authenticate();
        	// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$status = $this->dispatch(new PostStatus($user, null, $request->all()));
+       	$project = Project::find($request->get('project'));
+		$status = $this->dispatch(new PostStatus($user, $request->all()), $project));
 		$feed = Feed::whereType('StatusPosted')->whereSubjectId($status->id)->first();
 		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status, 'feed' => $feed]);
 		// return ['success' => true];

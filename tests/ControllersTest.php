@@ -1,9 +1,11 @@
 <?php
 
 use App\Commands\PostComment;
+use App\Commands\PostStatus;
 use App\Commands\DeleteComment;
 use App\Feed;
 use App\User;
+use App\Project;
 
 class ControllersTest extends TestCase {
 
@@ -64,13 +66,13 @@ class ControllersTest extends TestCase {
 	 * Delete the only one seeded comment
 	 */
 	public function testDeleteComment() {
+		$cd = array('comment' => 'lets bring the pain');
 		$user = User::firstOrFail();
-		$comment = App\Comment::firstOrFail();
-		$feed = $comment->feed;
+		$feed = Feed::firstOrFail();
+		$comment = Bus::dispatch(new PostComment($user, $cd, $feed));
 		// echo "deleting comment on {$feed->context->type}. total comments = {$feed->context->comments->count()}";
 		Bus::dispatch(new DeleteComment($user, $comment));
-		$this->assertEquals(0, $feed->comments->count());
-		$this->assertFalse(Feed::whereType('CommentPosted')->whereContextId($feed->id)->exists());
+		if($feed->comments->count() > 0) $this->assertEquals('CommentPosted', $feed->additional_type);
 	}
 
 	public function stestMakeModel() {
@@ -98,10 +100,19 @@ class ControllersTest extends TestCase {
 	}
 
 	public function testPostStatus() {
-		$status = App\Status::firstOrFail();
-		$this->assertNull($status->project);
-		$this->assertNotNull($status->owner);
-		
+		$user = User::firstOrFail();
+		$project = Project::firstOrFail();
+		$status = Bus::dispatch(new PostStatus($user, ['message' => 'shimmu'], $project));
+		$this->assertNotNull($status->project);
+		$this->assertNotNull($status->owner);	
+	}
+
+	public function testTaskOwnership() {
+		$project = Project::where('users.count', '>', 1)->first();
+		$user1 = $project->users()->wherePrivilegeLevel('1')->first();
+		$user2 = $project->users()->where('id', '!=', $user1->id)->first();
+		$users = User::whereIn('id', [$user1->id, $user2->id])->get();
+		$task = Bus::dispatch(new CreateTask($user1, ['name' => 'poopech'], $project, null, $users));
 	}
 
 }

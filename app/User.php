@@ -74,7 +74,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	}
 	
 	public function tasks() {
-		return $this->belongsToMany('App\Task', 'users_tasks')->withPivot('type')->withTimestamps();	
+		return $this->belongsToMany('App\Task', 'users_tasks')->withTimestamps();	
 	}
 
 	public function checklists() {

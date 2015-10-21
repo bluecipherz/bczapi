@@ -19,7 +19,7 @@ class PostStatus extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project = null, array $data, Collection $audience = null)
+	public function __construct(User $user, array $data, Project $project = null, Collection $audience = null)
 	{
 		$this->user = $user;
 		$this->data = $data;

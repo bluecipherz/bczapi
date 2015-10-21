@@ -21,7 +21,7 @@ class Task extends Model {
 	}
 
     public function users() {
-        return $this->belongsToMany('App\User', 'users_tasks')->withTimestamps()->withPivot('type');
+        return $this->belongsToMany('App\User', 'users_tasks')->withTimestamps();
     }
     
 	public function owner() {
