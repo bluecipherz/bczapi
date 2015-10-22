@@ -4,10 +4,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Backlog extends Model {
 
-	protected $fillable = ['name','release'];
+	protected $fillable = ['name'];
 	
-	public function sprint(){
-		return $this->hasMany('App/Sprint');
+	public function sprints(){
+		return $this->hasMany('App\Sprint');
 	}
 
 }

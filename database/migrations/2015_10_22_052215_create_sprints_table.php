@@ -16,8 +16,8 @@ class CreateSprintsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name');
-			$table->boolean('release');
 			$table->unsignedInteger('backlog_id');
+			$table->unsignedInteger('project_id');
 			$table->unsignedInteger('user_id');
 			$table->timestamps();
 		});
@@ -30,7 +30,7 @@ class CreateSprintsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('sprints');
+		Schema::dropIfExists('sprints');
 	}
 
 }

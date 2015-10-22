@@ -30,7 +30,7 @@ class CreateActivity {
 		$activity = Activity::create(['type' => $event->getType()]);
 		$event->getSubject()->activities()->save($activity);
 		if($event->getParticipants() !=null)$activity->participants()->saveMany($event->getParticipants()->all());
-		if($event->getProject() != null) $activity->project()->associcate($event->getProject());
+		if($event->getProject() != null) $activity->project()->associate($event->getProject());
 		$activity->user()->associate($event->getUser());
 		$activity->save();
 	}

@@ -25,6 +25,11 @@ Route::model('comments', 'App\Comment');
 Route::model('feeds', 'App\Feed');
 Route::model('statuses', 'App\Status');
 Route::model('chats', 'App\Chat');
+
+Route::bind('stories', function($value)
+{
+    return App\Story::whereIn('id', explode(',', $value))->get();
+});
 		
 Route::group(array('prefix' => 'api'), function() {
     Route::post('authenticate', 'AuthController@authenticate');
@@ -72,6 +77,9 @@ Route::group(array('prefix' => 'api'), function() {
         // PROJECTS
         Route::get('projects/all', 'ProjectController@all');
         Route::resource('projects', 'ProjectController', ['except' => ['create', 'show', 'edit']]);
+
+        // STORY
+        Route::resource('sprints.stories', 'Sprint\StoryController', ['only' => ['update', 'destroy']]);
         
         // TASKS
         Route::resource('tasklists.tasks', 'TaskList\TaskController', ['except' => ['create', 'show', 'edit']]);

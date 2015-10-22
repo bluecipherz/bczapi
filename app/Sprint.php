@@ -6,7 +6,7 @@ class Sprint extends Model {
 
 	protected $fillable = ['name','release'];
 
-	public function story(){
+	public function stories() {
 		return $this->hasMany('App\Story');
 	}
 
