@@ -18,6 +18,10 @@ class Project extends Model {
 		'show_overview' => 'boolean'
 	];
 
+	public function sprints(){
+		return $this->hasMany('App\Sprint');
+	}
+
 	public function backlogs(){
 		return $this->hasMany('App\Backlog');
 	}

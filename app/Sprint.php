@@ -2,12 +2,12 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Backlog extends Model {
+class Sprint extends Model {
 
 	protected $fillable = ['name','release'];
-	
-	public function sprint(){
-		return $this->hasMany('App/Sprint');
+
+	public function story(){
+		return $this->hasMany('App\Story');
 	}
 
 }

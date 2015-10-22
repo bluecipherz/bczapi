@@ -36,6 +36,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
 	protected $with = ['profile'];
 
+	public function sprints(){
+		return $this->hasMany('App\Sprint');
+	}
+
 	public function backlogs(){
 		return $this->hasMany('App\Backlog');
 	}
