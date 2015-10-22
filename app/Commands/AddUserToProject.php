@@ -46,7 +46,7 @@ class AddUserToProject extends Command implements SelfHandling
 		// $this->users->each(function($user) use ($feeds) {
 		// 	$user->feeds()->saveMany($feeds);
 		// });
-		event(new FeedableEvent('UserAddedToProject', $this->owner, $this->user, null, $this->project));
+		event(new FeedableEvent('UserAddedToProject', $this->owner, $this->project, $this->user));
 	}
 
 }
