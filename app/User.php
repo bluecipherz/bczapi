@@ -36,6 +36,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
 	protected $with = ['profile'];
 
+	public function backlogs(){
+		return $this->hasMany('App\Backlog');
+	}
+
 	public function getUserTypeAttribute() {
 		$tokens = explode('\\', $this->userable_type);
 		return $tokens[sizeof($tokens)-1];

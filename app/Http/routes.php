@@ -17,6 +17,7 @@ Route::controllers([
 ]);
 
 Route::model('projects', 'App\Project');
+Route::model('backlogs', 'App\Backlog');
 Route::model('users', 'App\User');
 Route::model('tasks', 'App\Task');
 Route::model('comments', 'App\Comment');
@@ -34,6 +35,15 @@ Route::group(array('prefix' => 'api'), function() {
 	
 		// HOME
 		Route::resource('home', 'HomeController', ['only' => ['index']]);
+		
+		
+		// Route::get('backlog', 'BacklogController@index');
+		// Route::get('backlog/create', 'BacklogController@create'); // avoid
+		// Route::get('backlog/{id}/show', 'BacklogController@show'); // avoid
+		// Route::get('backlog/{id}/edit', 'BacklogController@edit'); // avoid
+		// Route::post('backlog', 'BacklogController@store');
+		// Route::put('backlog/{id}', 'BacklogController@update');
+		// Route::delete('backlog/id', 'BacklogController@destroy');
 
         // ME
         Route::get('/me/projects', 'MeController@projects');
@@ -67,6 +77,8 @@ Route::group(array('prefix' => 'api'), function() {
 
 		// Project namespace
         Route::group(['namespace' => 'Project', 'middleware' => 'project.access'], function() {
+			// BACKLOGS
+			Route::resource('projects.backlogs', 'BacklogController', ['except' => ['create', 'show', 'edit']]);
             // MILESTONES
             Route::resource('projects.milestones', 'MileStoneController', ['except' => ['create', 'show', 'edit']]);
             // TASKLISTS
