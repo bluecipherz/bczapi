@@ -86,6 +86,8 @@ Route::group(array('prefix' => 'api'), function() {
 
 		// Project namespace
         Route::group(['namespace' => 'Project', 'middleware' => 'project.access'], function() {
+            // STORY
+            Route::resource('projects.stories', 'StoryController', ['only' => ['index']]);
             // SPRINTS
             Route::resource('projects.sprints','SprintController', ['except' => ['create', 'show' , 'edit']]);
 			// BACKLOGS
