@@ -3,7 +3,6 @@
 use Illuminate\Database\Seeder;
 use App\User;
 use App\Project;
-use App\Feed;
 use App\Commands\CreateProject;
 use App\Commands\CreateTask;
 use App\Commands\UpdateTask;
@@ -42,13 +41,11 @@ class ProjectsTasksTableSeeder extends Seeder {
 		
 		DB::table('projects')->delete();
 		DB::table('users_projects')->delete();
-		DB::table('tasks')->delete();
 		DB::table('stories')->delete();
 		DB::table('sprints')->delete();
 		DB::table('backlogs')->delete();
 		
 		// optional
-		DB::table('feeds')->delete();
 		DB::table('comments')->delete();
 		DB::table('statuses')->delete();
 		
@@ -57,8 +54,6 @@ class ProjectsTasksTableSeeder extends Seeder {
 		$project = Bus::dispatch(new CreateProject($user1, $projectdetails));
 		Bus::dispatch(new AddUserToProject($user1, $project, $user2, 'developer'));
 		$users = User::whereIn('id', [$user1->id, $user2->id])->get();
-		// $task = Bus::dispatch(new CreateTask($user1, $taskdetails, $project, null, $users));
-		// Bus::dispatch(new UpdateTask($user2, $task, ['progress' => 100]));
 
 		$backlog = App\Backlog::create(['name' => 'Release Elixir']);
 		$user1->backlogs()->save($backlog);
@@ -105,10 +100,6 @@ class ProjectsTasksTableSeeder extends Seeder {
       		$project->stories()->save($story);
       		$user1->createdStories()->save($story);
       	}
-		// $task2 = Bus::dispatch(new CreateTask($user2, $taskdetails2, $project));
-		// $feed = Feed::firstOrFail();
-		// Bus::dispatch(new PostComment($user1, ['comment' => 'ookay'], $feed));
-		// Bus::dispatch(new PostStatus($user1, null, $statusdetails));
 	}
 
 }

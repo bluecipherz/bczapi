@@ -41,8 +41,8 @@ class AddUserToProject extends Command implements SelfHandling
 	{
 		$this->project->users()->save($this->user, ['type' => $this->type]); // belongsToMany
 		// $this->project->users()->saveMany($this->users->values(), ['type' => $this->type]); // belongsToMany
-		$feeds = $this->project->feeds->all();
-		$this->user->feeds()->saveMany($feeds); // old project feeds
+		// $feeds = $this->project->feeds->all();
+		// $this->user->feeds()->saveMany($feeds); // old project feeds
 		// $this->users->each(function($user) use ($feeds) {
 		// 	$user->feeds()->saveMany($feeds);
 		// });

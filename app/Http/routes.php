@@ -23,7 +23,6 @@ Route::model('story', 'App\Story');
 Route::model('users', 'App\User');
 Route::model('tasks', 'App\Task');
 Route::model('comments', 'App\Comment');
-Route::model('feeds', 'App\Feed');
 Route::model('statuses', 'App\Status');
 Route::model('chats', 'App\Chat');
 

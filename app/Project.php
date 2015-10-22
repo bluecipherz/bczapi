@@ -93,14 +93,6 @@ class Project extends Model {
 
 	}
     
-    public function feed() {
-        return $this->morphOne('App\Feed', 'subject');
-    }
-    
-    public function feeds() {
-        return $this->hasMany('App\Feed');
-    }
-    
     public function memberActions() {
 		return $this->morphMany('App\MemberAction', 'memberable');
 	}
