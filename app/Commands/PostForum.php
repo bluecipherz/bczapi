@@ -36,7 +36,7 @@ class PostForum extends Command implements SelfHandling {
 		$forum = Forum::create($this->data);
         $this->user->forums()->save($forum);
         $this->project->forums()->save($forum);
-		event(new ForumPosted($this->user, $this->project, $forum, $this->audience));
+		event(new FeedableEvent('ForumPosted',$this->user,$forum));
 		return $forum;
 	}
 

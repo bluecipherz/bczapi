@@ -53,6 +53,7 @@ class TaskListController extends Controller {
 	public function update(Project $project, TaskList $tasklist, Request $request)
 	{
 		$tasklist->update($request->except('token'));
+		 $this->dispatch(new UpdateTaskList($user, $tasklist, $request->all()));
 		return response()->json(['success' => true, 'message' => 'TaskList updated.']);
 	}
 

@@ -56,7 +56,7 @@ class CreateTask extends Command implements SelfHandling
 		} else {
 			$task->users()->save($this->user);
 		}
-		event(new FeedableEvent('TaskCreated', $this->user, $task, $this->tasklist, $this->project, $this->audience));
+		event(new FeedableEvent('TaskCreated', $this->user, $task, $this->tasklist));
 		return $task;
 	}
 

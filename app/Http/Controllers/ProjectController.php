@@ -39,7 +39,7 @@ class ProjectController extends Controller {
 	 */
 	public function store(Request $request)
 	{
-        $user = JWTAuth::parseToken()->authenticate();
+       	 $user = JWTAuth::parseToken()->authenticate();
         $this->validate($request, ['name' => 'required', 'description' => 'required']);
        	// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
         $project = $this->dispatch(new CreateProject($user, $request->all()));
@@ -57,7 +57,7 @@ class ProjectController extends Controller {
         $user = JWTAuth::parseToken()->authenticate();
        	// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
 		$this->dispatch(new UpdateProject($user, $project, $request->all()));
-        return response()->json(['success' => true, 'message' => 'Project Updated.']);
+        return response()->json(['success' => true, 'message' => 'Project Updated.','project' => $project ]);
 	}
 
 	/**

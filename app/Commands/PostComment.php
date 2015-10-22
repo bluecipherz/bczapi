@@ -43,7 +43,7 @@ class PostComment extends Command implements SelfHandling
 		$comment = Comment::create($this->data);
 		$this->user->comments()->save($comment);
 		$this->feed->comments()->save($comment);
-		event(new FeedableEvent('CommentPosted', $this->user, $comment, $this->feed, $this->feed->project, $this->audience));
+		event(new FeedableEvent('CommentPosted', $this->user, $comment);
 		return $comment;
 	}
 

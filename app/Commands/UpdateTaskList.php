@@ -23,7 +23,8 @@ class UpdateTaskList extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		//
+		$this->tasklist->update($this->data);
+		event(new FeedableEvent('TaskListUpdated', $this->user, $this->tasklist, null));
 	}
 
 }

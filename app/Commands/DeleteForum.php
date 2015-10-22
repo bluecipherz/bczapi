@@ -6,7 +6,7 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Forum;
 use Illuminate\Database\Eloquent\Collection;
-use App\Events\ForumDeleted;
+use App\Events\UnFeedableEvent;
 
 class DeleteForum extends Command implements SelfHandling {
 
@@ -32,7 +32,7 @@ class DeleteForum extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->forum->delete();
-        event(new ForumDeleted($this->user, $this->forum, $this->audience));
+        event(new UnFeedableEvent('ForumDeleted', $this->forum));
 	}
 
 }

@@ -48,7 +48,7 @@ class CreateProject extends Command implements SelfHandling
 			$this->user->projects()->save($project, ['type' => 'owner']);
 		}
 		$_project = $project->private ? $project : null;
-		event(new FeedableEvent('ProjectCreated', $this->user, $project, null, $_project));
+		event(new FeedableEvent('ProjectCreated', $this->user, $project,$_project));
 		return $project;
 	}
 

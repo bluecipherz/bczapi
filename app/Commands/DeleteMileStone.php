@@ -4,6 +4,8 @@ use App\Commands\Command;
 
 use Illuminate\Contracts\Bus\SelfHandling;
 
+private $type,$project,$user;
+
 class DeleteMileStone extends Command implements SelfHandling {
 
 	/**
@@ -11,9 +13,11 @@ class DeleteMileStone extends Command implements SelfHandling {
 	 *
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct($type,$user,$project)
 	{
-		//
+		$this->user=$user;
+		$this->type=$type;
+		$this->project=$project;
 	}
 
 	/**
@@ -23,7 +27,8 @@ class DeleteMileStone extends Command implements SelfHandling {
 	 */
 	public function handle()
 	{
-		//
+		$this->milestone->delete();
+		event(new UnFeedableEvent('milestone deleted',$this->milestone));
 	}
 
 }

@@ -34,7 +34,7 @@ class CreateDocument extends Command implements SelfHandling {
 	public function handle()
 	{
 		$document = Document::create($this->data);
-		event(new FeedableEvent('DocumentUploaded', $this->user, $document, null, $this->project, $this->audience));
+		event(new FeedableEvent('DocumentUploaded', $this->user, $document, null));
 		return $document;
 	}
 
