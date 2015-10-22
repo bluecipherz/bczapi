@@ -177,7 +177,7 @@ Route::group(['domain' => 'api.bluecipherz.com'], function() {
 	Route::get('test', function() { return 'on api subdomain'; });
 });
 
-Route::get('test', function() {
+Route::get('test_old', function() {
     // return substr('App\Feed', strrpos('App\Feed', '\\'));
     $user = \App\User::firstOrFail();
     $feeds = $user->feeds()
@@ -254,6 +254,16 @@ Route::get('test', function() {
     //     $query->where('type', 'CommentPosted');
     // }]);
 	return view('test', compact('feeds'));
+});
+
+Route::get('test', function() {
+    $user = App\User::firstOrFail();
+    $project = App\Project::firstOrFail();
+    // return response()->json($user->feeds()->whereProjectId($project->id)->count());
+    $feeds = App\Feed::with('subject.project')->whereHas('subject', function($q) use ($project) {
+        return $q->where('id', '=', $project->id);
+    })->count();
+    return response()->json($feeds);
 });
 
 Route::post('test', function() {

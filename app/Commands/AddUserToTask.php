@@ -33,7 +33,7 @@ class AddUserToTask extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->task->users()->save($this->user, ['type' => 'member']);
-        event(new FeedableEvent('UserAddedToTask', $this->admin, $this->user, $this->task, $this->task->project, $this->audience));
+        event(new FeedableEvent('UserAddedToTask', $this->admin, $this->task, $this->user, $this->task->project, $this->audience));
 	}
 
 }
