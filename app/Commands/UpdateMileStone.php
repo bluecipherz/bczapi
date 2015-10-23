@@ -32,7 +32,7 @@ class UpdateMileStone extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->milestone->update($this->data);
-		event(new FeedableEvent('MileStoneUpdated', $this->user, $this->milestone, null, $this->milestone->project));
+		event(new FeedableEvent('MileStoneUpdated', $this->user, $this->milestone, null));
 	}
 
 }

@@ -28,7 +28,7 @@ class DeleteTaskList extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->tasklist->delete();
-		event(new UnFeedableEvent('TaskListDeleted', $this->user, $this->tasklist, null, $this->project));
+		event(new UnFeedableEvent('TaskListDeleted',$this->tasklist));
 	}
 
 }

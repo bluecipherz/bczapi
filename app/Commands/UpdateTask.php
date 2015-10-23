@@ -55,7 +55,7 @@ class UpdateTask extends Command implements SelfHandling
         if($this->task->progress == 100) {
             $this->task->completed_at = new DateTime;
             $this->task->save();
-            event(new FeedableEvent('TaskCompleted', $this->user, $this->task, null, $this->task->project, $this->audience));
+            event(new FeedableEvent('TaskCompleted', $this->user, $this->task,$this->task->project));
         }
 	}
 

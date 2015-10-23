@@ -11,44 +11,27 @@ use Illuminate\Database\Eloquent\Collection;
 class UnFeedableEvent extends Event {
 
 	use SerializesModels;
+	private $type,$subject;
 
 	/**
 	 * Create a new event instance.
 	 *
 	 * @return void
 	 */
-	public function __construct($type, User $origin, Model $subject, Model $context = null, Project $project = null, Collection $audience = null)
+	public function __construct($type, $subject)
 	{
 		$this->type = $type;
-		$this->origin = $origin;
+		
 		$this->subject = $subject;
-		$this->context = $context;
-		$this->project = $project;
-		$this->audience = $audience;
+		
 	}
 
 	public function getType() {
 		return $this->type;
 	}
 
-	public function getOrigin() {
-		return $this->origin;
-	}
-
 	public function getSubject() {
 		return $this->subject;
-	}
-
-	public function getContext() {
-		return $this->context;
-	}
-
-	public function getProject() {
-		return $this->project;
-	}
-
-	public function getAudience() {
-		return $this->audience;
 	}
 
 }

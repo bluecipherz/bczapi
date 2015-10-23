@@ -74,6 +74,12 @@ class Project extends Model {
 	public function users() {
 		return $this->belongsToMany('App\User', 'users_projects')->withTimestamps()->withPivot('type');
 	}
+
+	public function activities(){
+
+		return $this->morphMany('App\Project', 'subject');
+
+	}
     
     public function feed() {
         return $this->morphOne('App\Feed', 'subject');

@@ -30,6 +30,7 @@ class CommentController extends Controller {
 		return response()->json(['status' => 'success', 'message' => 'Comment Posted.', 'comment' => $comment]);
 	}
 
+	
 	/**
 	 * Remove the specified resource from storage.
 	 *

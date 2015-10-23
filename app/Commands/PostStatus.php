@@ -37,7 +37,7 @@ class PostStatus extends Command implements SelfHandling {
 		$status = Status::create($this->data);
 		$this->user->statuses()->save($status);
 		if($this->project) $this->project->statuses()->save($status);
-		event(new FeedableEvent('StatusPosted', $this->user, $status, null, $this->project, $this->audience));
+		event(new FeedableEvent('StatusPosted', $this->user, $status));
 		return $status;
 	}
 

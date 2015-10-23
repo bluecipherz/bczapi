@@ -36,7 +36,7 @@ class DeleteTask extends Command implements SelfHandling {
 //        $this->task->project_id = null;
 //        $this->task->save();
 		$this->task->delete();
-		event(new UnFeedableEvent('TaskDeleted', $this->user, $this->task, null, $this->project));
+		event(new UnFeedableEvent('TaskDeleted', $this->task));
 	}
 
 }

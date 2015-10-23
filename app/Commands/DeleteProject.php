@@ -6,22 +6,25 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use App\User;
 use App\Project;
 use App\Events\ProjectDeleted;
+use App\Events\UnFeedableEvent;
 use Illuminate\Database\Eloquent\Collection;
+
 
 class DeleteProject extends Command implements SelfHandling {
 
-	protected $project, $user, $audience;
+	protected $project, $user;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, Collection $audience = null)
+	public function __construct(User $user, Project $project)
 	{
+		
 		$this->user = $user;
 		$this->project = $project;
-		$this->audience = $audience;
+		
 	}
 
 	/**
@@ -32,7 +35,7 @@ class DeleteProject extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->project->delete();
-		event(new ProjectDeleted($this->user, $this->project, $this->audience));
+		event(new UnFeedableEvent('ProjectDeleted',$this->project));
 	}
 
 }

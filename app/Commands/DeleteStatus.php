@@ -11,18 +11,19 @@ use Illuminate\Database\Eloquent\Collection;
 
 class DeleteStatus extends Command implements SelfHandling {
 
-	protected $user, $status, $audience;
+	protected $user, $status, $project,$type;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Status $status, Collection $audience = null)
+	public function __construct( $type, User $user, Status $status,$project)
 	{
+		$this->type = $type;
 		$this->user = $user;
 		$this->status = $status;
-        $this->audience = $audience;
+        $this->project = $project;
 	}
 
 	/**
@@ -34,7 +35,7 @@ class DeleteStatus extends Command implements SelfHandling {
 	{
 //		$this->status->feeds()->delete();
 		$this->status->delete();
-		event(new UnFeedableEvent('StatusDeleted', $this->user, $this->status));
+		event(new UnFeedableEvent('StatusDeleted', $this->status));
 	}
 
 }

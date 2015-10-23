@@ -10,19 +10,19 @@ use App\Events\FeedableEvent;
 
 class UpdateProject extends Command implements SelfHandling {
 
-	protected $user, $project, $data, $audience;
+	protected $user, $project, $data;
 
 	/**
 	 * Create a new command instance.
 	 *
 	 * @return void
 	 */
-	public function __construct(User $user, Project $project, array $data, Collection $audience = null)
+	public function __construct(User $user, Project $project, array $data)
 	{
 		$this->user = $user;
 		$this->project = $project;
 		$this->data = $data;
-		$this->audience = $audience;
+		
 	}
 
 	/**
@@ -33,7 +33,7 @@ class UpdateProject extends Command implements SelfHandling {
 	public function handle()
 	{
 		$this->project->update($this->data);
-		event(new FeedableEvent('ProjectUpdated', $this->user, $this->project, null, $this->project, $this->audience));
+		event(new FeedableEvent('ProjectUpdated', $this->user, $this->project));
 	}
 
 }
