@@ -17,6 +17,7 @@ Route::controllers([
 ]);
 
 Route::model('projects', 'App\Project');
+Route::model('backlogs', 'App\Backlog');
 Route::model('users', 'App\User');
 Route::model('tasks', 'App\Task');
 Route::model('comments', 'App\Comment');
@@ -34,6 +35,15 @@ Route::group(array('prefix' => 'api'), function() {
 	
 		// HOME
 		Route::resource('home', 'HomeController', ['only' => ['index']]);
+		
+		
+		// Route::get('backlog', 'BacklogController@index');
+		// Route::get('backlog/create', 'BacklogController@create'); // avoid
+		// Route::get('backlog/{id}/show', 'BacklogController@show'); // avoid
+		// Route::get('backlog/{id}/edit', 'BacklogController@edit'); // avoid
+		// Route::post('backlog', 'BacklogController@store');
+		// Route::put('backlog/{id}', 'BacklogController@update');
+		// Route::delete('backlog/id', 'BacklogController@destroy');
 
         // ME
         Route::get('/me/projects', 'MeController@projects');
@@ -67,6 +77,8 @@ Route::group(array('prefix' => 'api'), function() {
 
 		// Project namespace
         Route::group(['namespace' => 'Project', 'middleware' => 'project.access'], function() {
+			// BACKLOGS
+			Route::resource('projects.backlogs', 'BacklogController', ['except' => ['create', 'show', 'edit']]);
             // MILESTONES
             Route::resource('projects.milestones', 'MileStoneController', ['except' => ['create', 'show', 'edit']]);
             // TASKLISTS
@@ -177,7 +189,7 @@ Route::group(['domain' => 'api.bluecipherz.com'], function() {
 	Route::get('test', function() { return 'on api subdomain'; });
 });
 
-Route::get('test', function() {
+Route::get('test_old', function() {
     // return substr('App\Feed', strrpos('App\Feed', '\\'));
     $user = \App\User::firstOrFail();
     $feeds = $user->feeds()
@@ -254,6 +266,16 @@ Route::get('test', function() {
     //     $query->where('type', 'CommentPosted');
     // }]);
 	return view('test', compact('feeds'));
+});
+
+Route::get('test', function() {
+    $user = App\User::firstOrFail();
+    $project = App\Project::firstOrFail();
+    // return response()->json($user->feeds()->whereProjectId($project->id)->count());
+    $feeds = App\Feed::with('subject.project')->whereHas('subject', function($q) use ($project) {
+        return $q->where('id', '=', $project->id);
+    })->count();
+    return response()->json($feeds);
 });
 
 Route::post('test', function() {

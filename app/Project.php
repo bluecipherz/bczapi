@@ -18,6 +18,10 @@ class Project extends Model {
 		'show_overview' => 'boolean'
 	];
 
+	public function backlogs(){
+		return $this->hasMany('App\Backlog');
+	}
+
 	public function getTaskCompletionAttribute() {
 		return array(
 			'tasks' => $this->tasks->count(),
