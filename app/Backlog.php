@@ -10,4 +10,11 @@ class Backlog extends Model {
 		return $this->hasMany('App\Sprint');
 	}
 
+    public function activities() {
+        return $this->morphMany('App\Activity', 'subject');
+    }
+
+    public function comments() {
+        return $this->morphMany('App\Comment', 'commentable');
+    }
 }

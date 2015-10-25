@@ -16,5 +16,9 @@ class Message extends Model {
 	public function user() {
 		return $this->belongsTo('App\User');
 	}
-	
+
+	public function attachment() {
+		return $this->hasOne('App\Attachment', 'attachable');
+	}
+
 }

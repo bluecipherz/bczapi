@@ -14,21 +14,13 @@ class Comment extends Model {
 	public function commentable() {
         return $this->belongsTo('App\Feed', 'feed_id');
     }
-    
-    public function feed() {
-        return $this->morphOne('App\Feed', 'subject');
-    }
-	
-	public function images() {
-		return $this->morphMany('App\Image', 'imageable');
-	}
 	
 	public function owner() {
 		return $this->belongsTo('App\User', 'user_id');
 	}
     
-    public function attachments() {
-        return $this->morphMany('App\Attachment', 'attachable');
-    }
+	public function attachment() {
+		return $this->hasOne('App\Attachment', 'attachable');
+	}
 
 }
