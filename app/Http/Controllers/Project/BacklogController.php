@@ -28,7 +28,7 @@ class BacklogController extends Controller {
 	public function store(Project $project,Request $request)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$backlog=Backlog::create($request->only('name','release'));
+		$backlog=Backlog::create($request->only('name'));
 		$project->backlogs()->save($backlog);
 		$user->backlogs()->save($backlog);
 		return response()->json(['status'=>'success', 'backlog' => $backlog]);

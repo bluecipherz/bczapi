@@ -11,15 +11,23 @@ class Project extends Model {
 
 	// protected $appends = ['task_completion', 'milestone_completion', 'project_completion'];
 
-	protected $with = ['users', 'tasks', 'milestones', 'tasklists', 'createdBy'];
+	protected $with = ['users', 'stories', 'sprints', 'backlogs'];
 
 	protected $casts = [
 		'private' => 'boolean',
 		'show_overview' => 'boolean'
 	];
 
-	public function backlogs(){
+	public function sprints() {
+		return $this->hasMany('App\Sprint');
+	}
+
+	public function backlogs() {
 		return $this->hasMany('App\Backlog');
+	}
+
+	public function stories() {
+		return $this->hasMany('App\Story');
 	}
 
 	public function getTaskCompletionAttribute() {
