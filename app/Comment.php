@@ -12,7 +12,7 @@ class Comment extends Model {
 	// protected $with = ['owner'];
 
 	public function commentable() {
-        return $this->belongsTo('App\Feed', 'feed_id');
+        return $this->morphTo();
     }
     
     public function feed() {

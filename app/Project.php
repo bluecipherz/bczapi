@@ -120,4 +120,8 @@ class Project extends Model {
         return $this->morphMany('App\Attachment', 'attachable');
     }
 
+    public function comments(){
+    	return $this->morphMany('App\Comment', 'commentable');
+    }
+
 }
