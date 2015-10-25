@@ -2,6 +2,7 @@
 
 use Closure;
 use JWTAuth;
+use App\Project;
 
 class HasProjectAccess {
 

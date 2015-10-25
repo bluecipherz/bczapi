@@ -9,16 +9,6 @@ use Illuminate\Http\Request;
 
 class BacklogController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index(Project $project)
-	{
-		return $project->backlogs;
-	}
-
 
 	/**
 	 * Store a newly created resource in storage.
@@ -34,17 +24,10 @@ class BacklogController extends Controller {
 		return response()->json(['status'=>'success', 'backlog' => $backlog]);
 	}
 
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update(Project $project, Backlog $backlog, Request $request)
+		public function update(Project $project, Backlog $backlog, Request $request)
 	{
 		$backlog->update($request->all());
-		return response()->json(['status'=>'success', 'backlog' => $backlog]);
+		return response()->json(['status'=>'success', 'backlog' => $backlog ,'message'=>'Backlog deleted.']);
 	}
 
 	/**
@@ -56,7 +39,6 @@ class BacklogController extends Controller {
 	public function destroy(Project $project, Backlog $backlog)
 	{
 		$backlog->delete();
-		return response()->json(['status'=>'success']);
+		return response()->json(['status'=>'success','message'=>'Backlog deleted.']);
 	}
-
 }

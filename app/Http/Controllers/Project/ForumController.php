@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use JWTAuth;
 use App\Project;
 use App\Forum;
+use App\User;
+use App\Commands\PostForum;
+use App\Commands\UpdateForum;
+use App\Commands\DeleteForum;
+
 
 class ForumController extends Controller {
 
@@ -46,8 +51,8 @@ class ForumController extends Controller {
 	 */
 	public function update(Project $project, Forum $forum, Request $request)
 	{
-		$forum->update($request->all());
-		return response()->json(['success' => true, 'message' => 'Forum Updated.']);
+		$forum->update($request->only('name','description'));
+		return response()->json(['success' => true, 'message' => 'Forum Updated.', $request->only('description') ]);
 	}
 
 	/**
@@ -59,8 +64,8 @@ class ForumController extends Controller {
 	public function destroy(Project $project, Forum $forum)
 	{
 		$user = JWTAuth::parseToken()->authenticate();
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$this->dispatch(new DeleteForum($user, $forum, $audience));
+		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
+		$this->dispatch(new DeleteForum($user, $forum));
 		return response()->json(['success' => true, 'message' => 'Forum deleted.']);
 	}
 

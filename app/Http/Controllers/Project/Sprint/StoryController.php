@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Sprint;
+<?php namespace App\Http\Controllers\Project\Sprint;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;

@@ -19,6 +19,7 @@ class CreateStoriesTable extends Migration {
 			$table->text('description');
 			$table->tinyInteger('priority')->default(0);
 			$table->integer('work_hours');
+			$table->integer('progress');
 			$table->unsignedInteger('sprint_id');
 			$table->unsignedInteger('project_id');
 			$table->unsignedInteger('user_id');

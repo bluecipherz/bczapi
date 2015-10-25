@@ -19,6 +19,7 @@ Route::controllers([
 Route::model('projects', 'App\Project');
 Route::model('backlogs', 'App\Backlog');
 Route::model('sprints', 'App\Sprint');
+Route::model('story', 'App\Story');
 Route::model('users', 'App\User');
 Route::model('tasks', 'App\Task');
 Route::model('comments', 'App\Comment');
@@ -87,10 +88,12 @@ Route::group(array('prefix' => 'api'), function() {
 
 		// Project namespace
         Route::group(['namespace' => 'Project', 'middleware' => 'project.access'], function() {
+            //  STORIES
+            Route::resource('projects.story','StoryController',['only'=> ['store','update','destroy']]);
             // SPRINTS
-            Route::resource('projects.sprints','SprintController', ['except' => ['create', 'show' , 'edit']]);
+            Route::resource('projects.backlogs.sprints','Backlog\SprintController', ['except' => ['create', 'show' , 'edit']]);
 			// BACKLOGS
-			Route::resource('projects.backlogs', 'BacklogController', ['except' => ['create', 'show', 'edit']]);
+            Route::resource('projects.backlogs', 'BacklogController',['except' => ['create','show','edit']]);
             // MILESTONES
             Route::resource('projects.milestones', 'MileStoneController', ['except' => ['create', 'show', 'edit']]);
             // TASKLISTS

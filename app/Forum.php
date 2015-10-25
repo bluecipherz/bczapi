@@ -13,8 +13,8 @@ class Forum extends Model {
 		return $this->belongsTo('App\User', 'user_id');
 	}
     
-    public function feed() {
-        return $this->morphOne('App\Feed', 'subject');
+    public function activities() {
+        return $this->morphMany('App\Activity', 'subject');
     }
     
 	public function project() {
