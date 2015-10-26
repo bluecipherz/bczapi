@@ -31,6 +31,9 @@ class DeleteActivity {
 			$lastActivity = Activity::where('subject_id', '=', $subject->id)->where('subject_type', '=', get_class($subject))->where('type', '=', 'CommentPosted')->last();
 			$lastActivity->delete();
 		}
+		elseif{
+
+		}
 	}
 
 }

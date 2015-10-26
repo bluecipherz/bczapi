@@ -12,8 +12,8 @@
 */
 
 Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
+    'auth' => 'Auth\AuthController',
+    'password' => 'Auth\PasswordController',
 ]);
 
 Route::model('projects', 'App\Project');
@@ -31,7 +31,7 @@ Route::bind('stories', function($value)
 {
     return App\Story::whereIn('id', explode(',', $value))->get();
 });
-		
+        
 Route::group(array('prefix' => 'api'), function() {
     Route::post('authenticate', 'AuthController@authenticate');
     Route::get('authenticate/user', 'AuthController@getAuthenticatedUser');
@@ -39,18 +39,18 @@ Route::group(array('prefix' => 'api'), function() {
     Route::get('authenticate/{user?}', 'AuthController@index');
 
     Route::group(['middleware' => 'jwt.auth'], function() {
-	
-		// HOME
-		Route::resource('home', 'HomeController', ['only' => ['index']]);
-		
-		
-		// Route::get('backlog', 'BacklogController@index');
-		// Route::get('backlog/create', 'BacklogController@create'); // avoid
-		// Route::get('backlog/{id}/show', 'BacklogController@show'); // avoid
-		// Route::get('backlog/{id}/edit', 'BacklogController@edit'); // avoid
-		// Route::post('backlog', 'BacklogController@store');
-		// Route::put('backlog/{id}', 'BacklogController@update');
-		// Route::delete('backlog/id', 'BacklogController@destroy');
+    
+        // HOME
+        Route::resource('home', 'HomeController', ['only' => ['index']]);
+        
+        
+        // Route::get('backlog', 'BacklogController@index');
+        // Route::get('backlog/create', 'BacklogController@create'); // avoid
+        // Route::get('backlog/{id}/show', 'BacklogController@show'); // avoid
+        // Route::get('backlog/{id}/edit', 'BacklogController@edit'); // avoid
+        // Route::post('backlog', 'BacklogController@store');
+        // Route::put('backlog/{id}', 'BacklogController@update');
+        // Route::delete('backlog/id', 'BacklogController@destroy');
 
         // ME
         Route::get('/me/projects', 'MeController@projects');
@@ -62,7 +62,7 @@ Route::group(array('prefix' => 'api'), function() {
         Route::get('/me/milestones', 'MeController@milestones');
         Route::get('/me/statuses', 'MeController@statuses');
         
-		// FEEDS
+        // FEEDS
         Route::resource('feeds', 'FeedController', ['only' => ['index']]);
         Route::resource('projects.feeds', 'Project\FeedController', ['only' => ['index']]);
 
@@ -73,7 +73,7 @@ Route::group(array('prefix' => 'api'), function() {
 
         // ATTACHMENT
         Route::resource('feeds.comments.attachments', 'Feed\Comment\AttachmentController', ['only' => ['store']]);
-		
+        
         // PROJECTS GROUP =============================================================
 
         // PROJECTS
@@ -86,13 +86,14 @@ Route::group(array('prefix' => 'api'), function() {
         // TASKS
         Route::resource('tasklists.tasks', 'TaskList\TaskController', ['except' => ['create', 'show', 'edit']]);
 
-		// Project namespace
+        // Project namespace
         Route::group(['namespace' => 'Project', 'middleware' => 'project.access'], function() {
             //  STORIES
             Route::resource('projects.story','StoryController',['only'=> ['store','update','destroy']]);
+            Route::resource('projects.stories', 'StoryController', ['only' => ['index']]);
             // SPRINTS
             Route::resource('projects.backlogs.sprints','Backlog\SprintController', ['except' => ['create', 'show' , 'edit']]);
-			// BACKLOGS
+            // BACKLOGS
             Route::resource('projects.backlogs', 'BacklogController',['except' => ['create','show','edit']]);
             // MILESTONES
             Route::resource('projects.milestones', 'MileStoneController', ['except' => ['create', 'show', 'edit']]);
@@ -147,15 +148,15 @@ Route::group(array('prefix' => 'api'), function() {
             // CHAT USERS
             Route::resource('projects.chat.users', 'Chat\UserController', ['except' => ['create', 'show', 'edit']]);
             
-    		// BUGREPORTS
+            // BUGREPORTS
             Route::resource('projects.bugreports', 'BugReportController', ['except' => ['create', 'show', 'edit']]);                
-    		// FORUMS
+            // FORUMS
             Route::resource('projects.forums', 'ForumController', ['except' => ['create', 'show', 'edit']]);
-    		// STATUSES
+            // STATUSES
             Route::resource('projects.statuses', 'StatusController', ['except' => ['create', 'show', 'edit']]); // project nested
             // INVOICES
             Route::resource('projects.invoices', 'InvoiceController', ['except' => ['create', 'show', 'edit']]);
-    		// CHATS
+            // CHATS
             Route::resource('projects.chats', 'ChatController', ['except' => ['create', 'show', 'edit']]); // project nested
             // EXPENSES
             Route::resource('projects.expenses', 'ExpenseController', ['except' => ['create', 'show', 'edit']]);
@@ -171,14 +172,14 @@ Route::group(array('prefix' => 'api'), function() {
 
         // CHATS
         Route::resource('chats', 'ChatController', ['only' => ['index', 'store', 'update']]); // zoho synced
-		
-		// CHAT MESSAGES
+        
+        // CHAT MESSAGES
         Route::resource('chats.messages', 'Chat\MessageController', ['only' => ['index', 'store']]);
 
         // EXPENSES
         Route::resource('expenses', 'ExpenseController', ['except' => ['create', 'show', 'edit']]);
-		
-		// IMAGES
+        
+        // IMAGES
         Route::resource('images', 'ImageController', ['except' => ['create', 'show', 'edit']]);
         
         // USERS
@@ -201,7 +202,7 @@ Route::group(array('prefix' => 'api'), function() {
 });
 
 Route::group(['domain' => 'api.bluecipherz.com'], function() {
-	Route::get('test', function() { return 'on api subdomain'; });
+    Route::get('test', function() { return 'on api subdomain'; });
 });
 
 Route::get('test_old', function() {
@@ -217,51 +218,51 @@ Route::get('test_old', function() {
         ->get();
         
 //  $feeds->load(['context.subject' => function($query) {
-//		$query->where('type', 'CommentPosted');
-//	}]);
-	
-	$feeds = App\Feed::all()->filter(function($feed) {
-		return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
-	});
-	
-	$feeds = App\Feed::with(['context.origin' => function($query) {
-		$query->where('context_id', '!=', 0);
-	}])->get();
+//      $query->where('type', 'CommentPosted');
+//  }]);
+    
+    $feeds = App\Feed::all()->filter(function($feed) {
+        return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
+    });
+    
+    $feeds = App\Feed::with(['context.origin' => function($query) {
+        $query->where('context_id', '!=', 0);
+    }])->get();
 
-	
-	// $feeds = App\Feed::all()->map(function($feed) {
-	// 	if($feed->context_type == 'App\Feed') {
-	// 		$feed->context = App\Feed::whereId($feed->context_id)
-	// 		->with('subject.owner')
-	// 		->with('origin.userable')
-	// 		->with('context')
-	// 		->with('comments')
-	// 		->with('context.context')->get();
-	// 	}
-	// 	return $feed;
-	// })->filter(function($feed) {
-	// 	return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
-	// });
+    
+    // $feeds = App\Feed::all()->map(function($feed) {
+    //  if($feed->context_type == 'App\Feed') {
+    //      $feed->context = App\Feed::whereId($feed->context_id)
+    //      ->with('subject.owner')
+    //      ->with('origin.userable')
+    //      ->with('context')
+    //      ->with('comments')
+    //      ->with('context.context')->get();
+    //  }
+    //  return $feed;
+    // })->filter(function($feed) {
+    //  return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
+    // });
 
     // all round
-	// $feeds = App\Feed::with('subject.owner')
+    // $feeds = App\Feed::with('subject.owner')
  //            ->with('origin.userable')
  //            ->with('comments')
  //            ->orderBy('updated_at')
  //            ->get()->map(function($feed) {
- //        		if($feed->context_type == 'App\Feed') {
- //        			$feed->context = App\Feed::whereId($feed->context_id)
- //        			->with('subject.owner')
- //        			->with('origin.userable')
- //        			->with('context')
- //        			->with('comments')
- //        			->with('context')->first();
- //        		} else {
+ //             if($feed->context_type == 'App\Feed') {
+ //                 $feed->context = App\Feed::whereId($feed->context_id)
+ //                 ->with('subject.owner')
+ //                 ->with('origin.userable')
+ //                 ->with('context')
+ //                 ->with('comments')
+ //                 ->with('context')->first();
+ //             } else {
  //                    $feed->context = $feed->context;
  //                }
- //        		return $feed;
- //        	})->filter(function($feed) {
- //        		return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
+ //             return $feed;
+ //         })->filter(function($feed) {
+ //             return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
  //            });
 
     // $feeds->load(['context.subject.owner' => function($query)
@@ -280,7 +281,7 @@ Route::get('test_old', function() {
     // {
     //     $query->where('type', 'CommentPosted');
     // }]);
-	return view('test', compact('feeds'));
+    return view('test', compact('feeds'));
 });
 
 Route::get('test', function() {
@@ -294,7 +295,7 @@ Route::get('test', function() {
 });
 
 Route::post('test', function() {
-	// return array_merge(['method' => 'post'], \Input::all());
+    // return array_merge(['method' => 'post'], \Input::all());
     // return Feed::all()->map(function($feed) {
     //     return $feed;
     // });
