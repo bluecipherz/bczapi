@@ -13,8 +13,12 @@ class Document extends Model {
 		return $this->morphMany('App\Attachment', 'attachable');
 	}
 
-    public function feed() {
-        return $this->morphOne('App\Feed', 'subject');
+    public function activities() {
+        return $this->morphMany('App\Activity', 'subject');
+    }
+
+    public function comments() {
+        return $this->morphMany('App\Comment', 'commentable');
     }
 
     public function user() {

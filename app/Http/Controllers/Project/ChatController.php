@@ -34,30 +34,4 @@ class ChatController extends Controller {
 		return response()->json(['success' => true, 'message' => 'Project Chat Created.', 'chat' => $chat]);
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update(Project $project, Chat $chat, Request $request)
-	{
-		$chat->update($request->all());
-		return response()->json(['success' => true, 'message' => 'Project Chat Updated.']);
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy(Project $project, Chat $chat)
-	{
-		$user = JWTAuth::parseToken()->authenticate();
-		$audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-		$this->dispatch(new DeleteChatRoom($user, $chat, $audience));
-		return response()->json(['success' => true, 'message' => 'Project Chat Deleted.']);
-	}
-
 }

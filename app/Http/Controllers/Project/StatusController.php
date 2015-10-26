@@ -38,31 +38,4 @@ class StatusController extends Controller {
 		return response()->json(['success' => true, 'message' => 'Status Posted.', 'status' => $status, 'feed' => $feed]);
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update(Project $project, Status $status, Request $request)
-	{
-		$status->update($request->all());
-		return response()->json(['success' => true, 'message' => 'Status Updated.']);
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy(Project $project, Status $status)
-	{
-		$user = JWTAuth::parseToken()->authenticate();
-		// $audience = User::whereIn('id', explode(',', $request->get('audience')))->get();
-        $this->dispatch(new DeleteStatus($user, $status));
-        return response()->json(['success' => true, 'message' => 'Status Deleted.']);
-	}
-
-
 }

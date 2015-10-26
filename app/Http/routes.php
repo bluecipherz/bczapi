@@ -39,52 +39,45 @@ Route::group(array('prefix' => 'api'), function() {
     Route::get('authenticate/{user?}', 'AuthController@index');
 
     Route::group(['middleware' => 'jwt.auth'], function() {
-    
-        // HOME
-        Route::resource('home', 'HomeController', ['only' => ['index']]);
-        
-        
-        // Route::get('backlog', 'BacklogController@index');
-        // Route::get('backlog/create', 'BacklogController@create'); // avoid
-        // Route::get('backlog/{id}/show', 'BacklogController@show'); // avoid
-        // Route::get('backlog/{id}/edit', 'BacklogController@edit'); // avoid
-        // Route::post('backlog', 'BacklogController@store');
-        // Route::put('backlog/{id}', 'BacklogController@update');
-        // Route::delete('backlog/id', 'BacklogController@destroy');
+	
+		// HOME
+		Route::resource('home', 'HomeController', ['only' => ['index']]);
 
-        // ME
-        Route::get('/me/projects', 'MeController@projects');
-        Route::get('/me/feeds/{project?}', 'MeController@feeds');
-        Route::get('/me/notifications', 'MeController@notifications');
-        Route::get('/me/tasks', 'MeController@tasks');
-        Route::get('/me/tasklists', 'MeController@tasklists');
-        Route::get('/me/checklists', 'MeController@checklists');
-        Route::get('/me/milestones', 'MeController@milestones');
-        Route::get('/me/statuses', 'MeController@statuses');
-        
-        // FEEDS
-        Route::resource('feeds', 'FeedController', ['only' => ['index']]);
-        Route::resource('projects.feeds', 'Project\FeedController', ['only' => ['index']]);
+        // ME : NOT SET
+        Route::get('/me/backlogs', 'MeController@backlogs');
+        Route::get('/me/bugreports', 'MeController@bugreports');
+        Route::get('/me/documents', 'MeController@documents');
+        Route::get('/me/forums', 'MeController@forums');
+        Route::get('/me/sprints', 'MeController@sprints');
+        Route::get('/me/stories', 'MeController@stories'); // 2 way ownership
 
-        // COMMENTS
-        Route::resource('comments', 'CommentController', ['only' => ['store','destroy']]);
-        Route::resource('feeds.comments', 'Feed\CommentController', ['only' => ['store', 'destroy']]);
-        Route::resource('projects.feeds.comments', 'Project\Feed\CommentController', ['only' => ['store', 'destroy']]);
+        // COMMENTS : NOT SET
+        Route::resource('comments', 'CommentController', ['only' => ['update', 'destroy']]);
+        Route::resource('backlogs.comments', 'Backlog\CommentController', ['only' => ['store']]);
+        Route::resource('bugreports.comments', 'BugReport\CommentController', ['only' => ['store']]);
+        Route::resource('documents.comments', 'Document\CommentController', ['only' => ['store']]);
+        Route::resource('forums.comments', 'Forum\CommentController', ['only' => ['store']]);
+        Route::resource('projects.comments', 'Project\CommentController', ['only' => ['store']]);
+        Route::resource('sprints.comments', 'Sprint\CommentController', ['only' => ['store']]);
+        Route::resource('statuses.comments', 'Status\CommentController', ['only' => ['store']]);
+        Route::resource('stories.comments', 'Story\CommentController', ['only' => ['store']]);
 
         // ATTACHMENT
-        Route::resource('feeds.comments.attachments', 'Feed\Comment\AttachmentController', ['only' => ['store']]);
-        
+
+
+        // NOTIFICATION
+
+
+        // 
+
+
         // PROJECTS GROUP =============================================================
 
         // PROJECTS
-        Route::get('projects/all', 'ProjectController@all');
         Route::resource('projects', 'ProjectController', ['except' => ['create', 'show', 'edit']]);
 
         // STORY
         Route::resource('sprints.stories', 'Sprint\StoryController', ['only' => ['update', 'destroy']]);
-        
-        // TASKS
-        Route::resource('tasklists.tasks', 'TaskList\TaskController', ['except' => ['create', 'show', 'edit']]);
 
         // Project namespace
         Route::group(['namespace' => 'Project', 'middleware' => 'project.access'], function() {
@@ -93,79 +86,36 @@ Route::group(array('prefix' => 'api'), function() {
             Route::resource('projects.stories', 'StoryController', ['only' => ['index']]);
             // SPRINTS
             Route::resource('projects.backlogs.sprints','Backlog\SprintController', ['except' => ['create', 'show' , 'edit']]);
-            // BACKLOGS
-            Route::resource('projects.backlogs', 'BacklogController',['except' => ['create','show','edit']]);
-            // MILESTONES
-            Route::resource('projects.milestones', 'MileStoneController', ['except' => ['create', 'show', 'edit']]);
-            // TASKLISTS
-            Route::resource('projects.tasklists', 'TaskListController', ['except' => ['create', 'show', 'edit']]);
-            Route::resource('projects.milestones.tasklists', 'TaskListController', ['except' => ['create', 'show', 'edit']]);
-            // TASKS
-            Route::resource('projects.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
+            Route::resource('projects.sprints','SprintController', ['except' => ['create', 'show' , 'edit']]);
+			// BACKLOGS
+			Route::resource('projects.backlogs', 'BacklogController', ['except' => ['create', 'show', 'edit']]);
             // DOCUMENTS
             Route::resource('projects.documents', 'DocumentController', ['only' => ['index', 'store', 'destroy']]);
-            // Project/Milestone namespace
-            Route::group(['namespace' => 'MileStone'], function() {
-                // TASKLISTS
-                Route::resource('projects.milestones.tasklists', 'TaskListController', ['except' => ['create', 'show', 'edit']]);
-                // TASK
-                Route::resource('projects.milestones.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
-                // Project/MileStone/TaskList namespace
-                Route::group(['namespace' => 'TaskList'], function() {
-                    // TASKLISTS
-                    Route::resource('projects.milestones.tasklists.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
-                    // Project/MileStone/TaskList/Task namespace
-                    Route::group(['namespace' => 'Task'], function() {                            
-                        // CHECKLISTS
-                        Route::resource('projects.milestones.tasklists.tasks.checklists', 'CheckListController', ['except' => ['create', 'show', 'edit']]);
-                        // USERS
-                        Route::resource('projects.milestone.tasklists.tasks.users', 'UserController', ['except' => ['create', 'show', 'edit']]);
-                    });
-                });
-            });
-
-            // Project/TaskList namespace
-            Route::group(['namespace' => 'TaskList'], function() {
-                // TASKLISTS
-                Route::resource('projects.tasklists.tasks', 'TaskController', ['except' => ['create', 'show', 'edit']]);
-                // Project/TaskList/Task namespace
-                Route::group(['namespace' => 'Task'], function() {
-                    // CHECKLISTS
-                    Route::resource('projects.tasklists.tasks.checklists', 'CheckListController', ['except' => ['create', 'show', 'edit']]);    
-                    // USERS
-                    Route::resource('projects.tasklists.tasks.users', 'UserController', ['except' => ['create', 'show', 'edit']]);
-                });
-            });
-
-            // Project/Task namespace
-            Route::group(['namespace' => 'Task'], function() {
-                // CHECKLISTS
-                Route::resource('projects.tasks.checklists', 'CheckListController', ['except' => ['create', 'show', 'edit']]);
-                // USERS
-                Route::resource('projects.tasks.users', 'UserController', ['except' => ['create', 'show', 'edit']]);
-            });
-
-            // CHAT USERS
-            Route::resource('projects.chat.users', 'Chat\UserController', ['except' => ['create', 'show', 'edit']]);
-            
-            // BUGREPORTS
+    		// BUGREPORTS
             Route::resource('projects.bugreports', 'BugReportController', ['except' => ['create', 'show', 'edit']]);                
             // FORUMS
             Route::resource('projects.forums', 'ForumController', ['except' => ['create', 'show', 'edit']]);
-            // STATUSES
-            Route::resource('projects.statuses', 'StatusController', ['except' => ['create', 'show', 'edit']]); // project nested
+    		// STATUSES
+            Route::resource('projects.statuses', 'StatusController', ['only' => ['index', 'store']]); // project nested
             // INVOICES
             Route::resource('projects.invoices', 'InvoiceController', ['except' => ['create', 'show', 'edit']]);
-            // CHATS
-            Route::resource('projects.chats', 'ChatController', ['except' => ['create', 'show', 'edit']]); // project nested
+    		// CHATS
+            Route::resource('projects.chats', 'ChatController', ['only' => ['index', 'store']]); // project nested
             // EXPENSES
-            Route::resource('projects.expenses', 'ExpenseController', ['except' => ['create', 'show', 'edit']]);
+            Route::resource('projects.expenses', 'ExpenseController', ['except' => ['index', 'store']]);
             // USERS
             Route::resource('projects.users', 'UserController', ['except' => ['create', 'show', 'edit']]);
-
         });
         
         // PROJECTS GROUP END ===========================================================
+
+        // User namespace : NOT SET
+        Route::group(['namespace' => 'User'], function() {
+
+            Route::resource('users.projects', 'User/ProjectController', ['only' => ['index']]);
+            Route::resource('users.notifications', 'User/NotificationController', ['only' => ['index']]);
+            Route::resource('users.statuses', 'User/StatusController', ['only' => ['index']]);
+        });
 
         // STATUSES
         Route::resource('statuses', 'StatusController', ['except' => ['create', 'show', 'edit']]);
@@ -178,136 +128,11 @@ Route::group(array('prefix' => 'api'), function() {
 
         // EXPENSES
         Route::resource('expenses', 'ExpenseController', ['except' => ['create', 'show', 'edit']]);
-        
-        // IMAGES
-        Route::resource('images', 'ImageController', ['except' => ['create', 'show', 'edit']]);
-        
-        // USERS
-        Route::resource('users', 'UserController', ['only' => ['index', 'update', 'destroy']]);
-        Route::resource('chats.users', 'Chat\UserController', ['except' => ['create', 'show', 'edit']]);
 
-        // User namespace
-        Route::group(['namespace' => 'User'], function() {
-            // PROJECT
-            Route::resource('users.projects', 'ProjectController', ['only' => ['index']]);
-            // PROFILE
-            Route::resource('users.profile', 'ProfileController', ['only' => ['index', 'store', 'update']]);
-            // NOTIFICATION
-            Route::resource('users.notifications', 'NotificationController', ['except' => ['create', 'edit', 'show']]);
-        });
+        // PROFILE
 
-        // ATTACHMENTS
+
+        // TEMPORARY UPLOAD
         Route::resource('tempupload', 'TempUploadController', ['only' => ['store']]);
     });
 });
-
-Route::group(['domain' => 'api.bluecipherz.com'], function() {
-    Route::get('test', function() { return 'on api subdomain'; });
-});
-
-Route::get('test_old', function() {
-    // return substr('App\Feed', strrpos('App\Feed', '\\'));
-    $user = \App\User::firstOrFail();
-    $feeds = $user->feeds()
-        ->with('subject.owner')
-        ->with('origin.userable')
-        ->with('context')
-        ->with('comments')
-        ->with('context.context')
-        ->orderBy('updated_at')
-        ->get();
-        
-//  $feeds->load(['context.subject' => function($query) {
-//      $query->where('type', 'CommentPosted');
-//  }]);
-    
-    $feeds = App\Feed::all()->filter(function($feed) {
-        return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
-    });
-    
-    $feeds = App\Feed::with(['context.origin' => function($query) {
-        $query->where('context_id', '!=', 0);
-    }])->get();
-
-    
-    // $feeds = App\Feed::all()->map(function($feed) {
-    //  if($feed->context_type == 'App\Feed') {
-    //      $feed->context = App\Feed::whereId($feed->context_id)
-    //      ->with('subject.owner')
-    //      ->with('origin.userable')
-    //      ->with('context')
-    //      ->with('comments')
-    //      ->with('context.context')->get();
-    //  }
-    //  return $feed;
-    // })->filter(function($feed) {
-    //  return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
-    // });
-
-    // all round
-    // $feeds = App\Feed::with('subject.owner')
- //            ->with('origin.userable')
- //            ->with('comments')
- //            ->orderBy('updated_at')
- //            ->get()->map(function($feed) {
- //             if($feed->context_type == 'App\Feed') {
- //                 $feed->context = App\Feed::whereId($feed->context_id)
- //                 ->with('subject.owner')
- //                 ->with('origin.userable')
- //                 ->with('context')
- //                 ->with('comments')
- //                 ->with('context')->first();
- //             } else {
- //                    $feed->context = $feed->context;
- //                }
- //             return $feed;
- //         })->filter(function($feed) {
- //             return !App\Feed::whereContextId($feed->id)->whereContextType("App\Feed")->exists();
- //            });
-
-    // $feeds->load(['context.subject.owner' => function($query)
-    // {
-    //     $query->where('type', 'CommentPosted');
-    // },
-    // 'context.origin.userable' => function ($query)
-    // {
-    //     $query->where('type', 'CommentPosted');
-    // },
-    // 'context.context' => function ($query)
-    // {
-    //     $query->where('type', 'CommentPosted');
-    // },
-    // 'context.comments' => function ($query)
-    // {
-    //     $query->where('type', 'CommentPosted');
-    // }]);
-    return view('test', compact('feeds'));
-});
-
-Route::get('test', function() {
-    $user = App\User::firstOrFail();
-    $project = App\Project::firstOrFail();
-    // return response()->json($user->feeds()->whereProjectId($project->id)->count());
-    $feeds = App\Feed::with('subject.project')->whereHas('subject', function($q) use ($project) {
-        return $q->where('id', '=', $project->id);
-    })->count();
-    return response()->json($feeds);
-});
-
-Route::post('test', function() {
-    // return array_merge(['method' => 'post'], \Input::all());
-    // return Feed::all()->map(function($feed) {
-    //     return $feed;
-    // });
-    return Input::get('token');
-});
-
-Route::get('arr_test', function() {
-    $audience = App\User::whereIn('id', explode(',', Input::get('audience')))->get();
-    if($audience->count()) {
-        return 'audience';
-    } else {
-        return 'no audience';
-    }
-});
-
