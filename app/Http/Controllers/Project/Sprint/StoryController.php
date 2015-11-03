@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use App\Sprint;
+use App\Project;
 
 class StoryController extends Controller {
 
@@ -15,7 +16,7 @@ class StoryController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(Sprint $sprint, Collection $stories)
+	public function update(Project $project, Sprint $sprint, Collection $stories)
 	{
 		$sprint->stories()->saveMany($stories->all());
 		return response()->json(['status'=>'success','message'=>'Stories added to sprint.', 'stories' => $stories]);
@@ -27,7 +28,7 @@ class StoryController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Sprint $sprint, Collection $stories)
+	public function destroy(Project $project, Sprint $sprint, Collection $stories)
 	{
 		foreach($stories as $story) {
 			if($story->sprint_id == $sprint->id) {

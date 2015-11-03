@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Project;
 use App\Sprint;
 use App\Backlog;
+use App\Event\type;
+use App\Event\subject;
+use App\Event\project;
+use App\Event\user;
 use JWTAuth;
 use App;
 
@@ -36,6 +40,7 @@ class SprintController extends Controller {
 		$sprint = Sprint::create($request->only('name'));
 		$project->sprints()->save($sprint);
 		$user->sprints()->save($sprint);
+		event(new FeedableEvent('SprintCreated',$user,$sprint,$project));
 		return response()->json(['status'=>'success','Sprint'=>$sprint,'Message'=>'Sprint created.']);
 	}
 	
@@ -61,6 +66,7 @@ class SprintController extends Controller {
 	public function destroy(Project $project, Backlog $backlog ,Sprint $sprint)
 	{
 		$sprint->delete();
+		event(new FeedableEvent('SprintDeleted',$user,$sprint,$project));
 		return response()->json(['status'=>'success','Message'=>'Sprint deleted.']);
 	}
 
